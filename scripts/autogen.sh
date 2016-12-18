@@ -325,7 +325,7 @@ run()
 rm -rf autom4te.cache config.cache
 
 if ! egrep '^[[:space:]]*CW_AUTOMACROS(\(\[[[:digit:]]*\]\)|)[[:space:]]*([[:space:]]dnl[[:space:]]|$)' configure.ac > /dev/null; then
-  echo -e "\nERROR: configure.ac must contain CW_AUTOMACROS([$(cat cwm4/version)]). Put it for example at the top below AM_MAINTAINER_MODE."
+  echo -e "\nERROR: configure.ac must contain CW_AUTOMACROS. Put it for example at the top below AM_MAINTAINER_MODE."
   exit 1
 fi
 
