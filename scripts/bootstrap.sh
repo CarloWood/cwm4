@@ -29,16 +29,6 @@ if test ! -f configure.ac; then
   exit 1
 fi
 
-# Do sanity checks.
-# Directory check.
-if test ! -L autogen.sh; then
-  echo "./autogen.sh must be a symlink that exists in the same directory as configure.ac."
-  echo "If needed, add a symlink 'autogen.sh' there that points to this script."
-  echo "For example: ln -s $0; ./autogen.sh"
-  exit 1
-fi
-
-
 # Determine if this project uses libtool.
 if grep '^[[:space:]]*A[CM]_PROG_LIBTOOL' configure.ac >/dev/null; then
   using_libtool="yes"
