@@ -92,7 +92,8 @@ if test "$using_libtool" = "yes"; then
 fi
 
 if test ! -f ./autogen_versions; then
-  echo -en "\nERROR: Missing file 'autogen_versions'. This file should define required_automake_version"
+  echo
+  echo -n "ERROR: Missing file 'autogen_versions'. This file should define required_automake_version"
   if test "$using_libtool" = "yes"; then
     echo -n ", required_libtool_version and libtoolize_arguments"
   fi
@@ -204,6 +205,18 @@ if test "$using_gettext" = "yes"; then
   fi
 
 fi # using_gettext
+
+# Do some git sanity checks.
+if test -d .git; then
+  PUSH_RECURSESUBMODULES="$(git config push.recurseSubmodules)"
+  if test x"$PUSH_RECURSESUBMODULES" != x"on-demand"; then
+    echo "You should use at least git version 2.7 and do:"
+    echo "git config push.recurseSubmodules on-demand"
+    echo "to prevent pushing a project that references unpushed submodules."
+    echo "See http://stackoverflow.com/a/10878273/1487069"
+    exit 1
+  fi
+fi
 
 if test "$using_doxygen" = "yes"; then
 
