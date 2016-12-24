@@ -68,7 +68,7 @@ if test "$(echo $GIT_COMMITTER_EMAIL | md5sum | cut -d \  -f 1)" = "$1"; then
       /^Entering / { printf("'$orange'%s'$reset'\n", $0); next }
       /^Already up-to-date/ { printf("'$ok'%s'$reset'\n", $0); next }
       { print }' || exit 1
-  echo "\n$prefix Updating submodules (recursive) inside submodules..."
+  echo "\n$prefix Updating submodules (recursively) inside submodules..."
   git submodule foreach 'git submodule update --recursive' | awk '
       /^Entering / { printf("'$orange'%s'$reset'\n", $0); next }
       { print }' || exit 1

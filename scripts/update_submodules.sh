@@ -41,7 +41,7 @@ if test "$#" -ne 5; then
   fi
   # Bootstrap the recursive calls.
   FULLPATH=$(realpath $0) || exit 1
-  git submodule foreach "$FULLPATH"' $opt_recursive $name $path $sha1 $toplevel'
+  git submodule foreach "$FULLPATH $opt_recursive"' $name $path $sha1 $toplevel'
 else
   # Script is called from git submodule foreach "$FULLPATH"' $opt_recursive $name $path $sha1 $toplevel'.
   # Check that it was indeed called with a full path.
@@ -49,19 +49,20 @@ else
     echo "Not a full path: $0"
     exit 1
   fi
-  # Make sure we are in the right directory.
-  cd "$toplevel/$path" || exit 1
   opt_recursive=$1
   name="$2"
   path="$3"
   sha1="$4"
   toplevel="$5"
+  # Make sure we are in the right directory.
+  cd "$toplevel/$path" || exit 1
+  echo "opt_recursive=$opt_recursive; name=$name; path=$path; sha1=$sha1; toplevel=$toplevel; pwd=$(pwd)"
   # Does the parent project want us to checkout a branch for this module?
   SUBMODULE_BRANCH=$(git config -f "$toplevel/.gitmodules" submodule.$name.branch)
   if test -n "$SUBMODULE_BRANCH"; then
     if test $opt_recursive -eq 1; then
       # Call this script recursively for all submodules, depth first.
-      git submodule foreach "$0"' $opt_recursive $name $path $sha1 $toplevel'
+      git submodule foreach "$0 $opt_recursive"' $name $path $sha1 $toplevel'
     fi
     git checkout $SUBMODULE_BRANCH
     if test $(git rev-parse HEAD) != "$sha1"; then
@@ -83,7 +84,7 @@ else
     git checkout $sha1
     if test $opt_recursive -eq 1; then
       # Call this script recursively for all submodules, breadth first.
-      git submodule foreach "$0"' $opt_recursive $name $path $sha1 $toplevel'
+      git submodule foreach "$0 $opt_recursive"' $name $path $sha1 $toplevel'
     fi
   fi
 fi
