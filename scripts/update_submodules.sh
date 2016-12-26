@@ -13,7 +13,7 @@ opt_recursive=0
 while [[ $# -gt 0 ]]
 do
   case $1 in
-    --int)
+    --init)
       opt_init=1
       ;;
     --recursive)

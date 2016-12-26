@@ -2,26 +2,38 @@
 
 # Only run this script if we are the real maintainer of this project (the owner of the git repository that contains the autogen.sh file).
 if test "$(echo $GIT_COMMITTER_EMAIL | md5sum | cut -d \  -f 1)" = "$1"; then
+  # Colors.
   esc=""
   reset="$esc""[0m"
   prefix="$esc""[36m***""$reset"
   ok="$esc[32m"
   red="$esc[31m"
   orange="$esc[33m"
+
+  # Greetings.
   echo "Hi $GIT_COMMITTER_NAME, how are you today?"
-  # Is cwm4 on master already?
-  cd cwm4 || exit 1
-  if test x"$(git rev-parse --abbrev-ref HEAD)" != x"master"; then
+
+  # Sanity check.
+  CWM4_BRANCH=$(git config -f "$toplevel/.gitmodules" submodule.cwm4.branch)
+  if test -z "$CWM4_BRANCH"; then
+    echo "$prefix $red""Setting submodule.cwm4.branch to master!"
+    git config -f "$toplevel/.gitmodules" submodule.cwm4.branch master
+    CWM4_BRANCH="master"
+  fi
+
+  # Is cwm4 on CWM4_BRANCH already?
+  pushd cwm4 || exit 1
+  if test x"$(git rev-parse --abbrev-ref HEAD)" != x"$CWM4_BRANCH"; then
     echo "$prefix $red""cwm4 is not up-to-date$reset, will rerun this script after updating."
-    git checkout master && git pull --ff-only || exit 1
+    git checkout $CWM4_BRANCH && git pull --ff-only || exit 1
     # Run the (possibly updated) script again...
-    cd ..
-    echo "$prefix $red""Please 'git add cwm4' and commit.$reset"
-    echo "Rerunning $0 $1..."
+    popd
+    echo "Restarting $0 script..."
     exec "$0" "$1"
     exit $?
   fi
-  cd ..
+  popd
+
   echo "$prefix Updating the projects autogen.sh..."
   # Get the trailing 'AccountName/projectname.git' of the upstream fetch url of branch master:
   PROJECT_URL="$(git config remote.$(git config branch.master.remote).url | sed -e 's%.*[^A-Za-z]\([^/ ]*/[^/ ]*$\)%\1%')"
@@ -46,10 +58,10 @@ if test "$(echo $GIT_COMMITTER_EMAIL | md5sum | cut -d \  -f 1)" = "$1"; then
   CWM4HASH=$(git ls-tree HEAD | grep '[[:space:]]cwm4$' | awk '{ print $3 }')
   if test "$CWM4HASH" != "$CWM4COMMIT"; then
     if git diff-index --quiet --cached HEAD; then
-      echo "\n$prefix $red""Updating cwm4 to its current master!$reset"
+      echo "\n$prefix $red""Updating cwm4 to its current branch $CWM4_BRANCH!$reset"
       git add cwm4 && git commit -m 'Automatic commit of update of submodule cwm4'
     else
-      echo "\n$prefix $red""Please checkout master in cwm4 and add it to the current project!$reset"
+      echo "\n$prefix $red""Please checkout $CWM4_BRANCH in cwm4 and add it to the current project!$reset"
     fi
   fi
   echo "\n$prefix Fetching all submodules (recursively)..."
