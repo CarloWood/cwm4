@@ -1,4 +1,4 @@
-#! /bin/sh
+#! /bin/bash
 
 # Helps bootstrapping the application when checked out from git.
 # Requires GNU autoconf, GNU automake and GNU which.
@@ -9,14 +9,6 @@
 # RSA-1024 0x624ACAD5 1997-01-26                    Sign & Encrypt
 # Fingerprint16 = 32 EC A7 B6 AC DB 65 A6  F6 F6 55 DD 1C DC FF 61
 #
-
-# Clueless user check.
-if test ! -d CVS -a ! -d .svn -a ! -d .git -a ! -d .hg -a -f configure; then
-  echo "You only need to run './autogen.sh' when you checked out this project from the source repository."
-  echo "Just run ./configure [--help]."
-  echo "If you insist on running it, then first remove the 'configure' script."
-  exit 0
-fi
 
 # Demand we use configure.ac.
 if test ! -f configure.ac; then

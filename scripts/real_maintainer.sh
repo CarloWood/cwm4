@@ -1,4 +1,4 @@
-#! /bin/sh
+#! /bin/bash
 
 # Only run this script if we are the real maintainer of this project (the owner of the git repository that contains the autogen.sh file).
 if test "$(echo $GIT_COMMITTER_EMAIL | md5sum | cut -d \  -f 1)" = "$1"; then
