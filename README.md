@@ -2,7 +2,8 @@
 
 This repository is a git submodule containing
 autoconf macros and helper scripts to support
-building a project.
+building a project that uses autotools and
+git submodules.
 
 ## Checking out a project that uses the cwm4 submodule.
 
