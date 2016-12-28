@@ -50,7 +50,7 @@ if test "$(echo $GIT_COMMITTER_EMAIL | md5sum | cut -d \  -f 1)" = "$1"; then
   fi
   cd cwm4 || exit 1
   if ! git diff-index --quiet HEAD --; then
-    echo "\n$prefix $red""Automatically committing uncommitted changes in cwm4!$reset"
+    echo -e "\n$prefix $red""Automatically committing uncommitted changes in cwm4!$reset"
     git commit -a -m 'Automatic commit of changes by autogen.sh.'
   fi
   CWM4COMMIT=$(git rev-parse HEAD)
@@ -58,29 +58,29 @@ if test "$(echo $GIT_COMMITTER_EMAIL | md5sum | cut -d \  -f 1)" = "$1"; then
   CWM4HASH=$(git ls-tree HEAD | grep '[[:space:]]cwm4$' | awk '{ print $3 }')
   if test "$CWM4HASH" != "$CWM4COMMIT"; then
     if git diff-index --quiet --cached HEAD; then
-      echo "\n$prefix $red""Updating cwm4 to its current branch $CWM4_BRANCH!$reset"
+      echo -e "\n$prefix $red""Updating cwm4 to its current branch $CWM4_BRANCH!$reset"
       git add cwm4 && git commit -m 'Automatic commit of update of submodule cwm4'
     else
-      echo "\n$prefix $red""Please checkout $CWM4_BRANCH in cwm4 and add it to the current project!$reset"
+      echo -e "\n$prefix $red""Please checkout $CWM4_BRANCH in cwm4 and add it to the current project!$reset"
     fi
   fi
-  echo "\n$prefix Fetching all submodules (recursively)..."
+  echo -e "\n$prefix Fetching all submodules (recursively)..."
   git submodule foreach --recursive 'git fetch $(git config branch.master.remote)' | awk '
       /^Entering / { printf("'$orange'%s'$reset'\n", $0); next }
       { print }' || exit 1
-  echo "\n$prefix Checking out master for each submodule..."
+  echo -e "\n$prefix Checking out master for each submodule..."
   git submodule foreach 'git checkout master' 2>&1 | awk '
       /use "git push" to publish your local commits/ { next }
       /^Entering / { printf("'$orange'%s'$reset'\n", $0); next }
       /^(Already on|Your branch is up-to-date with)/ { printf("'$ok'%s'$reset'\n", $0); next }
       /^(M|Your branch is ahead of)/ { printf("'$red'%s'$reset'\n", $0); next }
       { print }' || exit 1
-  echo "\n$prefix Fast-forwarding submodules..."
+  echo -e "\n$prefix Fast-forwarding submodules..."
   git submodule foreach 'git merge --ff-only' 2>&1 | awk '
       /^Entering / { printf("'$orange'%s'$reset'\n", $0); next }
       /^Already up-to-date/ { printf("'$ok'%s'$reset'\n", $0); next }
       { print }' || exit 1
-  echo "\n$prefix Updating submodules (recursively) inside submodules..."
+  echo -e "\n$prefix Updating submodules (recursively) inside submodules..."
   git submodule foreach 'git submodule update --recursive' | awk '
       /^Entering / { printf("'$orange'%s'$reset'\n", $0); next }
       { print }' || exit 1
