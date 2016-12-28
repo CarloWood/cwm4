@@ -86,4 +86,5 @@ if test "$(echo $GIT_COMMITTER_EMAIL | md5sum | cut -d \  -f 1)" = "$1"; then
       { print }' || exit 1
   echo
 fi
+# Continue to run bootstrap.sh.
 exit 2

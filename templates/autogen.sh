@@ -1,7 +1,12 @@
 #! /bin/sh
 
 if test -f .git; then
-  echo "Don't run $0 inside a submodule. Run it from the parent project's directory."
+  echo "Error: don't run $0 inside a submodule. Run it from the parent project's directory."
+  exit 1
+fi
+
+if test "$(realpath $0)" != "$(realpath $(pwd)/autogen.sh)"; then
+  echo "Error: run autogen.sh from the directory it resides in."
   exit 1
 fi
 
@@ -14,8 +19,8 @@ if test -d .git; then
   if test -f cwm4/scripts/real_maintainer.sh; then
     cwm4/scripts/real_maintainer.sh 15014aea5069544f695943cfe3a5348c
     RET=$?
-    # A return value of 2 means success and we need to continue with calling bootstrap.sh.
-    # Otherwise abort/stop returning the same value.
+    # A return value of 2 means we need to continue with calling bootstrap.sh.
+    # Otherwise, abort/stop returning that value.
     if test $RET -ne 2; then
       echo "Exiting with code $RET"
       exit $RET
