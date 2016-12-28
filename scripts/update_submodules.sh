@@ -63,7 +63,7 @@ else
   if test -n "$SUBMODULE_BRANCH"; then
     git checkout $SUBMODULE_BRANCH
     # Update the parent project to point to the head of this branch.
-    pushd "$toplevel"
+    pushd "$toplevel" >/dev/null
     SN1=$(git stash list | grep '^stash' | wc --lines)
     git stash save --quiet Automatic stash of parent project by update_submodules.sh
     SN2=$(git stash list | grep '^stash' | wc --lines)
@@ -72,7 +72,7 @@ else
     if test $SN1 -ne $SN2; then
       git stash pop --quiet
     fi
-    popd
+    popd >/dev/null
   elif test $(git rev-parse HEAD) != "$sha1"; then
     # No submodule.$name.branch for this submodule. Just checkout the detached HEAD.
     git checkout $sha1

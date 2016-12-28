@@ -14,25 +14,25 @@ if test "$(echo $GIT_COMMITTER_EMAIL | md5sum | cut -d \  -f 1)" = "$1"; then
   echo "Hi $GIT_COMMITTER_NAME, how are you today?"
 
   # Sanity check.
-  CWM4_BRANCH=$(git config -f "$toplevel/.gitmodules" submodule.cwm4.branch)
+  CWM4_BRANCH=$(git config -f .gitmodules submodule.cwm4.branch)
   if test -z "$CWM4_BRANCH"; then
     echo "$prefix $red""Setting submodule.cwm4.branch to master!"
-    git config -f "$toplevel/.gitmodules" submodule.cwm4.branch master
+    git config -f .gitmodules submodule.cwm4.branch master
     CWM4_BRANCH="master"
   fi
 
   # Is cwm4 on CWM4_BRANCH already?
-  pushd cwm4 || exit 1
+  pushd cwm4 >/dev/null || exit 1
   if test x"$(git rev-parse --abbrev-ref HEAD)" != x"$CWM4_BRANCH"; then
     echo "$prefix $red""cwm4 is not up-to-date$reset, will rerun this script after updating."
     git checkout $CWM4_BRANCH && git pull --ff-only || exit 1
     # Run the (possibly updated) script again...
-    popd
+    popd >/dev/null
     echo "Restarting $0 script..."
     exec "$0" "$1"
     exit $?
   fi
-  popd
+  popd >/dev/null
 
   echo "$prefix Updating the projects autogen.sh..."
   # Get the trailing 'AccountName/projectname.git' of the upstream fetch url of branch master:
