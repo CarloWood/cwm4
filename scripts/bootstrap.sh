@@ -334,6 +334,11 @@ if ! egrep '^[[:space:]]*CW_AUTOMACROS[[:space:]]*([[:space:]]dnl[[:space:]]|$)'
   exit 1
 fi
 
+if ! grep '^[[:space:]]*AC_CONFIG_HEADERS[[:space:]]*([[:space:]]*' configure.ac >/dev/null; then
+  echo -e "\nERROR: AC_CONFIG_HEADERS not set in configure.ac.\nAdd the following line to configure.ac: AC_CONFIG_HEADERS([config.h])"
+  exit 1
+fi
+
 if test ! -f Makefile.am; then
   echo -e "\nERROR: Missing Makefile.am"
   exit 1
@@ -341,11 +346,6 @@ fi
 
 if ! grep '^[[:space:]]*ACLOCAL_AMFLAGS[[:space:]]*=' Makefile.am >/dev/null; then
   echo -e "\nERROR: ACLOCAL_AMFLAGS not set in Makefile.am, it should contain \"-I cwm4/m4\".\nAdd the following line to Makefile.am: ACLOCAL_AMFLAGS = @ACLOCAL_CWFLAGS@"
-  exit 1
-fi
-
-if ! grep '^[[:space:]]*AC_CONFIG_HEADERS[[:space:]]*([[:space:]]*' Makefile.am >/dev/null; then
-  echo -e "\nERROR: AC_CONFIG_HEADERS not set in Makefile.am.\nAdd the following line to Makefile.am: AC_CONFIG_HEADERS([config.h])"
   exit 1
 fi
 
