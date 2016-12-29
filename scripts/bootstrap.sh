@@ -90,9 +90,15 @@ if test ! -f ./autogen_versions; then
     echo -n ", required_libtool_version and libtoolize_arguments"
   fi
   echo "."
-  echo "For example, the file 'autogen_versions' could contain the following two lines:"
+  if test -n "$libtool_version"; then
+    echo "For example, the file 'autogen_versions' could contain the following two lines:"
+  else
+    echo "For example, the file 'autogen_versions' could contain the following line:"
+  fi
   echo "required_automake_version=\"$automake_version\""
-  echo "required_libtool_version=\"$libtool_version\""
+  if test -n "$libtool_version"; then
+    echo "required_libtool_version=\"$libtool_version\""
+  fi
   exit 1
 fi
 
