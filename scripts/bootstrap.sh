@@ -344,6 +344,11 @@ if ! grep '^[[:space:]]*ACLOCAL_AMFLAGS[[:space:]]*=' Makefile.am >/dev/null; th
   exit 1
 fi
 
+if ! grep '^[[:space:]]*AC_CONFIG_HEADERS[[:space:]]*([[:space:]]*' Makefile.am >/dev/null; then
+  echo -e "\nERROR: AC_CONFIG_HEADERS not set in Makefile.am.\nAdd the following line to Makefile.am: AC_CONFIG_HEADERS([config.h])"
+  exit 1
+fi
+
 ACLOCAL_AMFLAGS=`grep '^[[:space:]]*ACLOCAL_AMFLAGS[[:space:]]*=' Makefile.am | sed -e 's/^[[:space:]]*ACLOCAL_AMFLAGS[[:space:]]*=[[:space:]]*//' -e 's%@ACLOCAL_CWFLAGS@%-I cwm4/m4%g'`
 
 if ! echo "$ACLOCAL_AMFLAGS" | grep -- '-I cwm4/m4' >/dev/null; then
