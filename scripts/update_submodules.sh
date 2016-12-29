@@ -61,18 +61,23 @@ else
   # Does the parent project want us to checkout a branch for this module?
   SUBMODULE_BRANCH=$(git config -f "$toplevel/.gitmodules" submodule.$name.branch)
   if test -n "$SUBMODULE_BRANCH"; then
-    git checkout $SUBMODULE_BRANCH
-    # Update the parent project to point to the head of this branch.
-    pushd "$toplevel" >/dev/null
-    SN1=$(git stash list | grep '^stash' | wc --lines)
-    git stash save --quiet Automatic stash of parent project by update_submodules.sh
-    SN2=$(git stash list | grep '^stash' | wc --lines)
-    git add $name
-    git commit -m "Update of submodule $name to current $SUBMODULE_BRANCH"
-    if test $SN1 -ne $SN2; then
-      git stash pop --quiet
+    echo "Calling 'git checkout $SUBMODULE_BRANCH' in $(pwd)"
+    git checkout $SUBMODULE_BRANCH || exit 1
+    echo "Calling 'git pull' in $(pwd)"
+    git pull || exit 1
+    if test $(git rev-parse HEAD) != "$sha1"; then
+      # Update the parent project to point to the head of this branch.
+      pushd "$toplevel" >/dev/null
+      SN1=$(git stash list | grep '^stash' | wc --lines)
+      git stash save --quiet Automatic stash of parent project by update_submodules.sh
+      SN2=$(git stash list | grep '^stash' | wc --lines)
+      git add $name
+      git commit -m "Update of submodule $name to current $SUBMODULE_BRANCH"
+      if test $SN1 -ne $SN2; then
+        git stash pop --quiet
+      fi
+      popd >/dev/null
     fi
-    popd >/dev/null
   elif test $(git rev-parse HEAD) != "$sha1"; then
     # No submodule.$name.branch for this submodule. Just checkout the detached HEAD.
     git checkout $sha1
