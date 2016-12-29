@@ -339,6 +339,11 @@ if ! egrep '^[[:space:]]*CW_AUTOMACROS[[:space:]]*([[:space:]]dnl[[:space:]]|$)'
   exit 1
 fi
 
+if ! grep '^[[:space:]]*AM_INIT_AUTOMAKE' configure.ac >/dev/null; then
+  echo -e "\nERROR: AM_INIT_AUTOMAKE not set in configure.ac.\nAdd the following line to configure.ac: AM_INIT_AUTOMAKE([foreign])"
+  exit 1
+fi
+
 if test ! -f Makefile.am; then
   echo -e "\nERROR: Missing Makefile.am"
   exit 1
