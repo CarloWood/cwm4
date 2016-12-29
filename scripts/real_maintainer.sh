@@ -36,7 +36,17 @@ if test "$(echo $GIT_COMMITTER_EMAIL | md5sum | cut -d \  -f 1)" = "$1"; then
 
   echo "$prefix Updating the projects autogen.sh..."
   # Get the trailing 'AccountName/projectname.git' of the upstream fetch url of branch master:
-  PROJECT_URL="$(git config remote.$(git config branch.master.remote).url | sed -e 's%.*[^A-Za-z]\([^/ ]*/[^/ ]*$\)%\1%')"
+  MASTER_REMOTE=$(git config branch.master.remote)
+  if test -z "$MASTER_REMOTE"; then
+    REPO_NAME=$(basename $(pwd))
+    echo "Fatal error: branch master does not have a remote set."
+    echo "Make sure you created the repository $REPO_NAME on github and issued the commands"
+    echo "under '…or push an existing repository from the command line'"
+    echo "That is: create the remote REMOTE (ie, origin) and then issue the command:"
+    echo "git push -u REMOTE master"
+    exit 1
+  fi
+  PROJECT_URL="$(git config remote.$MASTER_REMOTE.url | sed -e 's%.*[^A-Za-z]\([^/ ]*/[^/ ]*$\)%\1%')"
   echo "  $prefix PROJECT_URL = \"$PROJECT_URL\""
   NEW_MD5=$(sed -e "s%@PROJECT_URL@%$PROJECT_URL%" cwm4/templates/autogen.sh | md5sum)
   OLD_MD5=$(cat autogen.sh | md5sum)
