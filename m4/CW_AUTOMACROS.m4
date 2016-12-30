@@ -29,6 +29,8 @@ dnl Take care of general things needed.
 AC_DEFUN([CW_AUTOMACROS], [dnl
 dnl Detect unexpanded macros.
 m4_pattern_forbid(CW_)
+dnl Define some m4 macros.
+m4_define([cwm4_relpath], [ifelse(len([$1]), [0], [$1], [$1/])])dnl
 dnl Define ACLOCAL_CWFLAGS, so that rerunning aclocal from 'make' will work.
 ACLOCAL_CWFLAGS="-I ${CWAUTOMACROSPREFIX-/usr}/share/cwautomacros/m4"
 if test -d $ac_confdir/libtoolm4; then
