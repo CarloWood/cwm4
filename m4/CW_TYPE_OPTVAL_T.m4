@@ -1,4 +1,4 @@
-# CW_TYPE_OPTVAL_T m4 macro -- this file is part of cwautomacros.
+# CW_TYPE_OPTVAL_T m4 macro -- this file is part of cwm4.
 # Copyright (C) 2006 Carlo Wood <carlo@alinoe.com>
 #
 # This program is free software; you can redistribute it and/or modify
@@ -22,7 +22,7 @@
 # not follow the terms of the GNU General Public License when using or
 # distributing such scripts, even though portions of the text of this
 # file appears in them. The GNU General Public License (GPL) does govern
-# all other use of the material that constitutes the cwautomacros project.
+# all other use of the material that constitutes the cwm4 project.
 
 dnl CW_TYPE_OPTVAL_T
 dnl

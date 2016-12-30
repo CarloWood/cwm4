@@ -1,5 +1,5 @@
-# CW_AUTOMACROS m4 macro -- this file is part of cwautomacros.
-# Copyright (C) 2006 - 2008 Carlo Wood <carlo@alinoe.com>
+# CW_AUTOMACROS m4 macro -- this file is part of cwm4.
+# Copyright (C) 2006 Carlo Wood <carlo@alinoe.com>
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -22,15 +22,13 @@
 # not follow the terms of the GNU General Public License when using or
 # distributing such scripts, even though portions of the text of this
 # file appears in them. The GNU General Public License (GPL) does govern
-# all other use of the material that constitutes the cwautomacros project.
+# all other use of the material that constitutes the cwm4 project.
 
 dnl CW_AUTOMACROS
 dnl Take care of general things needed.
 AC_DEFUN([CW_AUTOMACROS], [dnl
 dnl Detect unexpanded macros.
 m4_pattern_forbid(CW_)
-dnl Define some m4 macros.
-m4_define([cwm4_relpath], [ifelse(len([$1]), [0], [$1], [$1/])])dnl
 dnl Define ACLOCAL_CWFLAGS, so that rerunning aclocal from 'make' will work.
 ACLOCAL_CWFLAGS="-I cwm4/m4"
 if test -d $ac_confdir/libtoolm4; then
