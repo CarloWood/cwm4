@@ -32,7 +32,7 @@ m4_pattern_forbid(CW_)
 dnl Define some m4 macros.
 m4_define([cwm4_relpath], [ifelse(len([$1]), [0], [$1], [$1/])])dnl
 dnl Define ACLOCAL_CWFLAGS, so that rerunning aclocal from 'make' will work.
-ACLOCAL_CWFLAGS="-I ${CWAUTOMACROSPREFIX-/usr}/share/cwautomacros/m4"
+ACLOCAL_CWFLAGS="-I cwm4/m4"
 if test -d $ac_confdir/libtoolm4; then
 ACLOCAL_CWFLAGS="$ACLOCAL_CWFLAGS -I `cd $ac_confdir; pwd`/libtoolm4"
 fi
