@@ -75,8 +75,13 @@ if test "$(echo $GIT_COMMITTER_EMAIL | md5sum | cut -d \  -f 1)" = "$1"; then
     fi
   fi
   echo -e "\n$prefix Updating all submodules (recursively)..."
-  cwm4/scripts/update_submodules.sh --recursive
-  echo
 fi
+
+# Update all submodules.
+if ! cwm4/scripts/update_submodules.sh --recursive; then
+  echo "autogen.sh: Failed to update one or more submodules. Does it have uncommitted changes?"
+  exit 1
+fi
+
 # Continue to run bootstrap.sh.
 exit 2
