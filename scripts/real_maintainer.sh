@@ -70,7 +70,7 @@ if test "$(echo $GIT_COMMITTER_EMAIL | md5sum | cut -d \  -f 1)" = "$1"; then
     if git diff-index --quiet --cached HEAD; then
       echo -e "\n$prefix $red""Updating cwm4 to its current branch $CWM4_BRANCH!$reset"
       git add cwm4 && git commit -m 'Automatic commit of update of submodule cwm4'
-    else
+    elif test x"$(git rev-parse --abbrev-ref HEAD)" != x"$CWM4_BRANCH"; then
       echo -e "\n$prefix $red""Please checkout $CWM4_BRANCH in cwm4 and add it to the current project!$reset"
     fi
   fi
