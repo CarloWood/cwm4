@@ -74,26 +74,8 @@ if test "$(echo $GIT_COMMITTER_EMAIL | md5sum | cut -d \  -f 1)" = "$1"; then
       echo -e "\n$prefix $red""Please checkout $CWM4_BRANCH in cwm4 and add it to the current project!$reset"
     fi
   fi
-  echo -e "\n$prefix Fetching all submodules (recursively)..."
-  git submodule foreach --recursive 'git fetch $(git config branch.master.remote)' | awk '
-      /^Entering / { printf("'$orange'%s'$reset'\n", $0); next }
-      { print }' || exit 1
-  echo -e "\n$prefix Checking out master for each submodule..."
-  git submodule foreach 'git checkout master' 2>&1 | awk '
-      /use "git push" to publish your local commits/ { next }
-      /^Entering / { printf("'$orange'%s'$reset'\n", $0); next }
-      /^(Already on|Your branch is up-to-date with)/ { printf("'$ok'%s'$reset'\n", $0); next }
-      /^(M|Your branch is ahead of)/ { printf("'$red'%s'$reset'\n", $0); next }
-      { print }' || exit 1
-  echo -e "\n$prefix Fast-forwarding submodules..."
-  git submodule foreach 'git merge --ff-only' 2>&1 | awk '
-      /^Entering / { printf("'$orange'%s'$reset'\n", $0); next }
-      /^Already up-to-date/ { printf("'$ok'%s'$reset'\n", $0); next }
-      { print }' || exit 1
-  echo -e "\n$prefix Updating submodules (recursively) inside submodules..."
-  git submodule foreach 'git submodule update --recursive' | awk '
-      /^Entering / { printf("'$orange'%s'$reset'\n", $0); next }
-      { print }' || exit 1
+  echo -e "\n$prefix Updating all submodules (recursively)..."
+  cwm4/scripts/update_submodules --recursive
   echo
 fi
 # Continue to run bootstrap.sh.
