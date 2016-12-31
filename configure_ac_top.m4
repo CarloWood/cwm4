@@ -7,9 +7,6 @@ AC_INIT(CW_PACKAGE_NAME, CW_VERSION_MAJOR.CW_VERSION_MINOR.CW_VERSION_REVISION, 
 dnl Because we use cwautomacros.
 CW_AUTOMACROS
 
-dnl Automake options.
-AM_INIT_AUTOMAKE([foreign])
-
 dnl Include maintainer mode targets
 AM_MAINTAINER_MODE
 
