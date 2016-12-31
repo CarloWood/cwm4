@@ -63,8 +63,8 @@ else
   if test -n "$SUBMODULE_BRANCH"; then
     echo "Calling 'git checkout $SUBMODULE_BRANCH' in $(pwd)"
     git checkout $SUBMODULE_BRANCH || exit 1
-    echo "Calling 'git pull' in $(pwd)"
-    git pull || exit 1
+    echo "Calling 'git pull --ff-only' in $(pwd)"
+    git pull --ff-only || exit 1
     if test $(git rev-parse HEAD) != "$sha1"; then
       # Update the parent project to point to the head of this branch.
       pushd "$toplevel" >/dev/null
@@ -80,6 +80,7 @@ else
     fi
   elif test $(git rev-parse HEAD) != "$sha1"; then
     # No submodule.$name.branch for this submodule. Just checkout the detached HEAD.
+    echo "Calling 'git checkout $sha1' in $(pwd)"
     git checkout $sha1
   fi
 fi
