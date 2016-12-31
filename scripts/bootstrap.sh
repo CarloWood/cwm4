@@ -11,6 +11,7 @@
 #
 
 # Sanity checks.
+echo "\$0 equals \"$0\""
 if test "$0" != "./autogen.sh"; then
   echo -e "\nERROR: Run './autogen.sh' (from the root directory of the project)."
   exit 1
