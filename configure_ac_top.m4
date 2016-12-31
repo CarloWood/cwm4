@@ -1,8 +1,14 @@
 dnl Detect unexpanded macros.
 m4_pattern_forbid(CW_)
 
-dnl Because we use cwautomacros.
-CW_AUTOMACROS
+dnl Package name and version
+AC_INIT(CW_PACKAGE_NAME, CW_VERSION_MAJOR.CW_VERSION_MINOR.CW_VERSION_REVISION, CW_BUGREPORT)
+
+dnl Put resulting configuration defines in this header file.
+AC_CONFIG_HEADERS([config.h])
+
+dnl Automake options.
+AM_INIT_AUTOMAKE([foreign])
 
 dnl Include maintainer mode targets
 AM_MAINTAINER_MODE
