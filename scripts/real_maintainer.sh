@@ -83,5 +83,8 @@ if ! cwm4/scripts/update_submodules.sh --recursive; then
   exit 1
 fi
 
+# Generate submodules.m4.
+git submodule foreach -q --recursive 'test "$name" = "cwm4" || echo "CW_SUBMODULE([$path])"' > submodules.m4
+
 # Continue to run bootstrap.sh.
 exit 2
