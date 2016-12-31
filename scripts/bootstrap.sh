@@ -10,16 +10,6 @@
 # Fingerprint16 = 32 EC A7 B6 AC DB 65 A6  F6 F6 55 DD 1C DC FF 61
 #
 
-# Sanity checks.
-echo "\$0 equals \"$0\""
-if test "$0" != "./autogen.sh"; then
-  echo -e "\nERROR: Run './autogen.sh' (from the root directory of the project)."
-  exit 1
-elif ! test -d .git; then
-  echo -e "\nERROR: $(pwd): not a git repository.\nRun ./autogen.sh from the root directory of the project."
-  exit 1
-fi
-
 # Demand we use configure.ac.
 generate_configure_ac="no"
 if test ! -f configure.ac; then
