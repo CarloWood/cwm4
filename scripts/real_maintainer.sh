@@ -75,6 +75,7 @@ if test "$(echo $GIT_COMMITTER_EMAIL | md5sum | cut -d \  -f 1)" = "$1"; then
     fi
   fi
   echo -e "\n$prefix Updating all submodules (recursively)..."
+  pwd
   cwm4/scripts/update_submodules --recursive
   echo
 fi
