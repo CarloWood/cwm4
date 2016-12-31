@@ -25,7 +25,7 @@ fi
 if grep '^[[:space:]]*A[CM]_PROG_LIBTOOL' configure.ac >/dev/null; then
   using_libtool="yes"
 else
-  using_libtool="no"
+  using_libtool="yes"
 fi
 
 # Determine if this project uses gettext.
