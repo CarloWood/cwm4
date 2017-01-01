@@ -24,8 +24,8 @@
 # file appears in them. The GNU General Public License (GPL) does govern
 # all other use of the material that constitutes the cwm4 project.
 
-m4_define([cwm4_relpath], [ifelse(regexp($1, [.*[^/]$]), -1, [$1], [$1/])])
-m4_define([cwm4_quote], [ifelse([$#], [0], [], [[$*]])])
+m4_define([cwm4_relpath], [m4_if(regexp($1, [.*[^/]$]), -1, [$1], [$1/])])
+m4_define([cwm4_quote], [m4_if([$#], [0], [], [[$*]])])
 m4_define([cwm4_dquote], [[$@]])
 
 AC_DEFUN([CW_SUBMODULE],
