@@ -24,13 +24,13 @@
 # file appears in them. The GNU General Public License (GPL) does govern
 # all other use of the material that constitutes the cwm4 project.
 
-m4_define([cwm4_relpath], [m4_if(regexp($1, [.*[^/]$]), -1, [$1], [$1/])])
+m4_define([cwm4_relpath], [m4_if(m4_bregexp($1, [.*[^/]$]), -1, [$1], [$1/])])
 m4_define([cwm4_quote], [m4_if([$#], [0], [], [[$*]])])
 m4_define([cwm4_dquote], [[$@]])
 
 AC_DEFUN([CW_SUBMODULE],
- [m4_define([cwm4_rel_top_srcdir], ifelse($#, 1, [], [$1]))
-  m4_define([cwm4_submodule_path], ifelse($#, 1, [$1], [$2]))
+ [m4_define([cwm4_rel_top_srcdir], m4_if($#, 1, [], [$1]))
+  m4_define([cwm4_submodule_path], m4_if($#, 1, [$1], [$2]))
   m4_define([cwm4_submodule_relpath], [cwm4_relpath(cwm4_rel_top_srcdir)cwm4_relpath(cwm4_submodule_path)])
   m4_include(cwm4_submodule_relpath[configure.m4])]
 )
