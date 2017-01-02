@@ -236,10 +236,10 @@ fi # using_gettext
 if test -d .git; then
   PUSH_RECURSESUBMODULES="$(git config push.recurseSubmodules)"
   if test x"$PUSH_RECURSESUBMODULES" != x"on-demand"; then
-    echo "You should use at least git version 2.7 and do:"
-    echo "git config push.recurseSubmodules on-demand"
-    echo "to prevent pushing a project that references unpushed submodules."
-    echo "See http://stackoverflow.com/a/10878273/1487069"
+    echo -e "\n*** ERROR: You should (use at least git version 2.7 and) do:"
+    echo "***        git config push.recurseSubmodules on-demand"
+    echo "***        to prevent pushing a project that references unpushed submodules."
+    echo "***        See http://stackoverflow.com/a/10878273/1487069"
     exit 1
   fi
 fi
@@ -354,8 +354,8 @@ run()
 rm -rf autom4te.cache config.cache
 
 if test ! -f Makefile.am; then
-  echo -e "\n*** ERROR: Missing Makefile.am"
-  exit 1
+  echo -e "\n*** WARNING: Missing Makefile.am. Copying a default one. Edit it!"
+  cp cwm4/templates/Makefile.am Makefile.am
 fi
 
 if ! egrep '^[[:space:]]*SUBDIRS[[:space:]]*=.*@CW_SUBDIRS@' Makefile.am >/dev/null; then
