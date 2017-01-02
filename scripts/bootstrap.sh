@@ -3,7 +3,7 @@
 # Helps bootstrapping the application when checked out from git.
 # Requires GNU autoconf, GNU automake and GNU which.
 #
-# Copyright (C) 2004 - 2016, by
+# Copyright (C) 2004 - 2017, by
 #
 # Carlo Wood, Run on IRC <carlo@alinoe.com>
 # RSA-1024 0x624ACAD5 1997-01-26                    Sign & Encrypt
@@ -40,6 +40,13 @@ if test "$generate_configure_ac" = "yes"; then
   CW_PACKAGE_NAME="$(basename $(pwd))"
   CW_BUGREPORT="$GIT_AUTHOR_EMAIL"
   sed -e 's/@CW_PACKAGE_NAME@/'"$CW_PACKAGE_NAME"'/;s/@CW_BUGREPORT@/'"$CW_BUGREPORT"'/' cwm4/templates/configure.ac > configure.ac
+else
+  if test $(egrep '^define\(CW_(VERSION_MAJOR|VERSION_MINOR|VERSION_REVISION|BUGREPORT|COMPILER_WARNINGS),' configure.ac | sort -u | wc --lines) != 6; then
+    echo "The follow macros should be defined at the top of configure.ac:"
+    echo "  CW_VERSION_MAJOR, CW_VERSION_MINOR, CW_VERSION_REVISION, CW_PACKAGE_NAME, CW_BUGREPORT and CW_COMPILER_WARNINGS"
+    echo "Please see cwm4/templates/configure.ac for an example."
+    exit 1
+  fi
 fi
 
 # Determine if this project uses libtool.
