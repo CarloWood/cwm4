@@ -355,7 +355,7 @@ rm -rf autom4te.cache config.cache
 
 if test ! -f Makefile.am; then
   echo -e "\n*** WARNING: Missing Makefile.am. Copying a default one. Edit it!"
-  cp cwm4/templates/Makefile.am Makefile.am
+  cp cwm4/templates/root_Makefile.am Makefile.am
 fi
 
 if ! egrep '^[[:space:]]*SUBDIRS[[:space:]]*=.*@CW_SUBDIRS@' Makefile.am >/dev/null; then
