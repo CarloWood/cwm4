@@ -42,9 +42,10 @@ if test "$generate_configure_ac" = "yes"; then
   sed -e 's/@CW_PACKAGE_NAME@/'"$CW_PACKAGE_NAME"'/;s/@CW_BUGREPORT@/'"$CW_BUGREPORT"'/' cwm4/templates/configure.ac > configure.ac
 else
   if test $(egrep '^[[:space:]]*define[[:space:]]*\([[:space:]]*CW_(VERSION_MAJOR|VERSION_MINOR|VERSION_REVISION|PACKAGE_NAME|BUGREPORT|COMPILER_WARNINGS)[[:space:]]*,' configure.ac | sort -u | wc --lines) != 6; then
-    echo "ERROR: The follow macros should be defined at the top of configure.ac:"
-    echo "  CW_VERSION_MAJOR, CW_VERSION_MINOR, CW_VERSION_REVISION, CW_PACKAGE_NAME, CW_BUGREPORT and CW_COMPILER_WARNINGS"
-    echo "Please see cwm4/templates/configure.ac for an example."
+    echo "*** ERROR: The follow macros should be defined at the top of configure.ac:"
+    echo "***        CW_VERSION_MAJOR, CW_VERSION_MINOR, CW_VERSION_REVISION,"
+    echo "***        CW_PACKAGE_NAME, CW_BUGREPORT and CW_COMPILER_WARNINGS"
+    echo "***        Please see cwm4/templates/configure.ac for an example."
     exit 1
   fi
 fi
@@ -114,19 +115,19 @@ fi
 
 if test ! -f ./autogen_versions; then
   echo
-  echo -n "ERROR: Missing file 'autogen_versions'. This file should define required_automake_version"
+  echo -n "*** ERROR: Missing file 'autogen_versions'. This file should define required_automake_version"
   if test "$using_libtool" = "yes"; then
     echo -n ", required_libtool_version and libtoolize_arguments"
   fi
   echo "."
   if test -n "$libtool_version"; then
-    echo "For example, the file 'autogen_versions' could contain the following two lines:"
+    echo "***         For example, the file 'autogen_versions' could contain the following two lines:"
   else
-    echo "For example, the file 'autogen_versions' could contain the following line:"
+    echo "***         For example, the file 'autogen_versions' could contain the following line:"
   fi
-  echo "required_automake_version=\"$automake_version\""
+  echo "***         required_automake_version=\"$automake_version\""
   if test -n "$libtool_version"; then
-    echo "required_libtool_version=\"$libtool_version\""
+    echo "***         required_libtool_version=\"$libtool_version\""
   fi
   exit 1
 fi
@@ -135,12 +136,12 @@ fi
 
 if test "$using_libtool" = "yes"; then
   if test x"$required_libtool_version" = x; then
-    echo -e "\nERROR: The file autogen_versions should define 'required_libtool_version'."
+    echo -e "\n*** ERROR: The file autogen_versions should define 'required_libtool_version'."
     exit 1
   fi
 fi
 if test x"$required_automake_version" = x; then
-  echo -e "\nERROR: The file autogen_versions should define 'required_automake_version'."
+  echo -e "\n*** ERROR: The file autogen_versions should define 'required_automake_version'."
   exit 1
 fi
 
@@ -149,9 +150,8 @@ expr_automake_version=`echo "$automake_version" | sed -e 's%\.%.000%g' -e 's%^%0
 expr_required_automake_version=`echo "$required_automake_version" | sed -e 's%\.%.000%g' -e 's%^%000%' -e 's%0*\([0-9][0-9][0-9]\)%\1%g'`
 if expr "$expr_required_automake_version" \> "$expr_automake_version" >/dev/null; then
   $AUTOMAKE --version | head -n 1
-  echo -e "\nERROR: automake $required_automake_version or higher is required. Please set \$AUTOMAKE"
-  echo "to point to a newer automake, or upgrade."
-  echo ""
+  echo -e "\n*** ERROR: automake $required_automake_version or higher is required."
+  echo "***        Please set \$AUTOMAKE to point to a newer automake, or upgrade."
   exit 1
 fi
 
@@ -162,7 +162,7 @@ if test "$using_libtool" = "yes"; then
   expr_required_libtool_version=`echo "$required_libtool_version" | sed -e 's%\.%.000%g' -e 's%^%000%' -e 's%0*\([0-9][0-9][0-9]\)%\1%g'`
   if expr "$expr_required_libtool_version" \> "$expr_libtool_version" >/dev/null; then
     $LIBTOOL --version
-    echo -e "\nERROR: libtool version $required_libtool_version or higher is required."
+    echo -e "\n*** ERROR: libtool version $required_libtool_version or higher is required."
     exit 1
   fi
 
@@ -216,9 +216,8 @@ if test "$using_gettext" = "yes"; then
   expr_gettext_version=`echo "$gettext_version" | sed -e 's%\.%.000%g' -e 's%^%000%' -e 's%0*\([0-9][0-9][0-9]\)%\1%g'`
   if expr "$expr_confver" \> "$expr_gettext_version" >/dev/null; then
     $GETTEXT --version | head -n 1
-    echo -e "\nERROR: gettext version "$confver" or higher is required. Please set \$GETTEXT"
-    echo "to point to a newer gettext, or upgrade."
-    echo ""
+    echo -e "\n*** ERROR: gettext version "$confver" or higher is required."
+    echo "***        Please set \$GETTEXT to point to a newer gettext, or upgrade."
     exit 1
   fi
 
@@ -290,7 +289,7 @@ if [ -f "$doc_path/Makefile.am" -a ! -f $doc_path/mainpage.dox ]; then
 fi
 
 if [ -f "$doc_path/Makefile.am" -a ! -f "$doc_path/doxygen.config.in" -a ! -f "$doc_path/doxygen.config" ]; then
-  (doxygen --version) >/dev/null 2>/dev/null || (echo -e "\nERROR: You need the package 'doxygen' to generate documentation. Please install it (see http://www.doxygen.org/)."; exit 1) || exit 1
+  (doxygen --version) >/dev/null 2>/dev/null || (echo -e "\n*** ERROR: You need the package 'doxygen' to generate documentation. Please install it (see http://www.doxygen.org/)."; exit 1) || exit 1
   created_files="$created_files $doc_path/doxygen.config.in"
   doxygen -g "$doc_path/doxygen.config.tmp" >/dev/null
   echo -e "# @""configure_input""@\n" > "$doc_path/doxygen.config.in";
@@ -355,12 +354,12 @@ run()
 rm -rf autom4te.cache config.cache
 
 if test ! -f Makefile.am; then
-  echo -e "\nERROR: Missing Makefile.am"
+  echo -e "\n*** ERROR: Missing Makefile.am"
   exit 1
 fi
 
 if ! grep '^[[:space:]]*ACLOCAL_AMFLAGS[[:space:]]*=' Makefile.am >/dev/null; then
-  echo -e "\nERROR: ACLOCAL_AMFLAGS not set in Makefile.am.\nAdd the following line to Makefile.am: ACLOCAL_AMFLAGS = @ACLOCAL_CWFLAGS@"
+  echo -e "\n*** ERROR: ACLOCAL_AMFLAGS not set in Makefile.am.\n***        Add the following line to Makefile.am: ACLOCAL_AMFLAGS = @ACLOCAL_CWFLAGS@"
   exit 1
 fi
 
@@ -369,6 +368,11 @@ ACLOCAL_AMFLAGS=`grep '^[[:space:]]*ACLOCAL_AMFLAGS[[:space:]]*=' Makefile.am | 
 if ! echo "$ACLOCAL_AMFLAGS" | grep -- '-I cwm4/m4' >/dev/null; then
   echo "*** WARNING: ACLOCAL_AMFLAGS, in Makefile.am, should contain \"-I cwm4/m4\""
   echo "***          You can achieve this by adding ACLOCAL_AMFLAGS=@ACLOCAL_CWFLAGS@ to Makefile.am."
+fi
+
+if ! grep '^[[:space:]]*SUBDIRS[[:space:]]*=.*@CW_SUBDIRS@' Makefile.am >/dev/null; then
+  echo -e "\n*** ERROR: SUBDIRS in Makefile.am must contain @CW_SUBDIRS@.\n***        For example: SUBDIRS = @CW_SUBDIRS@ src"
+  exit 1
 fi
 
 run "$ACLOCAL $ACLOCAL_AMFLAGS $ACLOCAL_LTFLAGS"
