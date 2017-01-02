@@ -85,11 +85,13 @@ fi
 
 # Generate submodules.m4.
 git submodule foreach -q --recursive 'test "$name" = "cwm4" || echo "CW_SUBMODULE([$path])"' > submodules.m4
-cat >> submodules.m4 << EOF
+if test -s submodules.m4; then
+  cat >> submodules.m4 << EOF
 AC_SUBST([CW_SUBDIRS], "CW_SUBMODULE_SUBDIRS")
 AM_SUBST_NOTMAKE([CW_SUBDIRS])
 AC_CONFIG_FILES(CW_SUBMODULE_CONFIG_FILES)
 EOF
+fi
 
 # Continue to run bootstrap.sh.
 exit 2
