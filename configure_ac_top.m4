@@ -4,6 +4,9 @@ m4_pattern_forbid(CW_)
 dnl Package name and version
 AC_INIT(CW_PACKAGE_NAME, CW_VERSION_MAJOR.CW_VERSION_MINOR.CW_VERSION_REVISION, CW_BUGREPORT)
 
+dnl Where to find the CW_* macros.
+AC_CONFIG_MACRO_DIR([cwm4/m4])
+
 dnl Put resulting configuration defines in this header file.
 AC_CONFIG_HEADERS([config.h])
 

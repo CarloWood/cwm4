@@ -358,24 +358,12 @@ if test ! -f Makefile.am; then
   exit 1
 fi
 
-if ! grep '^[[:space:]]*ACLOCAL_AMFLAGS[[:space:]]*=' Makefile.am >/dev/null; then
-  echo -e "\n*** ERROR: ACLOCAL_AMFLAGS not set in Makefile.am.\n***        Add the following line to Makefile.am: ACLOCAL_AMFLAGS = @ACLOCAL_CWFLAGS@"
-  exit 1
-fi
-
-ACLOCAL_AMFLAGS=`grep '^[[:space:]]*ACLOCAL_AMFLAGS[[:space:]]*=' Makefile.am | sed -e 's/^[[:space:]]*ACLOCAL_AMFLAGS[[:space:]]*=[[:space:]]*//' -e 's%@ACLOCAL_CWFLAGS@%-I cwm4/m4%g'`
-
-if ! echo "$ACLOCAL_AMFLAGS" | grep -- '-I cwm4/m4' >/dev/null; then
-  echo "*** WARNING: ACLOCAL_AMFLAGS, in Makefile.am, should contain \"-I cwm4/m4\""
-  echo "***          You can achieve this by adding ACLOCAL_AMFLAGS=@ACLOCAL_CWFLAGS@ to Makefile.am."
-fi
-
 if ! grep '^[[:space:]]*SUBDIRS[[:space:]]*=.*@CW_SUBDIRS@' Makefile.am >/dev/null; then
   echo -e "\n*** ERROR: SUBDIRS in Makefile.am must contain @CW_SUBDIRS@.\n***        For example: SUBDIRS = @CW_SUBDIRS@ src"
   exit 1
 fi
 
-run "$ACLOCAL $ACLOCAL_AMFLAGS $ACLOCAL_LTFLAGS"
+run "$ACLOCAL $ACLOCAL_LTFLAGS"
 if test "$using_gtkdoc" = "yes"; then
 run "$GTKDOCIZE"
 fi
