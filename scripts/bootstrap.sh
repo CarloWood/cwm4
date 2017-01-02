@@ -51,7 +51,7 @@ else
 fi
 
 # Determine if this project uses libtool.
-RESULT=$(find . -type d -name '.git' -prune -o -name Makefile.am -exec grep -l '^[[:alnum:]_]*_LTLIBRARIES[[:space:]]*=' {} \;)
+RESULT=$(find . -type d -name '.git' -prune -o -name Makefile.am -exec egrep -l '^[[:alnum:]_]*_LTLIBRARIES[[:space:]]*=' {} \;)
 if test -n "$RESULT"; then
   using_libtool="yes"
 else
@@ -59,21 +59,21 @@ else
 fi
 
 # Determine if this project uses gettext.
-if m4 -P cwm4/changequote.m4 configure.ac | grep '^[[:space:]]*AM_GNU_GETTEXT_VERSION' >/dev/null; then
+if m4 -P cwm4/changequote.m4 configure.ac | egrep '^[[:space:]]*AM_GNU_GETTEXT_VERSION' >/dev/null; then
   using_gettext="yes"
 else
   using_gettext="no"
 fi
 
 # Determine if this project uses doxygen.
-if m4 -P cwm4/changequote.m4 configure.ac | grep '^[[:space:]]*CW_DOXYGEN' >/dev/null; then
+if m4 -P cwm4/changequote.m4 configure.ac | egrep '^[[:space:]]*CW_DOXYGEN' >/dev/null; then
   using_doxygen="yes"
 else
   using_doxygen="no"
 fi
 
 # Determine if this project uses gtk-doc.
-if m4 -P cwm4/changequote.m4 configure.ac | grep '^[[:space:]]*GTK_DOC_CHECK' >/dev/null; then
+if m4 -P cwm4/changequote.m4 configure.ac | egrep '^[[:space:]]*GTK_DOC_CHECK' >/dev/null; then
   using_gtkdoc="yes"
 else
   using_gtkdoc="no"
@@ -358,9 +358,28 @@ if test ! -f Makefile.am; then
   exit 1
 fi
 
-if ! grep '^[[:space:]]*SUBDIRS[[:space:]]*=.*@CW_SUBDIRS@' Makefile.am >/dev/null; then
+if ! egrep '^[[:space:]]*SUBDIRS[[:space:]]*=.*@CW_SUBDIRS@' Makefile.am >/dev/null; then
   echo -e "\n*** ERROR: SUBDIRS in Makefile.am must contain @CW_SUBDIRS@.\n***        For example: SUBDIRS = @CW_SUBDIRS@ src"
   exit 1
+fi
+
+generate_makefile_am="no"
+if ! egrep '^[[:space:]]*include[[:space:]]+\$\(srcdir\)/cwm4/root_makefile_top\.am' Makefile.am >/dev/null; then
+  echo "Missing 'include \$(srcdir)/cwm4/root_makefile_top.am' in Makefile.am."
+  generate_makefile_am="yes"
+fi
+
+if ! egrep '^[[:space:]]*include[[:space:]]+\$\(srcdir\)/cwm4/root_makefile_bottom\.am' Makefile.am >/dev/null; then
+  echo "Missing 'include \$(srcdir)/cwm4/root_makefile_bottom.am' in Makefile.am."
+  generate_makefile_am="yes"
+fi
+
+if test "$generate_makefile_am" = "yes"; then
+  if test -e Makefile.am; then
+    echo "WARNING: Replacing your Makefile.am with a new one. Please edit it! The old Makefile.am was renamed to Makefile.am.bak."
+    mv Makefile.am Makefile.am.bak
+  fi
+  cp cwm4/templates/root_Makefile.am Makefile.am
 fi
 
 run "$ACLOCAL $ACLOCAL_LTFLAGS"

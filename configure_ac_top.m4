@@ -32,13 +32,6 @@ AC_PROG_LIBTOOL
 dnl Suppress warning from ar by supplying U flag.
 AC_SUBST(AR_FLAGS, [cruU])
 
-dnl Define ACLOCAL_CWFLAGS, so that rerunning aclocal from 'make' will work.
-ACLOCAL_CWFLAGS="-I cwm4/m4"
-if test -d $ac_confdir/libtoolm4; then
-ACLOCAL_CWFLAGS="$ACLOCAL_CWFLAGS -I `cd $ac_confdir; pwd`/libtoolm4"
-fi
-AC_SUBST(ACLOCAL_CWFLAGS)
-
 dnl This source code is C++11 and thread-safe.
 CXXFLAGS="$CXXFLAGS -pthread -std=c++11"
 LIBCWD_FLAGS="$CWD_R_FLAGS"
