@@ -317,7 +317,7 @@ if [ -f "$doc_path/Makefile.am" -a ! -f "$doc_path/doxygen.config.in" -a ! -f "$
                          "@DOXYGEN_DEBUG@" \\\
                          "DDCN(x)=" \\\
                          "DOXYGEN_STATIC=" \\\
-                         "UNUSED(x)="' \
+                         "UNUSED_ARG(x)="' \
       "$doc_path/doxygen.config.tmp" >> "$doc_path/doxygen.config.in"
   rm "$doc_path/doxygen.config.tmp"
 fi
