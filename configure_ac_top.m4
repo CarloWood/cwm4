@@ -16,6 +16,9 @@ AM_INIT_AUTOMAKE([foreign])
 dnl Include maintainer mode targets
 AM_MAINTAINER_MODE
 
+dnl Use libtool.
+m4_sinclude([lt_init.m4])
+
 dnl Check for compiler and preprocessor
 AC_PROG_CC_C99
 AC_PROG_CXX
@@ -27,7 +30,6 @@ CW_OPG_FLAGS(CW_COMPILER_WARNINGS)
 
 dnl Checks for other programs.
 AC_PROG_INSTALL
-AC_PROG_LIBTOOL
 
 dnl Suppress warning from ar by supplying U flag.
 AC_SUBST(AR_FLAGS, [cruU])

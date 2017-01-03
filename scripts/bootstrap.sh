@@ -54,8 +54,10 @@ fi
 RESULT=$(find . -type d \( -name '.git' -o -name 'cwm4' \) -prune -o -name Makefile.am -exec egrep -l '^[[:alnum:]_]*_LTLIBRARIES[[:space:]]*=' {} \;)
 if test -n "$RESULT"; then
   using_libtool="yes"
+  echo "LT_INIT" > lt_init.m4
 else
   using_libtool="no"
+  rm -f lt_init.m4
 fi
 
 # Determine if this project uses gettext.
