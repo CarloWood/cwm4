@@ -1,13 +1,13 @@
 dnl Detect unexpanded macros.
 m4_pattern_forbid(CW_)
 
+dnl Package name and version
+AC_INIT(CW_PACKAGE_NAME, CW_VERSION_MAJOR.CW_VERSION_MINOR.CW_VERSION_REVISION, CW_BUGREPORT)
+
 dnl Some macros that we use.
 m4_define([cwm4_relpath], [m4_if(m4_bregexp($1, [.*[^/]$]), -1, [$1], [$1/])])
 m4_define([cwm4_quote], [m4_if([$#], [0], [], [[$*]])])
 m4_define([cwm4_dquote], [[$@]])
-
-dnl Package name and version
-AC_INIT(CW_PACKAGE_NAME, CW_VERSION_MAJOR.CW_VERSION_MINOR.CW_VERSION_REVISION, CW_BUGREPORT)
 
 dnl Where to find the CW_* macros.
 AC_CONFIG_MACRO_DIR([cwm4/m4])

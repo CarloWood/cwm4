@@ -61,21 +61,21 @@ else
 fi
 
 # Determine if this project uses gettext.
-if m4 -P cwm4/changequote.m4 configure.ac | egrep '^[[:space:]]*AM_GNU_GETTEXT_VERSION' >/dev/null; then
+if m4 -P cwm4/sugar.m4 configure.ac | egrep '^[[:space:]]*AM_GNU_GETTEXT_VERSION' >/dev/null; then
   using_gettext="yes"
 else
   using_gettext="no"
 fi
 
 # Determine if this project uses doxygen.
-if m4 -P cwm4/changequote.m4 configure.ac | egrep '^[[:space:]]*CW_DOXYGEN' >/dev/null; then
+if m4 -P cwm4/sugar.m4 configure.ac | egrep '^[[:space:]]*CW_DOXYGEN' >/dev/null; then
   using_doxygen="yes"
 else
   using_doxygen="no"
 fi
 
 # Determine if this project uses gtk-doc.
-if m4 -P cwm4/changequote.m4 configure.ac | egrep '^[[:space:]]*GTK_DOC_CHECK' >/dev/null; then
+if m4 -P cwm4/sugar.m4 configure.ac | egrep '^[[:space:]]*GTK_DOC_CHECK' >/dev/null; then
   using_gtkdoc="yes"
 else
   using_gtkdoc="no"
@@ -211,7 +211,7 @@ if test "$using_gettext" = "yes"; then
 
   # Determine version of gettext.
   gettext_version=`$GETTEXT --version | head -n 1 | sed -e 's/[^0]*\(0\.[0-9][^ ]*\).*/\1/'`
-  confver=`m4 -P cwm4/changequote.m4 configure.ac | grep '^AM_GNU_GETTEXT_VERSION(' | sed -e 's/^AM_GNU_GETTEXT_VERSION(\([^()]*\))/\1/p' | sed -e 's/^\[\(.*\)\]$/\1/' | sed -e 1q`
+  confver=`m4 -P cwm4/sugar.m4 configure.ac | grep '^AM_GNU_GETTEXT_VERSION(' | sed -e 's/^AM_GNU_GETTEXT_VERSION(\([^()]*\))/\1/p' | sed -e 's/^\[\(.*\)\]$/\1/' | sed -e 1q`
 
   # Require version as specified in configure.ac.
   expr_confver=`echo "$confver" | sed -e 's%\.%.000%g' -e 's%^%000%' -e 's%0*\([0-9][0-9][0-9]\)%\1%g'`
