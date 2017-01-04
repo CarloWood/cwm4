@@ -84,7 +84,7 @@ if ! cwm4/scripts/update_submodules.sh --recursive; then
 fi
 
 # Generate submodules.m4.
-cwm4/scripts/generate_submodules_m4.sh > submodules.m4
+cwm4/scripts/generate_submodules_m4.sh
 
 # Continue to run bootstrap.sh.
 exit 2

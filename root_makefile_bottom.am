@@ -13,4 +13,5 @@ MAINTAINERCLEANFILES = \
 	$(srcdir)/mkinstalldirs \
 	$(srcdir)/ltmain.sh \
 	$(srcdir)/stamp-h.in \
-	$(srcdir)/ChangeLog
+	$(srcdir)/ChangeLog \
+        $(srcdir)/submodules.m4
