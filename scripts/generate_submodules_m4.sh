@@ -40,6 +40,12 @@ AC_SUBST([CW_SUBDIRS], "CW_SUBMODULE_SUBDIRS")
 AM_SUBST_NOTMAKE([CW_SUBDIRS])
 AC_CONFIG_FILES(CW_SUBMODULE_CONFIG_FILES)
 EOF
+  else
+    cat << EOF >> submodules.m4
+
+AC_SUBST([CW_SUBDIRS], [])
+AM_SUBST_NOTMAKE([CW_SUBDIRS])
+EOF
   fi
 elif test "$1" != "cwm4"; then
   # Script is called from git submodule foreach ...'
