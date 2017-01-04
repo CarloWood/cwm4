@@ -39,6 +39,9 @@ AC_PROG_INSTALL
 dnl Suppress warning from ar by supplying U flag.
 AC_SUBST(AR_FLAGS, [cruU])
 
+dnl Check if we are the real maintainer.
+AM_CONDITIONAL(REAL_MAINTAINER, test -z "$MAINTAINER_MODE_TRUE" -a -n "$TOPPROJECT")
+
 dnl This source code is C++11 and thread-safe.
 CXXFLAGS="$CXXFLAGS -pthread -std=c++11"
 LIBCWD_FLAGS="$CWD_R_FLAGS"

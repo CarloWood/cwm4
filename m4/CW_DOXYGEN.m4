@@ -46,4 +46,14 @@ fi
 AC_SUBST(HAVE_DOT)
 DOXYGEN_STRIP_FROM_PATH=$(cd $srcdir; pwd)
 AC_SUBST(DOXYGEN_STRIP_FROM_PATH)
+# Doxygen output directory.
+if test -z "$REAL_MAINTAINER_FALSE"; then
+  OUTPUT_DIRECTORY=""
+fi
+AC_SUBST(OUTPUT_DIRECTORY)
+AC_CONFIG_FILES(
+        [doc/Makefile]
+        [doc/doxygen.config]
+	[doc/html.header]
+	[doc/html.footer])
 ])
