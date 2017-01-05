@@ -96,7 +96,7 @@ if test "$(echo $GIT_COMMITTER_EMAIL | md5sum | cut -d \  -f 1)" = "$1"; then
         fi
         if test -n "$GITHUB_URL_PREFIX"; then
           URL=$(git config remote.$REMOTE.url)
-          PART=$(echo "$URL" | grep -o '"'"'[^/:]*/[^/]*$'"'"')
+          PART=$(echo "$URL" | grep -o '"'"'[^/:]*$'"'"')
           NEWURL="$GITHUB_URL_PREFIX$PART"
           if test "$URL" != "$NEWURL"; then
             echo "'"$prefix $red"'""Changing url of remote to $NEWURL!'"$reset"'"
