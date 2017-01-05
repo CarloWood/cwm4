@@ -69,7 +69,7 @@ else
   if test -n "$SUBMODULE_BRANCH"; then
     git checkout $SUBMODULE_BRANCH 2>&1 |\
       awk '
-        /^Your branch is up-to-date with/ { printf("'"$green%s$reset"'\n", $0); next }
+        /^(Your branch is up-to-date with|Already on)/ { printf("'"$green%s$reset"'\n", $0); next }
         /^Your branch is ahead of/ { printf("'"$orange%s$reset"'\n", $0); next }
         { printf("'"$red%s$reset"'\n", $0) }' || exit 1
       
