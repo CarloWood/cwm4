@@ -70,7 +70,7 @@ if test "$(echo $GIT_COMMITTER_EMAIL | md5sum | cut -d \  -f 1)" = "$1"; then
   fi
 
   # Check if 'branch' is set for all submodules with a configure.m4.
-  git submodule foreach 'echo "$(pwd)X$(git config -f $toplevel/.gitmodules submodule.$name.branch)X$name"; if test -f "$path/configure.m4" -a -z "$(git config -f .gitmodules submodule.$name.branch)"; then echo "No branch set for submodule $name!"; fi'
+  git submodule foreach 'if test -f "configure.m4" -a -z "$(git config -f $toplevel/.gitmodules submodule.$name.branch)"; then echo "No branch set for submodule $name!"; fi'
 
   # Is OUTPUT_DIRECTORY set?
   if m4 -P cwm4/sugar.m4 configure.ac | egrep '^[[:space:]]*CW_DOXYGEN' >/dev/null; then
