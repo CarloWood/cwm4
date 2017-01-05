@@ -50,6 +50,9 @@ AC_SUBST(DOXYGEN_STRIP_FROM_PATH)
 if test -z "$REAL_MAINTAINER_FALSE"; then
   OUTPUT_DIRECTORY="."
 fi
+if test -z "$OUTPUT_DIRECTORY"; then
+  AC_MSG_ERROR([The environment variable OUTPUT_DIRECTORY is empty?!], 1)
+fi
 AC_SUBST(OUTPUT_DIRECTORY)
 AC_CONFIG_FILES(
         [doc/Makefile]
