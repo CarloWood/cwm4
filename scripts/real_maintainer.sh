@@ -69,12 +69,6 @@ if test "$(echo $GIT_COMMITTER_EMAIL | md5sum | cut -d \  -f 1)" = "$1"; then
     fi
   fi
 
-  # Check if 'branch' is set for all submodules with a configure.m4.
-  git submodule foreach -q '
-      if test -f "configure.m4" -a -z "$(git config -f $toplevel/.gitmodules submodule.$name.branch)"; then
-        echo "'"$prefix $red"'""Setting submodule.$name.branch to master!'"$reset"'";
-        git config -f $toplevel/.gitmodules "submodule.$name.branch" master; fi'
-
   # Is OUTPUT_DIRECTORY set?
   if m4 -P cwm4/sugar.m4 configure.ac | egrep '^[[:space:]]*CW_DOXYGEN' >/dev/null; then
     if test -z "$OUTPUT_DIRECTORY"; then
@@ -84,6 +78,12 @@ if test "$(echo $GIT_COMMITTER_EMAIL | md5sum | cut -d \  -f 1)" = "$1"; then
   fi
 
   echo -e "\n$prefix Updating all submodules (recursively)..."
+
+  # Check if 'branch' is set for all submodules with a configure.m4.
+  git submodule foreach -q '
+      if test -f "configure.m4" -a -z "$(git config -f $toplevel/.gitmodules submodule.$name.branch)"; then
+        echo "'"$prefix $red"'""Setting submodule.$name.branch to master!'"$reset"'";
+        git config -f $toplevel/.gitmodules "submodule.$name.branch" master; fi'
 fi
 
 # Continue to run update_submodules.sh.
