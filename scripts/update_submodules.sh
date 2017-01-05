@@ -1,7 +1,5 @@
 #! /bin/bash
-# Written by Carlo Wood 2016
-
-echo "In \"$(pwd)\", entering $0 $*"
+# Written by Carlo Wood 2016, 2017
 
 # This script should be run from the root of the parent project.
 if ! test -e .git; then
@@ -61,9 +59,7 @@ else
   # Does the parent project want us to checkout a branch for this module?
   SUBMODULE_BRANCH=$(git config -f "$toplevel/.gitmodules" submodule.$name.branch)
   if test -n "$SUBMODULE_BRANCH"; then
-    echo "Calling 'git checkout $SUBMODULE_BRANCH' in $(pwd)"
     git checkout $SUBMODULE_BRANCH || exit 1
-    echo "Calling 'git pull --ff-only' in $(pwd)"
     git pull --ff-only || exit 1
     if test $(git rev-parse HEAD) != "$sha1"; then
       # Update the parent project to point to the head of this branch.
@@ -72,7 +68,7 @@ else
       git stash save --quiet Automatic stash of parent project by update_submodules.sh
       SN2=$(git stash list | grep '^stash' | wc --lines)
       git add $name
-      git commit -m "Update of submodule $name to current $SUBMODULE_BRANCH"
+      git commit -m "Updating submodule reference to current HEAD of branch $SUBMODULE_BRANCH of $name"
       if test $SN1 -ne $SN2; then
         git stash pop --quiet
       fi
@@ -80,22 +76,16 @@ else
     fi
   elif test $(git rev-parse HEAD) != "$sha1"; then
     # No submodule.$name.branch for this submodule. Just checkout the detached HEAD.
-    echo "Calling 'git checkout $sha1' in $(pwd)"
     git checkout $sha1
   fi
 fi
 
-echo "do_foreach=$do_foreach; opt_init=$opt_init; opt_recursive=$opt_recursive; name=$name; path=$path; sha1=$sha1; toplevel=$toplevel; pwd=$(pwd)"
-
 if test $do_foreach -eq 1; then
   if test -n "$opt_init"; then
-    echo "Calling 'git submodule init'"
     git submodule init
   fi
   # Make sure the submodules even exist.
-  echo "Calling 'git submodule update'"
   git submodule update
   # Call this script recursively for all submodules.
-  echo 'Calling '"'"'git submodule foreach '"$FULL_PATH --reentery $opt_init $opt_recursive"' $name $path $sha1 $toplevel'"'"
   git submodule foreach "$FULL_PATH --reentery $opt_init $opt_recursive"' $name $path $sha1 $toplevel'
 fi
