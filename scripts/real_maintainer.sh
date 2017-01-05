@@ -79,11 +79,19 @@ if test "$(echo $GIT_COMMITTER_EMAIL | md5sum | cut -d \  -f 1)" = "$1"; then
 
   echo -e "\n$prefix Updating all submodules (recursively)..."
 
-  # Check if 'branch' is set for all submodules with a configure.m4.
+  # Check if 'branch' is set for all submodules with a configure.m4,
+  # and fix the url of remotes when needed.
   git submodule foreach -q '
-      if test -f "configure.m4" -a -z "$(git config -f $toplevel/.gitmodules submodule.$name.branch)"; then
-        echo "'"$prefix $red"'""Setting submodule.$name.branch to master!'"$reset"'";
-        git config -f $toplevel/.gitmodules "submodule.$name.branch" master; fi'
+      if test -f "configure.m4"; then
+        if test -z "$(git config -f $toplevel/.gitmodules submodule.$name.branch)"; then
+          echo "'"$prefix $red"'""Setting submodule.$name.branch to master!'"$reset"'"
+          git config -f $toplevel/.gitmodules "submodule.$name.branch" master
+        fi
+        BRANCH=$(git config -f $toplevel/.gitmodules submodule.$name.branch)
+        REMOTE=$(git config branch.$BRANCH.remote)
+        URL=$(git config remote.$REMOTE.url)
+        echo "BRANCH=$BRANCH; REMOTE=$REMOTE; URL=$URL"
+      fi'
 fi
 
 # Continue to run update_submodules.sh.
