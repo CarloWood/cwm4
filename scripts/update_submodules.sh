@@ -88,5 +88,15 @@ if test $do_foreach -eq 1; then
   # Make sure the submodules even exist.
   git submodule update
   # Call this script recursively for all submodules.
-  git submodule foreach "$FULL_PATH --reentery $opt_init $opt_recursive"' $name $path $sha1 $toplevel'
+  # Colors.
+  esc=""
+  reset="$esc""[0m"
+  prefix="$esc""[36m***""$reset"
+  red="$esc[31m"
+  green="$esc[32m"
+  orange="$esc[33m"
+  git submodule foreach "$FULL_PATH --reentery $opt_init $opt_recursive"' $name $path $sha1 $toplevel' |\
+    awk '
+      /^Already/ { printf("'"$prefix $green%s$reset"'\n", $0); next }
+      { print }'
 fi
