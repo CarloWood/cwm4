@@ -84,13 +84,13 @@ if test "$(echo $GIT_COMMITTER_EMAIL | md5sum | cut -d \  -f 1)" = "$1"; then
   git submodule foreach -q '
       if test -f "configure.m4"; then
         if test -z "$(git config -f $toplevel/.gitmodules submodule.$name.branch)"; then
-          echo "$name: '"$red"'Setting submodule.$name.branch to master!'"$reset"'"
+          echo "  $name: '"$red"'Setting submodule.$name.branch to master!'"$reset"'"
           git config -f $toplevel/.gitmodules "submodule.$name.branch" master
         fi
         BRANCH=$(git config -f $toplevel/.gitmodules submodule.$name.branch)
         REMOTE=$(git config branch.$BRANCH.remote)
         if test -n "$GITHUB_REMOTE_NAME" -a x"$REMOTE" != x"$GITHUB_REMOTE_NAME"; then
-          echo "$name: '"$red"'Renaming remote from $REMOTE to $GITHUB_REMOTE_NAME!'"$reset"'"
+          echo "  $name: '"$red"'Renaming remote from $REMOTE to $GITHUB_REMOTE_NAME!'"$reset"'"
           git remote rename $REMOTE $GITHUB_REMOTE_NAME
           REMOTE=$GITHUB_REMOTE_NAME
         fi
@@ -99,7 +99,7 @@ if test "$(echo $GIT_COMMITTER_EMAIL | md5sum | cut -d \  -f 1)" = "$1"; then
           PART=$(echo "$URL" | grep -o '"'"'[^/:]*$'"'"')
           NEWURL="$GITHUB_URL_PREFIX$PART"
           if test "$URL" != "$NEWURL"; then
-            echo "$name: '"$red"'Changing url of remote to $NEWURL!'"$reset"'"
+            echo "  $name: '"$red"'Changing url of remote to $NEWURL!'"$reset"'"
             git remote set-url $REMOTE "$NEWURL"
           fi
         fi
