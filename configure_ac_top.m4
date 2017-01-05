@@ -40,7 +40,9 @@ dnl Suppress warning from ar by supplying U flag.
 AC_SUBST(AR_FLAGS, [cruU])
 
 dnl Check if we are the real maintainer.
-AM_CONDITIONAL(REAL_MAINTAINER, test -z "$MAINTAINER_MODE_TRUE" -a "$(echo "$GIT_COMMITTER_EMAIL" | md5sum | cut -d \  -f 1)" = "$(egrep -o '[0-9a-f]{32}' autogen.sh)")
+AM_CONDITIONAL(REAL_MAINTAINER, test -z "$MAINTAINER_MODE_TRUE" -a dnl
+  "$(echo "$GIT_COMMITTER_EMAIL" | md5sum | cut -d \  -f 1)" = dnl
+  "$(sed -n -e 's/.*MAINTAINER_HASH=//p' "$REPOBASE/autogen.sh")")
 
 dnl This source code is C++11 and thread-safe.
 CXXFLAGS="$CXXFLAGS -pthread -std=c++11"
