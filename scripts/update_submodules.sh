@@ -46,6 +46,14 @@ else
   FULL_PATH="$(realpath $0)"
 fi
 
+# Colors.
+esc=""
+reset="$esc""[0m"
+prefix="$esc""[36m***""$reset"
+red="$esc[31m"
+green="$esc[32m"
+orange="$esc[33m"
+
 if test "$initial_call" -eq 1; then
   do_foreach=1
 else
@@ -59,7 +67,11 @@ else
   # Does the parent project want us to checkout a branch for this module?
   SUBMODULE_BRANCH=$(git config -f "$toplevel/.gitmodules" submodule.$name.branch)
   if test -n "$SUBMODULE_BRANCH"; then
-    git checkout $SUBMODULE_BRANCH || exit 1
+    git checkout $SUBMODULE_BRANCH || exit 1 |\
+      awk '
+        /^./ { printf('"$green%s$reset"'\n); next }
+        { print }'
+      
     git pull --ff-only || exit 1
     if test $(git rev-parse HEAD) != "$sha1"; then
       # Update the parent project to point to the head of this branch.
@@ -88,15 +100,8 @@ if test $do_foreach -eq 1; then
   # Make sure the submodules even exist.
   git submodule update
   # Call this script recursively for all submodules.
-  # Colors.
-  esc=""
-  reset="$esc""[0m"
-  prefix="$esc""[36m***""$reset"
-  red="$esc[31m"
-  green="$esc[32m"
-  orange="$esc[33m"
   git submodule foreach "$FULL_PATH --reentery $opt_init $opt_recursive"' $name $path $sha1 $toplevel' |\
     awk '
-      /^Already/ { printf("'"$prefix $green%s$reset"'\n", $0); next }
+      /^Already/ { printf("'"$green%s$reset"'\n", $0); next }
       { print }'
 fi
