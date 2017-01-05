@@ -78,6 +78,7 @@ else
     # No submodule.$name.branch for this submodule. Just checkout the detached HEAD.
     git checkout $sha1
   fi
+  echo
 fi
 
 if test $do_foreach -eq 1; then
