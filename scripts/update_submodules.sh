@@ -69,7 +69,7 @@ else
   if test -n "$SUBMODULE_BRANCH"; then
     git checkout $SUBMODULE_BRANCH |\
       awk '
-        /^./ { printf("'"$green%s$reset"'"\n); next }
+        /^./ { printf("'"$green%s$reset"'\n"); next }
         { print }' || exit 1
       
     git pull --ff-only || exit 1
