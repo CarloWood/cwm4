@@ -89,9 +89,20 @@ if test "$(echo $GIT_COMMITTER_EMAIL | md5sum | cut -d \  -f 1)" = "$1"; then
         fi
         BRANCH=$(git config -f $toplevel/.gitmodules submodule.$name.branch)
         REMOTE=$(git config branch.$BRANCH.remote)
-        URL=$(git config remote.$REMOTE.url)
-        PART=$(echo "$URL" | grep -o '"'"'[^/]*/[^/]*$'"'"')
-        echo "BRANCH=$BRANCH; REMOTE=$REMOTE; URL=$URL; PART=$PART"
+        if test -n "$GITHUB_REMOTE_NAME" -a x"$REMOTE" != x"$GITHUB_REMOTE_NAME"; then
+          echo "'"$prefix $red"'""Renaming remote from $REMOTE to $GITHUB_REMOTE_NAME!'"$reset"'"
+          git remote rename $REMOTE $GITHUB_REMOTE_NAME
+          REMOTE=$GITHUB_REMOTE_NAME
+        fi
+        if test -n "$GITHUB_URL_PREFIX"; then
+          URL=$(git config remote.$REMOTE.url)
+          PART=$(echo "$URL" | grep -o '"'"'[^/:]*/[^/]*$'"'"')
+          NEWURL="$GITHUB_URL_PREFIX$PART"
+          if test "$URL" != "$NEWURL"; then
+            echo "'"$prefix $red"'""Changing url of remote to $NEWURL!'"$reset"'"
+            git remote set-url $REMOTE "$NEWURL"
+          fi
+        fi
       fi'
 fi
 
