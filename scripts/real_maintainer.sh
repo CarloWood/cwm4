@@ -90,7 +90,8 @@ if test "$(echo $GIT_COMMITTER_EMAIL | md5sum | cut -d \  -f 1)" = "$1"; then
         BRANCH=$(git config -f $toplevel/.gitmodules submodule.$name.branch)
         REMOTE=$(git config branch.$BRANCH.remote)
         URL=$(git config remote.$REMOTE.url)
-        echo "BRANCH=$BRANCH; REMOTE=$REMOTE; URL=$URL"
+        PART=$(echo "$URL" | grep -o '"'"'[^/]*/[^/]*$\'"'"')
+        echo "BRANCH=$BRANCH; REMOTE=$REMOTE; URL=$URL; PART=$PART"
       fi'
 fi
 
