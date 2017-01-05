@@ -63,8 +63,8 @@ if test "$(echo $GIT_COMMITTER_EMAIL | md5sum | cut -d \  -f 1)" = "$1"; then
   CWM4HASH=$(git ls-tree HEAD | grep '[[:space:]]cwm4$' | awk '{ print $3 }')
   if test "$CWM4HASH" != "$CWM4COMMIT"; then
     if git diff-index --quiet --cached HEAD; then
-      echo -e "\n$prefix $red""Updating cwm4 to its current branch $CWM4_BRANCH!$reset"
-      git add cwm4 && git commit -m 'Automatic commit of update of submodule cwm4'
+      echo -e "\n$prefix $red""Updating submodule reference to current HEAD of branch $CWM4_BRANCH of cwm4!$reset"
+      git add cwm4 && git commit -m "Automatic commit: update of submodule reference cwm4 to current HEAD of branch $CWM4_BRANCH"
     elif test x"$(git rev-parse --abbrev-ref HEAD)" != x"$CWM4_BRANCH"; then
       echo -e "\n$prefix $red""Please checkout $CWM4_BRANCH in cwm4 and add it to the current project!$reset"
     fi
