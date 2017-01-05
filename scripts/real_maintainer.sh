@@ -42,7 +42,6 @@ if test "$(echo $GIT_COMMITTER_EMAIL | md5sum | cut -d \  -f 1)" = "$1"; then
     exit 1
   fi
   PROJECT_URL="$(git config remote.$MASTER_REMOTE.url | sed -e 's%.*[^A-Za-z]\([^/ ]*/[^/ ]*$\)%\1%')"
-  echo "  $prefix PROJECT_URL = \"$PROJECT_URL\""
   NEW_MD5=$(sed -e "s%@PROJECT_URL@%$PROJECT_URL%" cwm4/templates/autogen.sh | cat - cwm4/scripts/real_maintainer.sh | md5sum)
   OLD_MD5=$(cat autogen.sh cwm4/scripts/real_maintainer.sh | md5sum)
   if test "$OLD_MD5" = "$NEW_MD5"; then
@@ -71,7 +70,7 @@ if test "$(echo $GIT_COMMITTER_EMAIL | md5sum | cut -d \  -f 1)" = "$1"; then
   fi
 
   # Check if 'branch' is set for all submodules with a configure.m4.
-  git submodule foreach 'if test -f "$path/configure.m4" -a -z "$(git config -f .gitmodules submodule.$name.branch)"; then echo "No branch set for submodule $name!"; fi'
+  git submodule foreach 'echo "path=$path"; if test -f "$path/configure.m4" -a -z "$(git config -f .gitmodules submodule.$name.branch)"; then echo "No branch set for submodule $name!"; fi'
 
   # Is OUTPUT_DIRECTORY set?
   if m4 -P cwm4/sugar.m4 configure.ac | egrep '^[[:space:]]*CW_DOXYGEN' >/dev/null; then
