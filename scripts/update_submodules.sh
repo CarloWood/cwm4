@@ -71,6 +71,7 @@ else
       awk '
         /^(Your branch is up-to-date with|Already on)/ { printf("'"$green%s$reset"'\n", $0); next }
         /^Your branch is ahead of/ { printf("'"$orange%s$reset"'\n", $0); next }
+        /use "git push" to publish your local commits/ { next }
         { printf("'"$red%s$reset"'\n", $0) }' || exit 1
       
     git pull --ff-only || exit 1
