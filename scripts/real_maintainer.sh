@@ -6,8 +6,8 @@ if test "$(echo $GIT_COMMITTER_EMAIL | md5sum | cut -d \  -f 1)" = "$1"; then
   esc=""
   reset="$esc""[0m"
   prefix="$esc""[36m***""$reset"
-  ok="$esc[32m"
   red="$esc[31m"
+  green="$esc[32m"
   orange="$esc[33m"
 
   # Greetings.
@@ -24,23 +24,10 @@ if test "$(echo $GIT_COMMITTER_EMAIL | md5sum | cut -d \  -f 1)" = "$1"; then
   # Is cwm4 on CWM4_BRANCH already?
   pushd cwm4 >/dev/null || exit 1
   if test x"$(git rev-parse --abbrev-ref HEAD)" != x"$CWM4_BRANCH"; then
-    echo "$prefix $red""cwm4 is not up-to-date$reset, will rerun this script after updating."
+    echo "$prefix $red""cwm4 is not up-to-date$reset; checking out branch $CWM4_BRANCH."
     git checkout $CWM4_BRANCH && git pull --ff-only || exit 1
-    # Run the (possibly updated) script again...
-    popd >/dev/null
-    echo "Restarting $0 script..."
-    exec "$0" "$1"
-    exit $?
   fi
   popd >/dev/null
-
-  # Is OUTPUT_DIRECTORY set?
-  if m4 -P cwm4/sugar.m4 configure.ac | egrep '^[[:space:]]*CW_DOXYGEN' >/dev/null; then
-    if test -z "$OUTPUT_DIRECTORY"; then
-      echo "Error: the environment variable OUTPUT_DIRECTORY is not set."
-      exit 1
-    fi
-  fi
 
   echo "$prefix Updating the projects autogen.sh..."
   # Get the trailing 'AccountName/projectname.git' of the upstream fetch url of branch master:
@@ -49,22 +36,22 @@ if test "$(echo $GIT_COMMITTER_EMAIL | md5sum | cut -d \  -f 1)" = "$1"; then
     REPO_NAME=$(basename $(pwd))
     echo "Fatal error: branch master does not have a remote set."
     echo "Make sure you created the repository $REPO_NAME on github and issued the commands"
-    echo "under '…or push an existing repository from the command line'"
+    echo "under '...or push an existing repository from the command line'"
     echo "That is: create the remote REMOTE (ie, origin) and then issue the command:"
     echo "git push -u REMOTE master"
     exit 1
   fi
   PROJECT_URL="$(git config remote.$MASTER_REMOTE.url | sed -e 's%.*[^A-Za-z]\([^/ ]*/[^/ ]*$\)%\1%')"
   echo "  $prefix PROJECT_URL = \"$PROJECT_URL\""
-  NEW_MD5=$(sed -e "s%@PROJECT_URL@%$PROJECT_URL%" cwm4/templates/autogen.sh | md5sum)
-  OLD_MD5=$(cat autogen.sh | md5sum)
+  NEW_MD5=$(sed -e "s%@PROJECT_URL@%$PROJECT_URL%" cwm4/templates/autogen.sh | cat - cwm4/scripts/real_maintainer.sh | md5sum)
+  OLD_MD5=$(cat autogen.sh cwm4/scripts/real_maintainer.sh | md5sum)
   if test "$OLD_MD5" = "$NEW_MD5"; then
-    echo "  $prefix $ok""Already up-to-date.""$reset"
+    echo "  $prefix $green""Already up-to-date.""$reset"
   else
     sed -e "s%@PROJECT_URL@%$PROJECT_URL%" cwm4/templates/autogen.sh > autogen.sh
-    echo "  $prefix $red""autogen.sh changed!""$reset"" Running the new script..."
+    echo "  $prefix $red""autogen.sh and/or real_maintainer.sh changed!""$reset"" Running the new script..."
     exec ./autogen.sh
-    exit 0
+    exit $?
   fi
   cd cwm4 || exit 1
   if ! git diff-index --quiet HEAD --; then
@@ -82,17 +69,20 @@ if test "$(echo $GIT_COMMITTER_EMAIL | md5sum | cut -d \  -f 1)" = "$1"; then
       echo -e "\n$prefix $red""Please checkout $CWM4_BRANCH in cwm4 and add it to the current project!$reset"
     fi
   fi
+
+  # Check if 'branch' is set for all submodules with a configure.m4.
+  git submodule foreach 'if test -f "$path/configure.m4" -a -z "$(git config -f .gitmodules submodule.$name.branch)"; then echo "No branch set for submodule $name!"; fi'
+
+  # Is OUTPUT_DIRECTORY set?
+  if m4 -P cwm4/sugar.m4 configure.ac | egrep '^[[:space:]]*CW_DOXYGEN' >/dev/null; then
+    if test -z "$OUTPUT_DIRECTORY"; then
+      echo "Error: the environment variable OUTPUT_DIRECTORY is not set."
+      exit 1
+    fi
+  fi
+
   echo -e "\n$prefix Updating all submodules (recursively)..."
 fi
 
-# Update all submodules.
-if ! cwm4/scripts/update_submodules.sh --recursive; then
-  echo "autogen.sh: Failed to update one or more submodules. Does it have uncommitted changes?"
-  exit 1
-fi
-
-# Generate submodules.m4.
-cwm4/scripts/generate_submodules_m4.sh
-
-# Continue to run bootstrap.sh.
+# Continue to run update_submodules.sh.
 exit 2
