@@ -67,10 +67,10 @@ else
   # Does the parent project want us to checkout a branch for this module?
   SUBMODULE_BRANCH=$(git config -f "$toplevel/.gitmodules" submodule.$name.branch)
   if test -n "$SUBMODULE_BRANCH"; then
-    git checkout $SUBMODULE_BRANCH || exit 1 |\
+    git checkout $SUBMODULE_BRANCH |\
       awk '
         /^./ { printf('"$green%s$reset"'\n); next }
-        { print }'
+        { print }' || exit 1
       
     git pull --ff-only || exit 1
     if test $(git rev-parse HEAD) != "$sha1"; then
