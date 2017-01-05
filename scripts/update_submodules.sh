@@ -70,7 +70,7 @@ else
     git checkout $SUBMODULE_BRANCH |\
       awk '
         /^Your branch is up-to-date with/ { printf("'"$green%s$reset"'\n", $0); next }
-        { print }' || exit 1
+        { printf("'"$red%s$reset"'\n", $0) }' || exit 1
       
     git pull --ff-only || exit 1
     if test $(git rev-parse HEAD) != "$sha1"; then
