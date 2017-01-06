@@ -2,7 +2,7 @@
 # Before inclusion, the macro cwm4_rel_top_srcdir is set to the path relative
 # to $top_scrdir containing the submodule directory, and cwm4_submodule_path
 # is set to the submodule `path'. Finally, cwm4_submodule_relpath is defined
-# as [cwm4_rel_top_srcdir/]cwm4_submodule_path/.
+# as [cwm4_rel_top_srcdir/]cwm4_submodule_path/ (see submodules.m4).
 #
 # This file should append cwm4_submodule_path to CW_SUBMODULE_SUBDIRS
 # iff cwm4_rel_top_srcdir is empty (this is done in the first line below).
