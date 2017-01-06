@@ -51,6 +51,14 @@ git add autogen.sh
 
 And commit your changes.
 
+To add support for another submodule, add a file called 'configure.m4'
+to the root of that submodule -- a template for that file can be
+found in [cwm4/templates/configure.m4](https://github.com/CarloWood/cwm4/blob/master/templates/configure.m4).
+A more complex example can be fun in the repository
+[ai-xml-testsuite](https://github.com/CarloWood/ai-xml-testsuite) which
+uses [this](https://github.com/CarloWood/ai-xml/blob/master/configure.m4) as configure.m4
+file of the submodule [ai-xml](https://github.com/CarloWood/ai-xml).
+
 ## Cloning this project.
 
 If you make your own clone of cwm4, make sure to set the
