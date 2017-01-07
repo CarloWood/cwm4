@@ -16,6 +16,6 @@ while test -n "$MISSING_SUBMODULES"; do
   done
   for dir in $MISSING_SUBMODULES; do
     echo "  Adding submodule dependency $dir"
-    git submodule URL $dir
+    #git submodule URL $dir
   done
 done
