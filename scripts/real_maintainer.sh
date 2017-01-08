@@ -82,7 +82,7 @@ if test "$(echo $GIT_COMMITTER_EMAIL | md5sum | cut -d \  -f 1)" = "$1"; then
   # Check if 'branch' is set for all submodules with a configure.m4,
   # and fix the url of remotes when needed.
   git submodule foreach -q '
-      if test -f "configure.m4"; then
+      if test -f "configure.m4" -o "$name" = "cwm4"; then
         if test -z "$(git config -f $toplevel/.gitmodules submodule.$name.branch)"; then
           echo "  $name: '"$red"'Setting submodule.$name.branch to master!'"$reset"'"
           git config -f $toplevel/.gitmodules "submodule.$name.branch" master
