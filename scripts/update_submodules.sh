@@ -81,7 +81,7 @@ else
       SN1=$(git stash list | grep '^stash' | wc --lines)
       git stash save --quiet Automatic stash of parent project by update_submodules.sh
       SN2=$(git stash list | grep '^stash' | wc --lines)
-      git add $name
+      git add $path
       git commit -m "Updating submodule reference to current HEAD of branch $SUBMODULE_BRANCH of $name"
       if test $SN1 -ne $SN2; then
         git stash pop --quiet
