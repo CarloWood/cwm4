@@ -242,7 +242,7 @@ if test -d .git; then
     echo "***        git config push.recurseSubmodules check"
     echo "***        to prevent pushing a project that references unpushed submodules, or"
     echo "***        git config push.recurseSubmodules on-demand"
-    echo "***        to automatically push submodules when pusing a reference to them."
+    echo "***        to automatically push submodules when pushing a reference to them."
     echo "***        See http://stackoverflow.com/a/10878273/1487069 and"
     echo "***        http://stackoverflow.com/a/34615803/1487069"
     exit 1
