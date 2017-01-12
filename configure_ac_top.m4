@@ -20,7 +20,6 @@ AM_INIT_AUTOMAKE([foreign])
 
 dnl Include maintainer mode targets
 AM_MAINTAINER_MODE
-AC_PROG_LIBTOOL
 
 dnl Use libtool (lt_init.m4 will only exist when the project is actually using libtool).
 m4_sinclude([lt_init.m4])
