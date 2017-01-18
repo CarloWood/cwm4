@@ -14,4 +14,6 @@ MAINTAINERCLEANFILES = \
 	$(srcdir)/ltmain.sh \
 	$(srcdir)/stamp-h.in \
 	$(srcdir)/ChangeLog \
-        $(srcdir)/submodules.m4
+        $(srcdir)/submodules.m4 \
+        $(srcdir)/lt_init.m4 \
+        $(srdcir)/min_automake_version.m4

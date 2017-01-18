@@ -4,6 +4,12 @@ m4_pattern_forbid(CW_)
 dnl Package name and version
 AC_INIT(CW_PACKAGE_NAME, CW_VERSION_MAJOR.CW_VERSION_MINOR.CW_VERSION_REVISION, CW_BUGREPORT)
 
+dnl Automake options.
+AM_INIT_AUTOMAKE(m4_sinclude(min_automake_version.m4)[foreign])
+
+dnl Minimum autoconf version to use.
+AC_PREREQ(m4_sinclude(min_autoconf_version.m4))
+
 dnl Some macros that we use.
 m4_define([cwm4_relpath], [m4_if(m4_bregexp($1, [.*[^/]$]), -1, [$1], [$1/])])
 m4_define([cwm4_quote], [m4_if([$#], [0], [], [[$*]])])
@@ -14,9 +20,6 @@ AC_CONFIG_MACRO_DIR([cwm4/m4])
 
 dnl Put resulting configuration defines in this header file.
 AC_CONFIG_HEADERS([config.h])
-
-dnl Automake options.
-AM_INIT_AUTOMAKE([foreign])
 
 dnl Include maintainer mode targets
 AM_MAINTAINER_MODE
@@ -41,6 +44,7 @@ AC_SUBST(AR_FLAGS, [cruU])
 
 dnl Check if we are the real maintainer.
 AM_CONDITIONAL(REAL_MAINTAINER, test -z "$MAINTAINER_MODE_TRUE" -a dnl
+  -n "$REPOBASE" -a dnl
   "$(echo "$GIT_COMMITTER_EMAIL" | md5sum | cut -d \  -f 1)" = dnl
   "$(sed -n -e 's/.*MAINTAINER_HASH=//p' "$REPOBASE/autogen.sh")")
 

@@ -1,1 +1,2 @@
+ACLOCAL_AMFLAGS = -I cwm4/m4
 EXTRA_DIST = submodules.m4
