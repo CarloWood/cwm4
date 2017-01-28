@@ -17,7 +17,7 @@ m4_define([cwm4_quote], [m4_if([$#], [0], [], [[$*]])])
 m4_define([cwm4_dquote], [[$@]])
 
 dnl Where libtoolize should put it's macro files.
-AC_CONFIG_MACRO_DIR([m4])
+AC_CONFIG_MACRO_DIR([m4/aclocal])
 
 dnl Put resulting configuration defines in this header file.
 AC_CONFIG_HEADERS([config.h])

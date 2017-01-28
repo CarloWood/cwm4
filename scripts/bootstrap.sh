@@ -213,43 +213,6 @@ if test "$using_libtool" = "yes"; then
     exit 1
   fi
 
-  # Make effort to get the right libtool.m4 file.
-  aclocal_ac_dir=`$ACLOCAL --print-ac-dir`
-  aclocal_base=`basename $ACLOCAL`
-  stripped_aclocal_ac_dir=`echo $aclocal_ac_dir | sed -e 's/'$aclocal_base'$/aclocal/'`
-  aclocal_api=`echo $automake_version | sed -e 's/\([0-9]*\.[0-9]*\).*/\1/'`
-  libtool_base=`basename $LIBTOOL`
-  libtool_api=`echo $libtool_version | sed -e 's/\([0-9]*\.[0-9]*\).*/\1/'`
-  need_copy="no"
-  if test -f $aclocal_ac_dir-$aclocal_api/$libtool_base.m4; then
-    libtool_m4=$aclocal_ac_dir-$aclocal_api/$libtool_base.m4
-  elif test -f $aclocal_ac_dir-$aclocal_api/libtool-$libtool_api.m4; then
-    libtool_m4=$aclocal_ac_dir-$aclocal_api/libtool-$libtool_api.m4
-  elif test -f $aclocal_ac_dir-$aclocal_api/libtool.m4; then
-    libtool_m4=$aclocal_ac_dir-$aclocal_api/libtool.m4
-  elif test -f $aclocal_ac_dir/$libtool_base.m4; then
-    libtool_m4=$aclocal_ac_dir/$libtool_base.m4
-  elif test -f $aclocal_ac_dir/libtool-$libtool_api.m4; then
-    libtool_m4=$aclocal_ac_dir/libtool-$libtool_api.m4
-  elif test -f $aclocal_ac_dir/libtool.m4; then
-    libtool_m4=$aclocal_ac_dir/libtool.m4
-  # This is used on FreeBSD:
-  elif test -f $stripped_aclocal_ac_dir/$libtool_base.m4; then
-    libtool_m4=$stripped_aclocal_ac_dir/$libtool_base.m4
-    need_copy="yes"
-  elif test -f $stripped_aclocal_ac_dir/libtool-$libtool_api.m4; then
-    libtool_m4=$stripped_aclocal_ac_dir/libtool-$libtool_api.m4
-    need_copy="yes"
-  elif test -f $stripped_aclocal_ac_dir/libtool.m4; then
-    libtool_m4=$stripped_aclocal_ac_dir/libtool.m4
-    need_copy="yes"
-  fi
-  if test "$need_copy" = "yes"; then
-    test -d libtoolm4 && rm -f libtoolm4/libtool*
-    mkdir -p libtoolm4 && cp $libtool_m4 libtoolm4
-    ACLOCAL_LTFLAGS=${ACLOCAL_LTFLAGS:--I libtoolm4}
-  fi
-
 fi # using_libtool
 
 if test "$using_gettext" = "yes"; then
@@ -444,7 +407,7 @@ fi
 if test -n "$ACLOCAL_PATH"; then
   echo "ACLOCAL_PATH is set ($ACLOCAL_PATH)!"
 fi
-run "$ACLOCAL -I cwm4/m4 $ACLOCAL_LTFLAGS"
+run "$ACLOCAL -I cwm4/m4 -I m4/aclocal"
 if test "$using_gtkdoc" = "yes"; then
   run "$GTKDOCIZE"
 fi
