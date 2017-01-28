@@ -137,15 +137,8 @@ if test ! -f ./autogen_versions; then
     echo -n ", required_libtool_version and libtoolize_arguments"
   fi
   echo "."
-  if test -n "$libtool_version"; then
-    echo "***         For example, the file 'autogen_versions' could contain the following two lines:"
-  else
-    echo "***         For example, the file 'autogen_versions' could contain the following line:"
-  fi
-  echo "***         required_automake_version=\"$automake_version\""
-  if test -n "$libtool_version"; then
-    echo "***         required_libtool_version=\"$libtool_version\""
-  fi
+  echo "***         For example, the file 'autogen_versions' could contain the following lines:"
+  cat cwm4/templates/autogen_versions
   exit 1
 fi
 
