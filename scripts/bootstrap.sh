@@ -260,10 +260,15 @@ fi # using_gettext
 
 version_compare $aclocal_version 1.10
 if [ $? -eq 2 ]; then
+  echo "Adding workaround for bug in aclocal $aclocal_version"
   # A bug in aclocal version 1.9 causes m4_include's to fail.
   # Add a workaround using symbolic links.
-  echo "WE GET HERE"
-  exit 1
+  SUBDIRS="$($AUTOM4TE -l M4sugar cwm4/submodules.m4)"
+  cd m4
+  for module in $SUBDIRS; do
+    ln -sf ../$module
+  done
+  cd ..
 fi
 
 # Do some git sanity checks.

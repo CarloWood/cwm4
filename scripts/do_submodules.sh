@@ -1,6 +1,13 @@
 #! /bin/sh
 
-# Determine version of aclocal.
+# Make sure we use the same environment as bootstrap.sh.
+AUTOMAKE=${AUTOMAKE:-automake}
+ACLOCAL=${ACLOCAL:-`echo $AUTOMAKE | sed -e 's/automake/aclocal/'`}
+AUTOCONF=${AUTOCONF:-autoconf}
+AUTOHEADER=${AUTOHEADER:-`echo $AUTOCONF | sed -e 's/autoconf/autoheader/'`}
+AUTOM4TE=${AUTOM4TE:-`echo $AUTOCONF | sed -e 's/autoconf/autom4te/'`}
+
+export AUTOMAKE ACLOCAL AUTOCONF AUTOHEADER AUTOM4TE
 
 MISSING_SUBMODULES="maybe"
 while test -n "$MISSING_SUBMODULES"; do
@@ -10,7 +17,7 @@ while test -n "$MISSING_SUBMODULES"; do
 
   # Check dependencies.
   MISSING_SUBMODULES=
-  SUBDIRS="$(autom4te -l M4sugar cwm4/submodules.m4)"
+  SUBDIRS="$($AUTOM4TE -l M4sugar cwm4/submodules.m4)"
   for dir in $SUBDIRS; do
     if ! test -f "$dir/configure.m4"; then
       MISSING_SUBMODULES="$MISSING_SUBMODULES $dir"
