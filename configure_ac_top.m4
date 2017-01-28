@@ -34,7 +34,7 @@ AC_PROG_CXX
 AC_PROG_CXXCPP
 
 dnl Add --enable-debug (DEBUG, DOXYGEN_DEBUG), --enable-libcwd (CWDEBUG, DOXYGEN_CWDEBUG),
-dnl --enable-optimise and --enable-profile options. Update USE_LIBCWD, CWD_LIBS and CXXFLAGS accordingly.
+dnl --enable-optimize and --enable-profile options. Update USE_LIBCWD, CWD_LIBS and CXXFLAGS accordingly.
 CW_OPG_FLAGS(CW_COMPILER_WARNINGS)
 
 dnl Checks for other programs.
