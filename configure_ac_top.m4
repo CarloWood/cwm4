@@ -6,10 +6,10 @@ dnl Package name and version
 AC_INIT(CW_PACKAGE_NAME, CW_VERSION_MAJOR.CW_VERSION_MINOR.CW_VERSION_REVISION, CW_BUGREPORT)
 
 dnl Automake options.
-AM_INIT_AUTOMAKE(m4_sinclude(m4/min_automake_version.m4)[foreign])
+AM_INIT_AUTOMAKE(m4_include(m4/min_automake_version.m4)[foreign])
 
 dnl Minimum autoconf version to use.
-AC_PREREQ(m4_sinclude(m4/min_autoconf_version.m4))
+AC_PREREQ(m4_include(m4/min_autoconf_version.m4))
 
 dnl Some macros that we use.
 m4_define([cwm4_relpath], [m4_if(m4_bregexp($1, [.*[^/]$]), -1, [$1], [$1/])])

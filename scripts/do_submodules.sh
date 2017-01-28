@@ -1,5 +1,7 @@
 #! /bin/sh
 
+# Determine version of aclocal.
+
 MISSING_SUBMODULES="maybe"
 while test -n "$MISSING_SUBMODULES"; do
 
