@@ -137,7 +137,7 @@ if test ! -f ./autogen_versions; then
     echo -n ", required_libtool_version and libtoolize_arguments"
   fi
   echo "."
-  echo "***         For example, the file 'autogen_versions' could contain the following lines:"
+  echo "***        For example, the file 'autogen_versions' could contain the following `cat cwm4/templates/autogen_versions | wc --lines` lines:"
   cat cwm4/templates/autogen_versions
   exit 1
 fi
