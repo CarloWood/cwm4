@@ -154,6 +154,8 @@ mkdir -p m4/aclocal
 if test "$using_libtool" = "yes"; then
   if test x"$required_libtool_version" = x; then
     echo -e "\n*** ERROR: The file autogen_versions should define 'required_libtool_version'."
+    source cwm4/templates/autogen_versions
+    echo "The minimum required version for libtool (for cwm4) is currently $required_libtool_version. See cwm4/templates/autogen_versions."
     exit 1
   fi
   echo "LT_INIT" > m4/lt_init.m4
@@ -163,10 +165,14 @@ else
 fi
 if test x"$required_automake_version" = x; then
   echo -e "\n*** ERROR: The file autogen_versions should define 'required_automake_version'."
+  source cwm4/templates/autogen_versions
+  echo "The minimum required version for automake (for cwm4) is currently $required_automake_version. See cwm4/templates/autogen_versions."
   exit 1
 fi
 if test x"$required_autoconf_version" = x; then
   echo -e "\n*** ERROR: The file autogen_versions should define 'required_autoconf_version'."
+  source cwm4/templates/autogen_versions
+  echo "The minimum required version for autoconf (for cwm4) is currently $required_autoconf_version. See cwm4/templates/autogen_versions."
   exit 1
 fi
 
