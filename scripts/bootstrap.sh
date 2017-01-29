@@ -144,10 +144,9 @@ fi
 
 source autogen_versions
 
-# autogen.sh is supposed to recover from EVERYTHING... So, simulate a make maintainer-clean.
-exit 3
-rm -f aclocal.m4 config.h.in configure compile config.guess config.sub depcomp install-sh ltmain.sh missing
-rm -rf autom4te.cache m4
+# autogen.sh is supposed to recover from everything, so remove old files that might get in the way.
+rm -f aclocal.m4 compile config.guess config.sub depcomp install-sh ltmain.sh missing
+rm -rf autom4te.cache m4/aclocal
 
 # ACLOCAL needs this to exist (and we need m4 to exist).
 mkdir -p m4/aclocal
