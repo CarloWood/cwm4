@@ -144,7 +144,8 @@ fi
 
 source autogen_versions
 
-mkdir -p m4
+# ACLOCAL needs this to exist (and we need m4 to exist).
+mkdir -p m4/aclocal
 
 if test "$using_libtool" = "yes"; then
   if test x"$required_libtool_version" = x; then
