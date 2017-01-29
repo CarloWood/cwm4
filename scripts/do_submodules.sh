@@ -18,7 +18,8 @@ while test -n "$MISSING_SUBMODULES"; do
   # Check dependencies.
   MISSING_SUBMODULES=
   SUBDIRS="$($AUTOM4TE -l M4sugar cwm4/submodules.m4)"
-  for dir in $SUBDIRS; do
+  # Returned "CW_SUBMODULE_SUBDIRS" when there are no submodules.
+  for dir in ${SUBDIRS#CW_SUBMODULE_SUBDIRS}; do
     if ! test -f "$dir/configure.m4"; then
       MISSING_SUBMODULES="$MISSING_SUBMODULES $dir"
     fi

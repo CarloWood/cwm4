@@ -283,7 +283,7 @@ if [ $? -eq 2 ]; then
   # Add a workaround using symbolic links.
   SUBDIRS="$($AUTOM4TE -l M4sugar cwm4/submodules.m4)"
   cd m4
-  for module in $SUBDIRS; do
+  for module in ${SUBDIRS#CW_SUBMODULE_SUBDIRS}; do
     ln -sf ../$module
   done
   cd ..
