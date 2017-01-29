@@ -25,13 +25,13 @@ AC_CONFIG_HEADERS([config.h])
 dnl Include maintainer mode targets
 AM_MAINTAINER_MODE
 
-dnl Use libtool (lt_init.m4 will only exist when the project is actually using libtool).
-m4_sinclude([m4/lt_init.m4])
-
 dnl Check for compiler and preprocessor
 AC_PROG_CC_C99
 AC_PROG_CXX
 AC_PROG_CXXCPP
+
+dnl Use libtool (lt_init.m4 will only exist when the project is actually using libtool).
+m4_sinclude([m4/lt_init.m4])
 
 dnl Add --enable-debug (DEBUG, DOXYGEN_DEBUG), --enable-libcwd (CWDEBUG, DOXYGEN_CWDEBUG),
 dnl --enable-optimize and --enable-profile options. Update USE_LIBCWD, CWD_LIBS and CXXFLAGS accordingly.
