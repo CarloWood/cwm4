@@ -145,6 +145,7 @@ fi
 source autogen_versions
 
 # autogen.sh is supposed to recover from EVERYTHING... So, simulate a make maintainer-clean.
+exit 3
 rm -f aclocal.m4 config.h.in configure compile config.guess config.sub depcomp install-sh ltmain.sh missing
 rm -rf autom4te.cache m4
 
