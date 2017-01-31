@@ -31,11 +31,11 @@ AC_PROG_CXX
 AC_PROG_CXXCPP
 
 dnl Use libtool (lt_init.m4 will only exist when the project is actually using libtool).
-dnl m4_sinclude([m4/lt_init.m4])
+m4_sinclude([m4/lt_init.m4])
 
 dnl Add --enable-debug (DEBUG, DOXYGEN_DEBUG), --enable-libcwd (CWDEBUG, DOXYGEN_CWDEBUG),
 dnl --enable-optimize and --enable-profile options. Update USE_LIBCWD, CWD_LIBS and CXXFLAGS accordingly.
-dnl CW_OPG_FLAGS(CW_COMPILER_WARNINGS)
+CW_OPG_FLAGS(CW_COMPILER_WARNINGS)
 
 dnl Checks for other programs.
 AC_PROG_INSTALL
@@ -50,8 +50,4 @@ AM_CONDITIONAL(REAL_MAINTAINER, test -z "$MAINTAINER_MODE_TRUE" -a dnl
   "$(sed -n -e 's/.*MAINTAINER_HASH=//p' "$REPOBASE/autogen.sh")")
 
 dnl This source code is C++11 and thread-safe.
-dnl CXXFLAGS="$CXXFLAGS -pthread -std=c++11"
-dnl LIBCWD_FLAGS="$CWD_R_FLAGS"
-dnl LIBCWD_LIBS="$CWD_R_LIBS"
-dnl AC_SUBST(LIBCWD_FLAGS)
-dnl AC_SUBST(LIBCWD_LIBS)
+CXXFLAGS="$CXXFLAGS -pthread -std=c++11"
