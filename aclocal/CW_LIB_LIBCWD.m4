@@ -113,7 +113,9 @@ cw_optionname="$1"
 cw_wanted="$2"
 cw_threaded="$3"
 AM_CONDITIONAL([CW_NON_THREADED], [test "$cw_threaded" = "no" -o "$cw_threaded" = "both"])
+m4_pattern_allow.([CW_NON_THREADED])
 AM_CONDITIONAL([CW_THREADED], [test "$cw_threaded" = "yes" -o "$cw_threaded" = "both"])
+m4_pattern_allow.([CW_THREADED])
 # Default for error reporting.
 cw_libname="libcwd_r"
 test "$cw_threaded" != "no" || cw_libname="libcwd"
