@@ -36,7 +36,7 @@
 AC_DEFUN([CW_BOOST],
 [dnl
 # Require cw_used_libcwd and cw_config_debug to be set already.
-AC_REQUIRE([CW_OPG_FLAGS])
+AC_REQUIRE([CW_OPG_CXXFLAGS])
 # Add a few configure scripts that allow the user to specify values that we might not be able to find ourselves.
 AC_ARG_ENABLE(boost-root, [dnl
   --enable-boost-root=/path/to/boost_root

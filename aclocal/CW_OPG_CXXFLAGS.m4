@@ -1,5 +1,5 @@
-# CW_OPG_FLAGS m4 macro -- this file is part of cwm4.
-# Copyright (C) 2006 Carlo Wood <carlo@alinoe.com>
+# CW_OPG_CXXFLAGS m4 macro -- this file is part of cwm4.
+# Copyright (C) 2006, 2017 Carlo Wood <carlo@alinoe.com>
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -24,7 +24,7 @@
 # file appears in them. The GNU General Public License (GPL) does govern
 # all other use of the material that constitutes the cwm4 project.
 
-dnl CW_OPG_FLAGS(WARNING_FLAGS, THREADED)
+dnl CW_OPG_CXXFLAGS(WARNING_FLAGS, THREADED)
 dnl
 dnl Add --enable-debug    (DEBUG, DOXYGEN_DEBUG),
 dnl     --enable-libcwd   (CWDEBUG, DOXYGEN_CWDEBUG),
@@ -33,18 +33,21 @@ dnl and --enable-profile
 dnl options.
 dnl
 dnl This macro sets CXXFLAGS to include -g (or -ggdb on FreeBSD) when
-dnl debugging is required, -O2 when optimization is required and
-dnl appropriate warning flags.
+dnl debugging is required, -O2 when optimization is required, -pg when
+dnl propiling is requested and appropriate warning flags.
 dnl
 dnl However, if CXXFLAGS already contains a -g* option then that is used
 dnl instead of the default -g (-ggdb). If it contains a -O* option then
 dnl that is used instead of -O2. Finally, if options are passed to
-dnl the macro (WARNING_FLAGS), then those are used instead of the default ones.
+dnl the macro (WARNING_FLAGS), then those are used instead of the default
+dnl ones (-W -Wall -Woverloaded-virtual -Wundef -Wpointer-arith
+dnl -Wwrite-strings -Werror -Winline).
 dnl
 dnl THREADED can be either [yes], [no] or [auto]/[], see the description
 dnl in CW_LIB_LIBCWD.m4.
 dnl
-dnl Update USE_LIBCWD, CWD_FLAGS, CWD_LIBS, CXXFLAGS and LDFLAGS accordingly.
+dnl Updates USE_LIBCWD, LIBCWD(_R)_FLAGS, LIBCWD(_R)_LIBS, CXXFLAGS and
+dnl LDFLAGS accordingly.
 dnl
 dnl Further more, the following macros are set:
 dnl
@@ -53,7 +56,7 @@ dnl CW_OPTIMIZE_FLAGS	: Any -O* flags.
 dnl CW_WARNING_FLAGS	: Any -W* flags.
 dnl CW_STRIPPED_CXXFLAGS: Any other flags that were already in CXXFLAGS.
 dnl
-AC_DEFUN([CW_OPG_FLAGS], [dnl
+AC_DEFUN([CW_OPG_CXXFLAGS], [dnl
 dnl Containers for the respective options.
 m4_pattern_allow(CW_DEBUG_FLAGS)
 m4_pattern_allow(CW_OPTIMIZE_FLAGS)

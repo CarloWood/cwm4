@@ -41,10 +41,15 @@ if test "$generate_configure_ac" = "yes"; then
   CW_BUGREPORT="$GIT_AUTHOR_EMAIL"
   sed -e 's/@CW_PACKAGE_NAME@/'"$CW_PACKAGE_NAME"'/;s/@CW_BUGREPORT@/'"$CW_BUGREPORT"'/' cwm4/templates/configure.ac > configure.ac
 else
-  if test $(egrep '^[[:space:]]*define[[:space:]]*\([[:space:]]*CW_(VERSION_MAJOR|VERSION_MINOR|VERSION_REVISION|PACKAGE_NAME|BUGREPORT|COMPILER_WARNINGS)[[:space:]]*,' configure.ac | sort -u | wc --lines) != 6; then
+  if test $(egrep '^[[:space:]]*define[[:space:]]*\([[:space:]]*CW_(VERSION_MAJOR|VERSION_MINOR|VERSION_REVISION|PACKAGE_NAME|BUGREPORT)[[:space:]]*,' configure.ac | sort -u | wc --lines) != 5; then
     echo "*** ERROR: The follow macros should be defined at the top of configure.ac:"
     echo "***        CW_VERSION_MAJOR, CW_VERSION_MINOR, CW_VERSION_REVISION,"
-    echo "***        CW_PACKAGE_NAME, CW_BUGREPORT and CW_COMPILER_WARNINGS"
+    echo "***        CW_PACKAGE_NAME and CW_BUGREPORT."
+    echo "***        Please see cwm4/templates/configure.ac for an example."
+    exit 1
+  fi
+  if ! egrep '^[[:space:]]*CW_OPG_(CXX|C)FLAGS\(' configure.ac >/dev/null; then
+    echo "*** ERROR: The use of CW_OPG_CXXFLAGS or CW_OPG_CFLAGS([<compiler warning flags>], [yes|no|both]) is mandatory."
     echo "***        Please see cwm4/templates/configure.ac for an example."
     exit 1
   fi
@@ -275,6 +280,12 @@ if test "$using_gettext" = "yes"; then
   fi
 
 fi # using_gettext
+
+# Sanity check.
+if test ! -e m4/submodules.m4; then
+  echo "Generating missing m4/submodules.m4! This should only happen when you run cwm4/scripts/bootstrap.sh directly, instead of autogen.sh."
+  cwm4/scripts/generate_submodules_m4.sh
+fi
 
 version_compare $aclocal_version 1.10
 if [ $? -eq 2 ]; then

@@ -33,10 +33,6 @@ AC_PROG_CXXCPP
 dnl Use libtool (lt_init.m4 will only exist when the project is actually using libtool).
 m4_sinclude([m4/lt_init.m4])
 
-dnl Add --enable-debug (DEBUG, DOXYGEN_DEBUG), --enable-libcwd (CWDEBUG, DOXYGEN_CWDEBUG),
-dnl --enable-optimize and --enable-profile options. Update USE_LIBCWD, CWD_LIBS and CXXFLAGS accordingly.
-CW_OPG_FLAGS(CW_COMPILER_WARNINGS)
-
 dnl Checks for other programs.
 AC_PROG_INSTALL
 
@@ -44,10 +40,14 @@ dnl Suppress warning from ar by supplying U flag.
 AC_SUBST(AR_FLAGS, [cruU])
 
 dnl Check if we are the real maintainer.
-AM_CONDITIONAL(REAL_MAINTAINER, test -z "$MAINTAINER_MODE_TRUE" -a dnl
-  -n "$REPOBASE" -a dnl
-  "$(echo "$GIT_COMMITTER_EMAIL" | md5sum | cut -d \  -f 1)" = dnl
-  "$(sed -n -e 's/.*MAINTAINER_HASH=//p' "$REPOBASE/autogen.sh")")
+cw_real_maintainer=0
+if test -z "$MAINTAINER_MODE_TRUE" -a -n "$REPOBASE"; then
+  if test "$(echo "$GIT_COMMITTER_EMAIL" | md5sum | cut -d \  -f 1)" = dnl
+      "$(sed -n -e 's/.*MAINTAINER_HASH=//p' "$REPOBASE/autogen.sh")"; then
+    cw_real_maintainer=1
+  fi
+fi
+AM_CONDITIONAL(REAL_MAINTAINER, test $cw_real_maintainer = 1)
 
 dnl This source code is C++11 and thread-safe.
 CXXFLAGS="$CXXFLAGS -pthread -std=c++11"

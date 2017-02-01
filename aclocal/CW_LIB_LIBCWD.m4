@@ -59,18 +59,18 @@
 # `cw_used_libcwd' is set to "no".
 #
 # The default ACTION-IF-NOT-FOUND is to print an error message;
-# ACTION-IF-NOT-FOUND is only executed when WANTED is "yes" and no
-# libcwd was found.
+# ACTION-IF-NOT-FOUND is only executed when WANTED is "yes" and
+# a required libcwd(_r) was not found.
 #
 # WANTED | THREADED | libcwd exists | libcwd_r exists | CWD_* | CWD_R_* | LIBCWD_* | LIBCWD_R_* | cw_used_libcwd
 #     no |        * |             * |               * | empty |   empty |    empty |      empty |       no
-#    yes |       no |            no |               * | empty |   empty |    empty |      empty |    error
+#    yes |       no |            no |               * |    -  |      -  |       -  |         -  |        -  (print error)
 #    yes |       no |           yes |               * |   set |   empty |      set |      empty |      yes
-#    yes |      yes |             * |              no | empty |   empty |    empty |      empty |    error
+#    yes |      yes |             * |              no |    -  |      -  |       -  |         -  |        -  (print error)
 #    yes |      yes |             * |             yes | empty |     set |    empty |        set |      yes
-#    yes |     both |            no |              no | empty |   empty |    empty |      empty |    error
-#    yes |     both |            no |             yes | empty |     set |    empty |      empty |    error
-#    yes |     both |           yes |              no |   set |   empty |    empty |      empty |    error
+#    yes |     both |            no |              no |    -  |      -  |       -  |         -  |        -  (print error)
+#    yes |     both |            no |             yes |    -  |      -  |       -  |         -  |        -  (print error)
+#    yes |     both |           yes |              no |    -  |      -  |       -  |         -  |        -  (print error)
 #    yes |     both |           yes |             yes |   set |     set |      set |        set |      yes
 #   auto |       no |            no |               * | empty |   empty |    empty |      empty |       no
 #   auto |       no |           yes |               * |   set |   empty |      set |      empty |      yes
@@ -109,38 +109,42 @@ cw_used_libcwd=no
 cw_optionname="$1"
 cw_wanted="$2"
 cw_threaded="$3"
+# Default for error reporting.
+cw_libname="libcwd_r"
+test "$cw_threaded" != "no" || cw_libname="libcwd"
 # If we don't want to use libcwd, then this macro is done.
 if test x"$cw_wanted" != x"no"; then
   # Test if libcwd exists when cw_threaded is no or both.
   if test x"$cw_threaded" = x"no" -o x"$cw_threaded" = x"both"; then
-    AC_CACHE_CHECK([if libcwd$cwd_available is available 1], cw_cv_lib_libcwd,
+    AC_CACHE_CHECK([if libcwd is available], cw_cv_lib_libcwd,
 [    # Check if we have libcwd.
     AC_LANG_SAVE
     AC_LANG_CPLUSPLUS
     cw_save_LIBS="$LIBS"
-    LIBS="$LIBS $(pkg-config --libs libcwd$cwd_available)"
+    LIBS="$LIBS $(pkg-config --libs libcwd)"
     AC_LINK_IFELSE([AC_LANG_CALL([], [__libcwd_version])], [cw_cv_lib_libcwd=yes], [cw_cv_lib_libcwd=no])
     LIBS="$cw_save_LIBS"
     AC_LANG_RESTORE])
     if test "$cw_cv_lib_libcwd" = "yes"; then
-      CWD_FLAGS="$(pkg-config --cflags libcwd$cwd_available)"
-      CWD_LIBS="$(pkg-config --libs libcwd$cwd_available)"
+      CWD_FLAGS="$(pkg-config --cflags libcwd)"
+      CWD_LIBS="$(pkg-config --libs libcwd)"
+      test -n "$CWD_LIBS" || cw_libname="libcwd"
     fi
   fi
   # Test if libcwd_r exists when cw_threaded is yes or both.
   if test x"$cw_threaded" = x"yes" -o x"$cw_threaded" = x"both"; then
-    AC_CACHE_CHECK([if libcwd_r$cwd_r_available is available 2], cw_cv_lib_libcwd_r,
+    AC_CACHE_CHECK([if libcwd_r is available], cw_cv_lib_libcwd_r,
 [    # Check if we have libcwd_r.
     AC_LANG_SAVE
     AC_LANG_CPLUSPLUS
     cw_save_LIBS="$LIBS"
-    LIBS="$LIBS $(pkg-config --libs libcwd_r$cwd_r_available)"
+    LIBS="$LIBS $(pkg-config --libs libcwd_r)"
     AC_LINK_IFELSE([AC_LANG_CALL([], [__libcwd_version])], [cw_cv_lib_libcwd_r=yes], [cw_cv_lib_libcwd_r=no])
     LIBS="$cw_save_LIBS"
     AC_LANG_RESTORE])
     if test "$cw_cv_lib_libcwd_r" = "yes"; then
-      CWD_R_FLAGS="$(pkg-config --cflags libcwd_r$cwd_r_available)"
-      CWD_R_LIBS="$(pkg-config --libs libcwd_r$cwd_r_available)"
+      CWD_R_FLAGS="$(pkg-config --cflags libcwd_r)"
+      CWD_R_LIBS="$(pkg-config --libs libcwd_r)"
     fi
   fi
   # Set cw_have_needed to no if a needed library is missing.
@@ -154,11 +158,10 @@ if test x"$cw_wanted" != x"no"; then
   # Print an error if we don't have what we want.
   if test "$cw_wanted" = "yes" -a "$cw_have_needed" = "no"; then
     m4_default([$5], [dnl
-      AC_MSG_WARN([
-  --enable-$cw_optionname: You need to have libcwd installed to enable this.
+      AC_MSG_ERROR([
+  --enable-$cw_optionname: You need to have $cw_libname installed to enable this.
   Or perhaps you need to add its location to PKG_CONFIG_PATH and LD_LIBRARY_PATH, for example:
   PKG_CONFIG_PATH=/opt/install/lib/pkgconfig LD_LIBRARY_PATH=/opt/install/lib ./configure])
-      cw_used_libcwd=error
     ])
   elif test "$cw_have_needed" = "yes"; then
     cw_used_libcwd=yes

@@ -1,5 +1,5 @@
 # CW_OPG_CFLAGS m4 macro -- this file is part of cwm4.
-# Copyright (C) 2006, 2010 Carlo Wood <carlo@alinoe.com>
+# Copyright (C) 2006, 2010, 2017 Carlo Wood <carlo@alinoe.com>
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -45,14 +45,14 @@ dnl
 dnl Further more, the following macros are set:
 dnl
 dnl CW_DEBUG_FLAGS	: Any -g* flags.
-dnl CW_OPTIMISE_FLAGS	: Any -O* flags.
+dnl CW_OPTIMIZE_FLAGS	: Any -O* flags.
 dnl CW_WARNING_FLAGS	: Any -W* flags.
 dnl CW_STRIPPED_CFLAGS: Any other flags that were already in CFLAGS.
 dnl
 AC_DEFUN([CW_OPG_CFLAGS], [dnl
 dnl Containers for the respective options.
 m4_pattern_allow(CW_DEBUG_FLAGS)
-m4_pattern_allow(CW_OPTIMISE_FLAGS)
+m4_pattern_allow(CW_OPTIMIZE_FLAGS)
 m4_pattern_allow(CW_WARNING_FLAGS)
 m4_pattern_allow(CW_STRIPPED_CFLAGS)
 m4_pattern_allow(CW_DEFAULT_DEBUG_FLAGS)
@@ -64,7 +64,7 @@ AC_ARG_ENABLE(profile,       [  --enable-profile        add profiling code @<:@n
 
 # Strip possible -g and -O commandline options from CFLAGS.
 CW_DEBUG_FLAGS=
-CW_OPTIMISE_FLAGS=
+CW_OPTIMIZE_FLAGS=
 CW_WARNING_FLAGS=
 CW_STRIPPED_CFLAGS=
 for arg in $CFLAGS; do
@@ -73,7 +73,7 @@ case "$arg" in # (
         CW_DEBUG_FLAGS="$CW_DEBUG_FLAGS $arg"
         ;; # (
 -O*)
-        CW_OPTIMISE_FLAGS="$CW_OPTIMISE_FLAGS $arg"
+        CW_OPTIMIZE_FLAGS="$CW_OPTIMIZE_FLAGS $arg"
         ;; # (
 -W*)	CW_WARNING_FLAGS="$CW_WARNING_FLAGS $arg"
 	;; # (
@@ -86,7 +86,7 @@ done
 # Set various defaults, depending on other options.
 
 if test x"$cw_config_optimize" = x"no"; then
-    CW_OPTIMISE_FLAGS=""        # Explicit --disable-optimize, strip optimization even from CFLAGS environment variable.
+    CW_OPTIMIZE_FLAGS=""        # Explicit --disable-optimize, strip optimization even from CFLAGS environment variable.
 fi
 
 if test x"$enable_maintainer_mode" = x"yes"; then
@@ -124,10 +124,10 @@ AC_SUBST([DOXYGEN_DEBUG])
 # Handle cw_config_optimize; when not explicitly set to "no", use user provided
 # optimization flags, or -O2 when nothing was provided.
 if test x"$cw_config_optimize" != x"no"; then
-  test -n "$CW_OPTIMISE_FLAGS" || CW_OPTIMISE_FLAGS="-O2"
+  test -n "$CW_OPTIMIZE_FLAGS" || CW_OPTIMIZE_FLAGS="-O2"
 elif test "$ac_test_CFLAGS" != set; then
-  # If CFLAGS was set by configure, reset CW_OPTIMISE_FLAGS.
-  CW_OPTIMISE_FLAGS=
+  # If CFLAGS was set by configure, reset CW_OPTIMIZE_FLAGS.
+  CW_OPTIMIZE_FLAGS=
 fi
 
 # Handle cw_config_profile.
@@ -154,20 +154,20 @@ if test x"$enable_maintainer_mode" = x"yes"; then
      dnl -Winline is broken.
      [CW_WARNING_FLAGS="$(echo "$CW_WARNING_FLAGS" | sed -e 's/ -Winline//g')"],
      dnl -Winline is not broken. Remove -Werror when optimizing though.
-     [if test -n "$CW_OPTIMISE_FLAGS"; then
+     [if test -n "$CW_OPTIMIZE_FLAGS"; then
         CW_WARNING_FLAGS="$(echo "$CW_WARNING_FLAGS" | sed -e 's/ -Werror//g')"
       fi]
   )
 fi
 
 # Reassemble CFLAGS with debug and optimization flags.
-[CFLAGS=`echo "$CW_DEBUG_FLAGS $CW_WARNING_FLAGS $CW_OPTIMISE_FLAGS $CW_STRIPPED_CFLAGS" | sed -e 's/^ *//' -e 's/  */ /g' -e 's/ *$//'`]
+[CFLAGS=`echo "$CW_DEBUG_FLAGS $CW_WARNING_FLAGS $CW_OPTIMIZE_FLAGS $CW_STRIPPED_CFLAGS" | sed -e 's/^ *//' -e 's/  */ /g' -e 's/ *$//'`]
 
 dnl Put CFLAGS into the Makefile.
 AC_SUBST(CFLAGS)
 dnl Allow fine tuning if necessary, by putting the substituting the parts too.
 AC_SUBST(CW_DEBUG_FLAGS)
 AC_SUBST(CW_WARNING_FLAGS)
-AC_SUBST(CW_OPTIMISE_FLAGS)
+AC_SUBST(CW_OPTIMIZE_FLAGS)
 AC_SUBST(CW_STRIPPED_CFLAGS)
 ])
