@@ -48,6 +48,3 @@ if test -z "$MAINTAINER_MODE_TRUE" -a -n "$REPOBASE"; then
   fi
 fi
 AM_CONDITIONAL(REAL_MAINTAINER, test $cw_real_maintainer = 1)
-
-dnl This source code is C++11 and thread-safe.
-CXXFLAGS="$CXXFLAGS -pthread -std=c++11"

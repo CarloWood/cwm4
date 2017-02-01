@@ -127,6 +127,8 @@ esac
 # Check if we have libcwd, $cw_config_libcwd can be "yes", "no" or "".
 if test -z "$cw_used_libcwd"; then
 CW_LIB_LIBCWD([libcwd], [$cw_config_libcwd], [$2])
+# Abuse LIBCWD_R_FLAGS to pass -pthread to the compiler.
+LIBCWD_R_FLAGS="-pthread${LIBCWD_R_FLAGS:+ }$LIBCWD_R_FLAGS"
 fi
 USE_LIBCWD="$cw_used_libcwd"
 AC_SUBST([USE_LIBCWD])
