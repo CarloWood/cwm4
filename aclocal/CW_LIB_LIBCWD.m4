@@ -39,6 +39,9 @@
 #
 # THREADED can be [yes], [no] or [both] when the application is
 # threaded, non-threaded or when both are needed respectively.
+# The automake conditional CW_NON_THREADED is set to reflect
+# if THREADED was no or both; and likewise CW_THREADED is set
+# to reflect if THREADED was yes or both.
 #
 # If WANTED is not [no] then this macro tests for the usability of
 # libcwd[_r] as follows:
@@ -109,6 +112,8 @@ cw_used_libcwd=no
 cw_optionname="$1"
 cw_wanted="$2"
 cw_threaded="$3"
+AM_CONDITIONAL([CW_NON_THREADED], [test "$cw_threaded" = "no" -o "$cw_threaded" = "both"])
+AM_CONDITIONAL([CW_THREADED], [test "$cw_threaded" = "yes" -o "$cw_threaded" = "both"])
 # Default for error reporting.
 cw_libname="libcwd_r"
 test "$cw_threaded" != "no" || cw_libname="libcwd"

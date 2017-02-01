@@ -454,10 +454,12 @@ if test "$generate_makefile_am" = "yes"; then
 fi
 
 if test "$using_libtool" = "yes"; then
-  # Set SED to a function that causes it to process configure.ac with m4 properly.
+  # Set SED and M4 to scripts that cause libtoolize to process configure.ac properly.
   export SED="$(pwd)/cwm4/scripts/SED.sh"
+  export M4="$(pwd)/cwm4/scripts/M4.sh"
   run "$LIBTOOLIZE --force --automake $libtoolize_arguments"
   unset SED
+  unset M4
   #if test ! -e depcomp; then
   #  ln -s cwm4/scripts/depcomp.sh depcomp
   #fi
