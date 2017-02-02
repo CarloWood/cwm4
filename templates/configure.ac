@@ -13,7 +13,8 @@ m4_include([cwm4/configure_ac_top.m4])
 # Second parameter can be [no] (single-threaded), [yes] (multi-threaded) or [both] (single and multi-threaded applications).
 CW_OPG_CXXFLAGS([-std=c++11 -W -Wall -Woverloaded-virtual -Wundef -Wpointer-arith -Wwrite-strings -Winline], [both])
 
-# Comment this out if the project is using doxygen to generate documentation.
+# Uncomment this if the project is using doxygen to generate documentation.
+# We use doxygen for documentation.
 #CW_DOXYGEN
 
 # Include cwm4 footer.

@@ -1,7 +1,7 @@
 maintainer-clean-local:
 	rm -rf $(srcdir)/m4
 
-MAINTAINERCLEANFILES = \
+MAINTAINERCLEANFILES += \
 	$(srcdir)/aclocal.m4 \
 	$(srcdir)/configure \
 	$(srcdir)/Makefile.in \
