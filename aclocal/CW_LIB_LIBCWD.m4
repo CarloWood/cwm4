@@ -59,7 +59,8 @@
 #
 # If the required librarie(s) (as per THREADED, not WANTED) could
 # not be found then all four LIB* macros will be empty and
-# `cw_used_libcwd' is set to "no".
+# `cw_used_libcwd' is set to "no". The AM_CONDITIONAL `LIBCWD_USED'
+# is also set accordingly.
 #
 # The default ACTION-IF-NOT-FOUND is to print an error message;
 # ACTION-IF-NOT-FOUND is only executed when WANTED is "yes" and
@@ -184,4 +185,5 @@ if test x"$cw_wanted" != x"no"; then
     fi
   fi
 fi # $cw_wanted != "no"
+AM_CONDITIONAL(LIBCWD_USED, [test "$cw_used_libcwd" = "yes"])
 ])
