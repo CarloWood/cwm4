@@ -1,4 +1,4 @@
-# cwautomacros git submodule
+# cwm4 git submodule
 
 This repository is a git submodule containing
 autoconf macros and helper scripts to support
