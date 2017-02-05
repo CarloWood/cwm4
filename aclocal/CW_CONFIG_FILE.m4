@@ -29,12 +29,14 @@ dnl
 dnl Generate $1/$2 from $1/$2.in, but only if the file
 dnl really changed.
 AC_DEFUN([CW_CONFIG_FILE], [
-AC_CONFIG_FILES($1/timestamp-$2:$1/$2.in, [
-if cmp -s $1/$2 $1/timestamp-$2 2> /dev/null; then
+cw_config_file_dir=
+test -z "$1" -o "x$1" = "x." || cw_config_file_dir="$1/"
+AC_CONFIG_FILES("$cw_config_file_dir"timestamp-$2:"$cw_config_file_dir"$2.in, [
+if cmp -s "$cw_config_file_dir"$2 "$cw_config_file_dir"timestamp-$2 2> /dev/null; then
   echo "config.status: $2 is unchanged"
 else
   echo "config.status: creating $2"
-  cp $1/timestamp-$2 $1/$2
+  cp "$cw_config_file_dir"timestamp-$2 "$cw_config_file_dir"$2
 fi
-touch $1/timestamp-$2
+touch "$cw_config_file_dir"timestamp-$2
 ])])
