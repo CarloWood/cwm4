@@ -36,7 +36,9 @@ if test "$cw_cv_sys_CXX_finger_print" != "$cw_prog_cxx_finger_print" -o \
         "$cw_cv_sys_LDFLAGS" != "$LDFLAGS" -o \
         "$cw_cv_sys_LIBS" != "$LIBS"; then
 changequote(<<, >>)dnl
-for i in `set | grep -v '^ac_cv_prog_[Ccg][CXx]' | grep '^[a-z]*_cv_' | sed -e 's/=.*$//'`; do
+# libtool incorrectly uses variables with names that start with lt_cv_ that are NOT cache values.
+# Make sure not to reset those.
+for i in `set | egrep -v '^(ac_cv_prog_[Ccg][CXx]|lt_cv_)' | grep '^[a-z]*_cv_' | sed -e 's/=.*$//'`; do
   unset $i
 done
 changequote([, ])dnl
