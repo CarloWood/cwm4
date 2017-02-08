@@ -30,6 +30,11 @@ AC_PROG_CC_C99
 AC_PROG_CXX
 AC_PROG_CXXCPP
 
+dnl Add --enable-debug (DEBUG, DOXYGEN_DEBUG), --enable-libcwd (CWDEBUG, DOXYGEN_CWDEBUG), --enable-optimize and --enable-profile options.
+dnl Update USE_LIBCWD, LIBCWD(_R)_FLAGS, LIBCWD(_R)_LIBS and CXXFLAGS accordingly.
+dnl Second parameter can be [no] (single-threaded), [yes] (multi-threaded) or [both] (single and multi-threaded applications).
+CW_OPG_CXXFLAGS([CW_COMPILE_FLAGS], [CW_THREADS])
+
 dnl Use libtool (lt_init.m4 will only exist when the project is actually using libtool).
 m4_sinclude([m4/lt_init.m4])
 
