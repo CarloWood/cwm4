@@ -41,20 +41,12 @@ if test "$generate_configure_ac" = "yes"; then
   CW_BUGREPORT="$GIT_AUTHOR_EMAIL"
   sed -e 's/@CW_PACKAGE_NAME@/'"$CW_PACKAGE_NAME"'/;s/@CW_BUGREPORT@/'"$CW_BUGREPORT"'/' cwm4/templates/configure.ac > configure.ac
 else
-  if test $(egrep '^[[:space:]]*define[[:space:]]*\([[:space:]]*CW_(VERSION_MAJOR|VERSION_MINOR|VERSION_REVISION|PACKAGE_NAME|BUGREPORT)[[:space:]]*,' configure.ac | sort -u | wc --lines) != 5; then
+  if test $(egrep '^[[:space:]]*define[[:space:]]*\([[:space:]]*CW_(VERSION_MAJOR|VERSION_MINOR|VERSION_REVISION|PACKAGE_NAME|BUGREPORT|COMPILE_FLAGS|THREADS)[[:space:]]*,' configure.ac | sort -u | wc --lines) != 5; then
     echo '*** ERROR: The follow macros should be defined at the top of configure.ac:'
     echo '***        CW_VERSION_MAJOR, CW_VERSION_MINOR, CW_VERSION_REVISION,'
-    echo '***        CW_PACKAGE_NAME and CW_BUGREPORT.'
+    echo '***        CW_PACKAGE_NAME, CW_BUGREPORT, CW_COMPILE_FLAGS and CW_THREADS.'
     echo '***        Please see cwm4/templates/configure.ac for an example.'
     exit 1
-  fi
-  if test "$(basename $(pwd))" != "libcwd"; then
-    if ! grep -A1000 '^m4_include(\[cwm4/configure_ac_top\.m4\])' configure.ac | egrep '^[[:space:]]*CW_OPG_(CXX|C)FLAGS\(' >/dev/null; then
-      echo '*** ERROR: The use of CW_OPG_CXXFLAGS or CW_OPG_CFLAGS([<compiler warning flags>], [yes|no|both])'
-      echo '***        (AFTER the `m4_include([cwm4/configure_ac_top.m4])'"'"') in configure.ac is mandatory.'
-      echo '***        Please see cwm4/templates/configure.ac for an example.'
-      exit 1
-    fi
   fi
 fi
 
