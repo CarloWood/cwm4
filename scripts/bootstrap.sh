@@ -48,11 +48,13 @@ else
     echo '***        Please see cwm4/templates/configure.ac for an example.'
     exit 1
   fi
-  if ! grep -A1000 '^m4_include(\[cwm4/configure_ac_top\.m4\])' configure.ac | egrep '^[[:space:]]*CW_OPG_(CXX|C)FLAGS\(' >/dev/null; then
-    echo '*** ERROR: The use of CW_OPG_CXXFLAGS or CW_OPG_CFLAGS([<compiler warning flags>], [yes|no|both])'
-    echo '***        (AFTER the `m4_include([cwm4/configure_ac_top.m4])'"'"') in configure.ac is mandatory.'
-    echo '***        Please see cwm4/templates/configure.ac for an example.'
-    exit 1
+  if test "$(basename $(pwd))" != "libcwd"; then
+    if ! grep -A1000 '^m4_include(\[cwm4/configure_ac_top\.m4\])' configure.ac | egrep '^[[:space:]]*CW_OPG_(CXX|C)FLAGS\(' >/dev/null; then
+      echo '*** ERROR: The use of CW_OPG_CXXFLAGS or CW_OPG_CFLAGS([<compiler warning flags>], [yes|no|both])'
+      echo '***        (AFTER the `m4_include([cwm4/configure_ac_top.m4])'"'"') in configure.ac is mandatory.'
+      echo '***        Please see cwm4/templates/configure.ac for an example.'
+      exit 1
+    fi
   fi
 fi
 
