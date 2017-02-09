@@ -77,6 +77,13 @@ if test "$(echo $GIT_COMMITTER_EMAIL | md5sum | cut -d \  -f 1)" = "$1"; then
     fi
   fi
 
+  # Do we have a .gitignore?
+  if ! test -f .gitignore; then
+    echo "Adding .gitignore..."
+    cp cwm4/templates/dot_gitignore .gitignore
+    git add .gitignore
+  fi
+
   echo -e "\n$prefix Updating all submodules (recursively)..."
 
   # Check if 'branch' is set for all submodules with a configure.m4,

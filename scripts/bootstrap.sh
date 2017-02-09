@@ -48,6 +48,13 @@ else
     echo '***        Please see cwm4/templates/configure.ac for an example.'
     exit 1
   fi
+  count="$(egrep '^[[:space:]]*define[[:space:]]*\([[:space:]]*CW_INTERFACE_(VERSION_REVISION|VERSION|AGE)[[:space:]]*,' configure.ac | sort -u | wc --lines)"
+  if test "$count" != 0 -a "$count" != 3; then
+    echo '*** ERROR: The follow macros should be defined at the top of configure.ac for a library project:'
+    echo '***        CW_INTERFACE_VERSION_REVISION, CW_INTERFACE_VERSION and CW_INTERFACE_AGE.'
+    echo '***        Please see cwm4/templates/configure.ac for an example.'
+    exit 1
+  fi
 fi
 
 # Determine if this project uses libtool.
@@ -426,6 +433,16 @@ fi
 
 if ! egrep '^[[:space:]]*SUBDIRS[[:space:]]*=.*@CW_SUBDIRS@' Makefile.am >/dev/null; then
   echo -e "\n*** ERROR: SUBDIRS in Makefile.am must contain @CW_SUBDIRS@.\n***        For example: SUBDIRS = @CW_SUBDIRS@ src"
+  exit 1
+fi
+
+if egrep '^[[:space:]]*EXTRA_DIST[[:space:]]*=' Makefile.am >/dev/null; then
+  echo -e "\n*** ERROR: EXTRA_DIST should only append new files. Use 'EXTRA_DIST += ...' instead of 'EXTRA_DIST ='."
+  exit 1
+fi
+
+if egrep '^[[:space:]]*MAINTAINERCLEANFILES[[:space:]]*=' Makefile.am >/dev/null; then
+  echo -e "\n*** ERROR: MAINTAINERCLEANFILES should only append new files. Use 'MAINTAINERCLEANFILES += ...' instead of 'MAINTAINERCLEANFILES ='."
   exit 1
 fi
 

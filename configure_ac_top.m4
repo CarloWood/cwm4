@@ -30,6 +30,11 @@ AC_PROG_CC_C99
 AC_PROG_CXX
 AC_PROG_CXXCPP
 
+dnl Substitute VERSIONINFO when CW_INTERFACE_VERSION is set.
+m4_ifdef([CW_INTERFACE_VERSION], [# Libtool version info
+VERSIONINFO="CW_INTERFACE_VERSION:CW_INTERFACE_VERSION_REVISION:CW_INTERFACE_AGE"
+AC_SUBST(VERSIONINFO)])
+
 dnl Add --enable-debug (DEBUG, DOXYGEN_DEBUG), --enable-libcwd (CWDEBUG, DOXYGEN_CWDEBUG), --enable-optimize and --enable-profile options.
 dnl Update USE_LIBCWD, LIBCWD(_R)_FLAGS, LIBCWD(_R)_LIBS and CXXFLAGS accordingly.
 dnl Second parameter can be [no] (single-threaded), [yes] (multi-threaded) or [both] (single and multi-threaded applications).
