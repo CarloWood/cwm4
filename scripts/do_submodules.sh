@@ -13,7 +13,7 @@ MISSING_SUBMODULES="maybe"
 while test -n "$MISSING_SUBMODULES"; do
 
   # (Re)generate submodules.m4.
-  cwm4/scripts/generate_submodules_m4.sh
+  cwm4/scripts/generate_submodules_m4.sh || exit 1
 
   # Check dependencies.
   MISSING_SUBMODULES=

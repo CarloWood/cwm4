@@ -286,7 +286,7 @@ fi # using_gettext
 # Sanity check.
 if test ! -e m4/submodules.m4; then
   echo "Generating missing m4/submodules.m4! This should only happen when you run cwm4/scripts/bootstrap.sh directly, instead of autogen.sh."
-  cwm4/scripts/generate_submodules_m4.sh
+  cwm4/scripts/generate_submodules_m4.sh || exit 1
 fi
 
 version_compare $aclocal_version 1.10
