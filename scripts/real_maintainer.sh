@@ -79,7 +79,7 @@ if test "$(echo $GIT_COMMITTER_EMAIL | md5sum | cut -d \  -f 1)" = "$1"; then
 
   # Do we have a .gitignore?
   if ! test -f .gitignore; then
-    echo "Adding .gitignore..."
+    echo -e "\n$prefix Adding .gitignore..."
     cp cwm4/templates/dot_gitignore .gitignore
     git add .gitignore
   fi
