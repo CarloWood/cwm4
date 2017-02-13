@@ -38,14 +38,14 @@ if test "$opt_foreach" -eq 0; then
   if test $(wc --lines < m4/submodules.m4) -gt 1; then
     cat << EOF >> m4/submodules.m4
 
-AC_SUBST([CW_SUBDIRS], CW_SUBMODULE_SUBDIRS)
+AC_SUBST([CW_SUBDIRS], "CW_SUBMODULE_SUBDIRS")
 #AM_SUBST_NOTMAKE([CW_SUBDIRS])
 AC_CONFIG_FILES(CW_SUBMODULE_CONFIG_FILES)
 EOF
   else
     cat << EOF >> m4/submodules.m4
 
-AC_SUBST([CW_SUBDIRS], [])
+AC_SUBST([CW_SUBDIRS], [""])
 #AM_SUBST_NOTMAKE([CW_SUBDIRS])
 EOF
   fi
