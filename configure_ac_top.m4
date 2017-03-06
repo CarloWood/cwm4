@@ -1,4 +1,5 @@
 dnl Detect unexpanded macros.
+m4_pattern_forbid(AX_)
 m4_pattern_forbid(CW_)
 m4_pattern_forbid(LT_)
 
