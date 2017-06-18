@@ -48,7 +48,9 @@ dnl Checks for other programs.
 AC_PROG_INSTALL
 
 dnl Suppress warning from ar by supplying U flag.
+dnl There seem to be two variants of AR[_]FLAGS in use, set both.
 AC_SUBST(AR_FLAGS, [cruU])
+AC_SUBST(ARFLAGS, [cruU])
 
 dnl Check if we are the real maintainer.
 cw_real_maintainer=0
