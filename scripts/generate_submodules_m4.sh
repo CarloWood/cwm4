@@ -49,7 +49,7 @@ AC_SUBST([CW_SUBDIRS], [""])
 #AM_SUBST_NOTMAKE([CW_SUBDIRS])
 EOF
   fi
-elif test -f "configure.m4"; then
+elif test -f "configure.m4" -o -z "$(ls -A)"; then      # Add this for submodule directories that contain configure.m4 or that are completely empty.
   # Script is called from git submodule foreach ...'
   submodule_path="$1"
   submodule_dirname="$(dirname "$submodule_path")"
