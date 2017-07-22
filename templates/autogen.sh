@@ -37,7 +37,6 @@ if test -d .git; then
     echo "autogen.sh: Failed to update one or more submodules. Does it have uncommitted changes?"
     exit 1
   fi
-  exit 1
   cwm4/scripts/do_submodules.sh
 else
   # Clueless user check.

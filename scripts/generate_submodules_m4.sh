@@ -49,7 +49,7 @@ AC_SUBST([CW_SUBDIRS], [""])
 #AM_SUBST_NOTMAKE([CW_SUBDIRS])
 EOF
   fi
-elif test "$1" != "cwm4"; then
+elif test -f "$1/configure.m4"; then
   # Script is called from git submodule foreach ...'
   submodule_path="$1"
   submodule_dirname="$(dirname "$submodule_path")"
