@@ -494,6 +494,8 @@ echo -n "Now you can do '"
 if [ ! -d ../$project_name-objdir ]; then
   echo -n "mkdir ../$project_name-objdir; "
 fi
+echo '***'
+which configure
 which configure 2>/dev/null | grep 'REPOBASE-objdir' >/dev/null || echo -n "cd ../$project_name-objdir; "
 if test -n "$CONFIGURE_OPTIONS"; then
   echo "configure'."
