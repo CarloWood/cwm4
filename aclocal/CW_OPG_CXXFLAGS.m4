@@ -63,6 +63,8 @@ m4_pattern_allow(CW_OPTIMIZE_FLAGS)
 m4_pattern_allow(CW_WARNING_FLAGS)
 m4_pattern_allow(CW_STRIPPED_CXXFLAGS)
 m4_pattern_allow(CW_DEFAULT_DEBUG_FLAGS)
+m4_pattern_allow(CW_MAX_ERRORS_FLAG)
+m4_pattern_allow([CW_MAX_ERRORS])
 
 # Add args to configure
 AC_ARG_ENABLE(debug,         [  --enable-debug          build for debugging @<:@no@:>@], [cw_config_debug=$enableval], [cw_config_debug=])
@@ -192,8 +194,17 @@ if test x"$enable_maintainer_mode" = x"yes"; then
   )
 fi
 
-# Reassemble CXXFLAGS with debug and optimization flags.
-[CXXFLAGS=`echo "$CW_DEBUG_FLAGS $CW_WARNING_FLAGS $CW_OPTIMIZE_FLAGS $CW_STRIPPED_CXXFLAGS" | sed -e 's/^ *//' -e 's/  */ /g' -e 's/ *$//'`]
+# Determine the flag that limits the number of errors to one.
+CW_MAX_ERRORS_FLAG=
+if m4_changequote([`],['])[[m4_changequote(`[',`]') "$3" m4_changequote([`],['])=~ ^[0-9]+$ ]]m4_changequote(`[',`]'); then
+  if test $3 -gt 0; then
+    AX_CHECK_COMPILE_FLAG([-ferror-limit=$3], [CW_MAX_ERRORS_FLAG="-ferror-limit=$3"], [
+    AX_CHECK_COMPILE_FLAG([-fmax-errors=$3], [CW_MAX_ERRORS_FLAG="-fmax-errors=$3"], [], [-Werror])], [-Werror])
+  fi
+fi
+
+# Reassemble CXXFLAGS with max-error, debug and optimization flags.
+[CXXFLAGS=`echo "$CW_MAX_ERRORS_FLAG $CW_DEBUG_FLAGS $CW_WARNING_FLAGS $CW_OPTIMIZE_FLAGS $CW_STRIPPED_CXXFLAGS" | sed -e 's/^ *//' -e 's/  */ /g' -e 's/ *$//'`]
 
 dnl Put CXXFLAGS into the Makefile.
 AC_SUBST(CXXFLAGS)
