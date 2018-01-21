@@ -74,7 +74,7 @@ fi
 
 # Determine if this project uses doxygen.
 CW_DOXYGEN_LINE=$(m4 -P cwm4/sugar.m4 configure.ac | egrep '^[[:space:]]*CW_DOXYGEN')
-if -n "$CW_DOXYGEN_PATHS"; then
+if test -n "$CW_DOXYGEN_PATHS"; then
   using_doxygen="yes"
   CW_DOXYGEN_PATHS="$(echo $CW_DOXYGEN_LINE | sed -r -e 's/^[[:space:]]*CW_DOXYGEN[[:space:]]*\(//;s/\).*//')"
 else
