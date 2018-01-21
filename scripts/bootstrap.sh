@@ -73,8 +73,10 @@ else
 fi
 
 # Determine if this project uses doxygen.
-if m4 -P cwm4/sugar.m4 configure.ac | egrep '^[[:space:]]*CW_DOXYGEN' >/dev/null; then
+CW_DOXYGEN_LINE=$(m4 -P cwm4/sugar.m4 configure.ac | egrep '^[[:space:]]*CW_DOXYGEN')
+if -n "$CW_DOXYGEN_PATHS"; then
   using_doxygen="yes"
+  CW_DOXYGEN_PATHS="$(echo $CW_DOXYGEN_LINE | sed -r -e 's/^[[:space:]]*CW_DOXYGEN[[:space:]]*\(//;s/\).*//')"
 else
   using_doxygen="no"
 fi
@@ -306,43 +308,54 @@ fi
 if test -d .git; then
   PUSH_RECURSESUBMODULES="$(git config push.recurseSubmodules)"
   if test -z "$PUSH_RECURSESUBMODULES"; then
-    echo -e "\n*** ERROR: You should (use at least git version 2.7 and) do:"
-    echo "***        git config push.recurseSubmodules check"
-    echo "***        to prevent pushing a project that references unpushed submodules, or"
-    echo "***        git config push.recurseSubmodules on-demand"
-    echo "***        to automatically push submodules when pushing a reference to them."
-    echo "***        See http://stackoverflow.com/a/10878273/1487069 and"
-    echo "***        http://stackoverflow.com/a/34615803/1487069"
-    exit 1
+    # Use this as default for now.
+    git config push.recurseSubmodules check
+    echo -e "\n*** WARNING: git config push.recurseSubmodules was not set!"
+    echo "***      To prevent pushing a project that references unpushed submodules,"
+    echo "***      this config was set to 'check'. Use instead the command"
+    echo "***      > git config push.recurseSubmodules on-demand"
+    echo "***      to automatically push submodules when pushing a reference to them."
+    echo "***      See http://stackoverflow.com/a/10878273/1487069 and"
+    echo "***      http://stackoverflow.com/a/34615803/1487069 more more info."
   fi
 fi
 
 if test "$using_doxygen" = "yes"; then
 
-if test -f "doc/doxygen.config.in"; then
-  doc_path="doc"
-elif test -f "docs/doxygen.config.in"; then
-  doc_path="docs"
-elif test -f "documentation/doxygen.config.in"; then
-  doc_path="documentation"
-elif test -d "doc"; then
-  doc_path="doc"
-elif test -d "docs"; then
-  doc_path="docs"
-elif test -d "documentation"; then
-  doc_path="documentation"
-else
-  echo -e "\n*WARNING:**********************************************************"
-  echo "* Creating non-existing directory 'doc'. Add it to your repository!"
-  mkdir doc
-  doc_path="doc"
-  created_doc="yes"
+if test -z "$CW_DOXYGEN_PATHS"; then
+  echo -e "\n*ERROR:**********************************************************"
+  echo "* Using CW_DOXYGEN without arguments. Please specify directories to generate documtation in."
+  echo "* Use a dot (.) for the root directory. For example:"
+  echo "* CW_DOXYGEN([. src utils])"
+  exit 1
 fi
 
+doc_paths=
+for dp in $CW_DOXYGEN_PATHS; do
+
+  if test -f "$dp/doc/doxygen.config.in"; then
+    doc_paths+="$dp/doc"
+  elif test -f "$dp/docs/doxygen.config.in"; then
+    doc_paths+="$dp/docs"
+  elif test -f "$dp/documentation/doxygen.config.in"; then
+    doc_paths+="$dp/documentation"
+  elif test -d "$dp/doc"; then
+    doc_paths+="$dp/doc"
+  elif test -d "$dp/docs"; then
+    doc_paths+="$dp/docs"
+  elif test -d "$dp/documentation"; then
+    doc_paths+="$dp/documentation"
+  fi
+
+done
+
+echo "doc_paths = \"$doc_paths\""
+exit 1
+
 created_files=
-if [ ! -f "$doc_path/Makefile.am" -a ! -f "$doc_path/Makefile.in" -a ! -f "$doc_path/Makefile" ]; then
-  created_files="$created_files $doc_path/Makefile.am"
-  cp cwm4/templates/doxygen/Makefile.am $doc_path
+if [ ! -f "$dp/Makefile.am" -a ! -f "$dp/Makefile.in" -a ! -f "$dp/Makefile" ]; then
+  created_files="$created_files $dp/Makefile.am"
+  cp cwm4/templates/doxygen/Makefile.am $dp
 fi
 if [ -f "$doc_path/Makefile.am" -a ! -f "$doc_path/main.css" ]; then
   created_files="$created_files $doc_path/main.css"
