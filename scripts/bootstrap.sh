@@ -380,6 +380,11 @@ for dp in $doc_paths; do
     cp cwm4/templates/doxygen/mainpage.dox $dp
   fi
 
+  input_dirs=" @top_srcdir@/$(dirname $dp)"
+  if test -d "$(dirname $dp)/include"; then
+    input_dirs+=" @top_srcdir@/$(dirname $dp)/include"
+  fi
+
   if [ -f "$dp/Makefile.am" -a ! -f "$dp/doxygen.config.in" -a ! -f "$dp/doxygen.config" ]; then
     (doxygen --version) >/dev/null 2>/dev/null || (echo -e "\n*** ERROR: You need the package 'doxygen' to generate documentation. Please install it (see http://www.doxygen.org/)."; exit 1) || exit 1
     created_files="$created_files $dp/doxygen.config.in"
@@ -388,7 +393,7 @@ for dp in $doc_paths; do
     sed -e 's%^\(PROJECT_NAME[[:space:]]*=\).*%\1 @PACKAGE_NAME@%' \
         -e 's%^\(PROJECT_NUMBER[[:space:]]*=\).*%\1 @PACKAGE_VERSION@%' \
         -e 's%^\(OUTPUT_DIRECTORY[[:space:]]*=\).*%\1 .%' \
-        -e 's%^\(INPUT[[:space:]]*=\).*%\1 @top_srcdir@/src @top_srcdir@/src/include%' \
+        -e 's%^\(INPUT[[:space:]]*=\).*%\1'"$input_dirs"'%' \
         -e 's%^\(FILE_PATTERNS[[:space:]]*=\).*%\1 *.cxx *.h *.dox%' \
         -e 's%^\(QUIET[[:space:]]*=\).*%\1 YES%' \
         -e 's%^\(PREDEFINED[[:space:]]*=\).*%\1 DOXYGEN protected_notdocumented=private%' \
