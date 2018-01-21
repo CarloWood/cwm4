@@ -10,9 +10,6 @@
 # Fingerprint16 = 32 EC A7 B6 AC DB 65 A6  F6 F6 55 DD 1C DC FF 61
 #
 
-echo WE GET HERE
-exit 1
-
 # Demand we use configure.ac.
 generate_configure_ac="no"
 if test ! -f configure.ac; then
@@ -323,6 +320,7 @@ if test -d .git; then
   fi
 fi
 
+echo "WE GET HERE, using_doxygen = $using_doxygen"
 if test "$using_doxygen" = "yes"; then
 
 if test -z "$CW_DOXYGEN_PATHS"; then
