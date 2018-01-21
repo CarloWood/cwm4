@@ -317,6 +317,7 @@ if test -d .git; then
     echo "***      to automatically push submodules when pushing a reference to them."
     echo "***      See http://stackoverflow.com/a/10878273/1487069 and"
     echo "***      http://stackoverflow.com/a/34615803/1487069 more more info."
+    echo
   fi
 fi
 
@@ -379,38 +380,44 @@ for dp in $doc_paths; do
     cp cwm4/templates/doxygen/mainpage.dox $dp
   fi
 
-if [ -f "$dp/Makefile.am" -a ! -f "$dp/doxygen.config.in" -a ! -f "$dp/doxygen.config" ]; then
-  (doxygen --version) >/dev/null 2>/dev/null || (echo -e "\n*** ERROR: You need the package 'doxygen' to generate documentation. Please install it (see http://www.doxygen.org/)."; exit 1) || exit 1
-  created_files="$created_files $dp/doxygen.config.in"
-  doxygen -g "$dp/doxygen.config.tmp" >/dev/null
-  echo -e "# @""configure_input""@\n" > "$dp/doxygen.config.in";
-  sed -e 's%^\(PROJECT_NAME[[:space:]=].*\)%\1@PACKAGE_NAME@%' \
-      -e 's%^\(PROJECT_NUMBER[[:space:]=].*\)%\1@PACKAGE_VERSION@%' \
-      -e 's%^\(OUTPUT_DIRECTORY[[:space:]=].*\)%\1.%' \
-      -e 's%^\(INPUT[[:space:]=].*\)%\1@top_srcdir@/src @top_srcdir@/src/include%' \
-      -e 's%^\(FILE_PATTERNS[[:space:]=].*\)%\1*.cc *.h *.dox%' \
-      -e 's%^\(QUIET[[:space:]]*=\).*%\1 YES%' \
-      -e 's%^\(PREDEFINED[[:space:]]*=\).*%\1 DOXYGEN protected_notdocumented=private%' \
-      -e 's%^\(MACRO_EXPANSION[[:space:]]*=\).*%\1 YES%' \
-      -e 's%^\(EXPAND_ONLY_PREDEF[[:space:]]*=\).*%\1 YES%' \
-      -e 's%^\(HAVE_DOT[[:space:]]*=\).*%\1 @HAVE_DOT@%' \
-      -e 's%^\(STRIP_FROM_PATH[[:space:]]*=\).*%\1 @DOXYGEN_STRIP_FROM_PATH@%' \
-      -e 's%^\(IMAGE_PATH[[:space:]]*=\).*%\1 @top_srcdir@/doc/images%' \
-      -e 's%^\(HTML_HEADER[[:space:]]*=\).*%\1 html.header%' \
-      -e 's%^\(HTML_FOOTER[[:space:]]*=\).*%\1 html.footer%' \
-      -e 's%^\(GENERATE_LATEX[[:space:]]*=\).*%\1 NO%' \
-      -e '/^PREDEFINED[[:space:]]*=/ cPREDEFINED             = "DOXYGEN" \\\
-                         "protected_notdocumented=private" \\\
-                         "public_notdocumented=private" \\\
-                         "@DOXYGEN_CWDEBUG@" \\\
-                         "@DOXYGEN_DEBUG@" \\\
-                         "DDCN(x)=" \\\
-                         "DOXYGEN_STATIC=" \\\
-                         "UNUSED_ARG(x)="' \
-      "$dp/doxygen.config.tmp" >> "$dp/doxygen.config.in"
-  rm "$dp/doxygen.config.tmp"
-fi
-#      -e 's%^\(CGI_NAME[[:space:]=].*\)%# Obsoleted: \1%' 
+  if [ -f "$dp/Makefile.am" -a ! -f "$dp/doxygen.config.in" -a ! -f "$dp/doxygen.config" ]; then
+    (doxygen --version) >/dev/null 2>/dev/null || (echo -e "\n*** ERROR: You need the package 'doxygen' to generate documentation. Please install it (see http://www.doxygen.org/)."; exit 1) || exit 1
+    created_files="$created_files $dp/doxygen.config.in"
+    doxygen -g "$dp/doxygen.config.tmp" >/dev/null
+    echo -e "# @""configure_input""@\n" > "$dp/doxygen.config.in";
+    sed -e 's%^\(PROJECT_NAME[[:space:]]*=\).*%\1 @PACKAGE_NAME@%' \
+        -e 's%^\(PROJECT_NUMBER[[:space:]]*=\).*%\1 @PACKAGE_VERSION@%' \
+        -e 's%^\(OUTPUT_DIRECTORY[[:space:]]*=\).*%\1 .%' \
+        -e 's%^\(INPUT[[:space:]]*=\).*%\1 @top_srcdir@/src @top_srcdir@/src/include%' \
+        -e 's%^\(FILE_PATTERNS[[:space:]]*=\).*%\1 *.cxx *.h *.dox%' \
+        -e 's%^\(QUIET[[:space:]]*=\).*%\1 YES%' \
+        -e 's%^\(PREDEFINED[[:space:]]*=\).*%\1 DOXYGEN protected_notdocumented=private%' \
+        -e 's%^\(MACRO_EXPANSION[[:space:]]*=\).*%\1 YES%' \
+        -e 's%^\(EXPAND_ONLY_PREDEF[[:space:]]*=\).*%\1 YES%' \
+        -e 's%^\(HAVE_DOT[[:space:]]*=\).*%\1 @HAVE_DOT@%' \
+        -e 's%^\(STRIP_FROM_PATH[[:space:]]*=\).*%\1 @DOXYGEN_STRIP_FROM_PATH@%' \
+        -e 's%^\(IMAGE_PATH[[:space:]]*=\).*%\1 @top_srcdir@/'"$dp"'/images%' \
+        -e 's%^\(HTML_HEADER[[:space:]]*=\).*%\1 html.header%' \
+        -e 's%^\(HTML_FOOTER[[:space:]]*=\).*%\1 html.footer%' \
+        -e 's%^\(GENERATE_LATEX[[:space:]]*=\).*%\1 NO%' \
+        -e '/^PREDEFINED[[:space:]]*=/ cPREDEFINED             = "DOXYGEN" \\\
+                           "protected_notdocumented=private" \\\
+                           "public_notdocumented=private" \\\
+                           "@DOXYGEN_CWDEBUG@" \\\
+                           "@DOXYGEN_DEBUG@" \\\
+                           "DDCN(x)=" \\\
+                           "DOXYGEN_STATIC=" \\\
+                           "UNUSED_ARG(x)="' \
+        "$dp/doxygen.config.tmp" >> "$dp/doxygen.config.in"
+    rm "$dp/doxygen.config.tmp"
+  fi
+
+  DOC_NAME="$(basename $dp)"
+  DIR_NAME="$(dirname $dp)"
+
+  if ! $(grep -E "^[[:space:]]*SUBDIRS[[:space:]]*=.*\b$DOC_NAME\b" $DIR_NAME/Makefile.am >/dev/null); then
+    echo -e "\n*** WARNING: Directory \"$DOC_NAME\" is missing from the SUBDIRS line in $DIR_NAME/Makefile.am!\n"
+  fi
 
 done
 
@@ -419,6 +426,7 @@ if test -n "$created_files"; then
   echo "* The following files were generated:"
   echo "* $created_files"
   echo "* Edit them and add them to your repository!"
+  echo
 fi
 
 fi # using_doxygen

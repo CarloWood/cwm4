@@ -1,12 +1,12 @@
 all-local: doxygen.config html.header html.footer
 	@echo "doxygen doxygen.config"
 	@doxygen doxygen.config
-	mkdir -p $(top_builddir)/doc/html/images
+	mkdir -p $(srcdir)/html/images
 	if test -n "`ls $(srcdir)/images/*.png 2>/dev/null`"; then \
-	  $(INSTALL) -m 644 $(srcdir)/images/*.png $(top_builddir)/doc/html/images; \
+	  $(INSTALL) -m 644 $(srcdir)/images/*.png $(builddir)/html/images; \
 	fi
-	mv $(top_builddir)/doc/html/doxygen.png $(top_builddir)/doc/html/images
-	test -f $(srcdir)/main.css && $(INSTALL) -m 644 $(srcdir)/main.css $(top_builddir)/doc/html
+	mv html/doxygen.png $(builddir)/html/images
+	test -f $(srcdir)/main.css && $(INSTALL) -m 644 $(srcdir)/main.css $(builddir)/html
 
 maintainer-clean-local:
 	rm -rf html latex
