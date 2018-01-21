@@ -27,13 +27,13 @@
 dnl CW_DOXYGEN
 dnl
 dnl The following is created, if it doesn't already exist, by autogen.sh:
-dnl - A directory 'doc' in srcdir
-dnl - $(srcdir)/doc/Makefile.am
-dnl - $(srcdir)/doc/doxygen.config.in
-dnl - $(srcdir)/doc/main.css
-dnl - $(srcdir)/doc/html.header
-dnl - $(srcdir)/doc/html.footer
-dnl - $(srcdir)/doc/mainpage.dox
+dnl - A directory 'doc' in srcdir/$1
+dnl - $(srcdir)/$1/doc/Makefile.am
+dnl - $(srcdir)/$1/doc/doxygen.config.in
+dnl - $(srcdir)/$1/doc/main.css
+dnl - $(srcdir)/$1/doc/html.header
+dnl - $(srcdir)/$1/doc/html.footer
+dnl - $(srcdir)/$1/doc/mainpage.dox
 dnl 
 AC_DEFUN([CW_DOXYGEN], [
 # Check if we have graphviz's 'dot'.
@@ -55,8 +55,8 @@ if test -z "$OUTPUT_DIRECTORY"; then
 fi
 AC_SUBST(OUTPUT_DIRECTORY)
 AC_CONFIG_FILES(
-        [doc/Makefile]
-        [doc/doxygen.config]
-	[doc/html.header]
-	[doc/html.footer])
+        ifelse([$1], [], [], [$1/])[doc/Makefile]
+        ifelse([$1], [], [], [$1/])[doc/doxygen.config]
+	ifelse([$1], [], [], [$1/])[doc/html.header]
+	ifelse([$1], [], [], [$1/])[doc/html.footer])
 ])
