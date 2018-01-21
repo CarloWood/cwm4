@@ -73,10 +73,10 @@ else
 fi
 
 # Determine if this project uses doxygen.
-CW_DOXYGEN_LINE=$(m4 -P cwm4/sugar.m4 configure.ac | egrep '^[[:space:]]*CW_DOXYGEN')
+CW_DOXYGEN_LINE=$(egrep '^[[:space:]]*CW_DOXYGEN' configure.ac)
 if test -n "$CW_DOXYGEN_LINE"; then
   using_doxygen="yes"
-  CW_DOXYGEN_PATHS="$(echo $CW_DOXYGEN_LINE | sed -r -e 's/^[[:space:]]*CW_DOXYGEN[[:space:]]*\(//;s/\).*//')"
+  CW_DOXYGEN_PATHS="$(echo $CW_DOXYGEN_LINE | sed -r -e 's/^[[:space:]]*CW_DOXYGEN[[:space:]]*\(\[*//;s/\]*\).*//')"
 else
   using_doxygen="no"
 fi
@@ -320,10 +320,10 @@ if test -d .git; then
   fi
 fi
 
-echo "WE GET HERE, using_doxygen = $using_doxygen"
 if test "$using_doxygen" = "yes"; then
 
-if test -z "$CW_DOXYGEN_PATHS"; then
+if expr "$CW_DOXYGEN_LINE" : "^[[:space:]]*CW_DOXYGEN[[:space:]]*[^(]" > /dev/null ||
+   expr "$CW_DOXYGEN_LINE" : "^[[:space:]]*CW_DOXYGEN[[:space:]]*$" > /dev/null; then
   echo -e "\n*ERROR:**********************************************************"
   echo "* Using CW_DOXYGEN without arguments. Please specify directories to generate documtation in."
   echo "* Use a dot (.) for the root directory. For example:"
@@ -335,51 +335,55 @@ doc_paths=
 for dp in $CW_DOXYGEN_PATHS; do
 
   if test -f "$dp/doc/doxygen.config.in"; then
-    doc_paths+="$dp/doc"
+    doc_paths+=" $dp/doc"
   elif test -f "$dp/docs/doxygen.config.in"; then
-    doc_paths+="$dp/docs"
+    doc_paths+=" $dp/docs"
   elif test -f "$dp/documentation/doxygen.config.in"; then
-    doc_paths+="$dp/documentation"
+    doc_paths+=" $dp/documentation"
   elif test -d "$dp/doc"; then
-    doc_paths+="$dp/doc"
+    doc_paths+=" $dp/doc"
   elif test -d "$dp/docs"; then
-    doc_paths+="$dp/docs"
+    doc_paths+=" $dp/docs"
   elif test -d "$dp/documentation"; then
-    doc_paths+="$dp/documentation"
+    doc_paths+=" $dp/documentation"
+  else
+    echo -e "\n*ERROR:**********************************************************"
+    echo "* Using $CW_DOXYGEN_LINE in configure.ac but no doc/docs/documentation directory could be found in '$dp'!"
+    echo "* Please create a $dp/doc directory or remove $dp from the CW_DOXYGEN line configure.ac."
+    exit 1
   fi
 
 done
 
-echo "doc_paths = \"$doc_paths\""
-exit 1
+for dp in $doc_paths; do
 
-created_files=
-if [ ! -f "$dp/Makefile.am" -a ! -f "$dp/Makefile.in" -a ! -f "$dp/Makefile" ]; then
-  created_files="$created_files $dp/Makefile.am"
-  cp cwm4/templates/doxygen/Makefile.am $dp
-fi
-if [ -f "$doc_path/Makefile.am" -a ! -f "$doc_path/main.css" ]; then
-  created_files="$created_files $doc_path/main.css"
-  cp cwm4/templates/doxygen/main.css $doc_path
-fi
-if [ -f "$doc_path/Makefile.am" -a ! -f "$doc_path/html.header.in" -a ! -f "$doc_path/html.header" ]; then
-  created_files="$created_files $doc_path/html.header.in"
-  cp cwm4/templates/doxygen/html.header.in $doc_path
-fi
-if [ -f "$doc_path/Makefile.am" -a ! -f "$doc_path/html.footer.in" -a ! -f "$doc_path/html.footer" ]; then
-  created_files="$created_files $doc_path/html.footer.in"
-  cp cwm4/templates/doxygen/html.footer.in $doc_path
-fi
-if [ -f "$doc_path/Makefile.am" -a ! -f $doc_path/mainpage.dox ]; then
-  created_files="$created_files $doc_path/mainpage.dox"
-  cp cwm4/templates/doxygen/mainpage.dox $doc_path
-fi
+  created_files=
+  if [ ! -f "$dp/Makefile.am" -a ! -f "$dp/Makefile.in" -a ! -f "$dp/Makefile" ]; then
+    created_files="$created_files $dp/Makefile.am"
+    cp cwm4/templates/doxygen/Makefile.am $dp
+  fi
+  if [ -f "$dp/Makefile.am" -a ! -f "$dp/main.css" ]; then
+    created_files="$created_files $dp/main.css"
+    cp cwm4/templates/doxygen/main.css $dp
+  fi
+  if [ -f "$dp/Makefile.am" -a ! -f "$dp/html.header.in" -a ! -f "$dp/html.header" ]; then
+    created_files="$created_files $dp/html.header.in"
+    cp cwm4/templates/doxygen/html.header.in $dp
+  fi
+  if [ -f "$dp/Makefile.am" -a ! -f "$dp/html.footer.in" -a ! -f "$dp/html.footer" ]; then
+    created_files="$created_files $dp/html.footer.in"
+    cp cwm4/templates/doxygen/html.footer.in $dp
+  fi
+  if [ -f "$dp/Makefile.am" -a ! -f $dp/mainpage.dox ]; then
+    created_files="$created_files $dp/mainpage.dox"
+    cp cwm4/templates/doxygen/mainpage.dox $dp
+  fi
 
-if [ -f "$doc_path/Makefile.am" -a ! -f "$doc_path/doxygen.config.in" -a ! -f "$doc_path/doxygen.config" ]; then
+if [ -f "$dp/Makefile.am" -a ! -f "$dp/doxygen.config.in" -a ! -f "$dp/doxygen.config" ]; then
   (doxygen --version) >/dev/null 2>/dev/null || (echo -e "\n*** ERROR: You need the package 'doxygen' to generate documentation. Please install it (see http://www.doxygen.org/)."; exit 1) || exit 1
-  created_files="$created_files $doc_path/doxygen.config.in"
-  doxygen -g "$doc_path/doxygen.config.tmp" >/dev/null
-  echo -e "# @""configure_input""@\n" > "$doc_path/doxygen.config.in";
+  created_files="$created_files $dp/doxygen.config.in"
+  doxygen -g "$dp/doxygen.config.tmp" >/dev/null
+  echo -e "# @""configure_input""@\n" > "$dp/doxygen.config.in";
   sed -e 's%^\(PROJECT_NAME[[:space:]=].*\)%\1@PACKAGE_NAME@%' \
       -e 's%^\(PROJECT_NUMBER[[:space:]=].*\)%\1@PACKAGE_VERSION@%' \
       -e 's%^\(OUTPUT_DIRECTORY[[:space:]=].*\)%\1.%' \
@@ -403,10 +407,12 @@ if [ -f "$doc_path/Makefile.am" -a ! -f "$doc_path/doxygen.config.in" -a ! -f "$
                          "DDCN(x)=" \\\
                          "DOXYGEN_STATIC=" \\\
                          "UNUSED_ARG(x)="' \
-      "$doc_path/doxygen.config.tmp" >> "$doc_path/doxygen.config.in"
-  rm "$doc_path/doxygen.config.tmp"
+      "$dp/doxygen.config.tmp" >> "$dp/doxygen.config.in"
+  rm "$dp/doxygen.config.tmp"
 fi
 #      -e 's%^\(CGI_NAME[[:space:]=].*\)%# Obsoleted: \1%' 
+
+done
 
 if test -n "$created_files"; then
   echo -e "\n*WARNING:**********************************************************"
