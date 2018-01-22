@@ -1,7 +1,7 @@
 all-local: doxygen.config html.header html.footer
 	@echo "doxygen doxygen.config"
 	@doxygen doxygen.config
-	mkdir -p $(srcdir)/html/images
+	mkdir -p $(builddir)/html/images
 	if test -n "`ls $(srcdir)/images/*.png 2>/dev/null`"; then \
 	  $(INSTALL) -m 644 $(srcdir)/images/*.png $(builddir)/html/images; \
 	fi
