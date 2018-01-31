@@ -358,6 +358,17 @@ done
 
 for dp in $doc_paths; do
 
+  package_name="@PACKAGE_NAME@"
+  package_version="@PACKAGE_VERSION@"
+  version="@VERSION@"
+
+  if test "$dp" != "." -a -f "$(dirname $dp)/.git"; then
+    package_name=$(git -C "$(dirname $dp)" ls-remote --get-url $(git -C "$(dirname $dp)" rev-parse --symbolic-full-name --abbrev-ref @{upstream} | \
+                   cut -d / -f 1) | sed -e 's%.*/%%;s%\.git$%%')
+    package_version=$(git -C "$(dirname $dp)" rev-parse --short HEAD)
+    version="$package_version"
+  fi
+
   created_files=
   if [ ! -f "$dp/Makefile.am" -a ! -f "$dp/Makefile.in" -a ! -f "$dp/Makefile" ]; then
     created_files="$created_files $dp/Makefile.am"
@@ -369,7 +380,9 @@ for dp in $doc_paths; do
   fi
   if [ -f "$dp/Makefile.am" -a ! -f "$dp/html.header.in" -a ! -f "$dp/html.header" ]; then
     created_files="$created_files $dp/html.header.in"
-    cp cwm4/templates/doxygen/html.header.in $dp
+    sed -e 's%@PACKAGE_NAME@%'"$package_name"'%g' \
+        -e 's%@VERSION@%'"$version"'%g' \
+        cwm4/templates/doxygen/html.header.in > $dp/html.header.in
   fi
   if [ -f "$dp/Makefile.am" -a ! -f "$dp/html.footer.in" -a ! -f "$dp/html.footer" ]; then
     created_files="$created_files $dp/html.footer.in"
@@ -384,19 +397,21 @@ for dp in $doc_paths; do
   if test -d "$(dirname $dp)/include"; then
     input_dirs+=" @top_srcdir@/$(dirname $dp)/include"
   fi
+  input_dirs+=" @top_srcdir@/$dp"
 
   if [ -f "$dp/Makefile.am" -a ! -f "$dp/doxygen.config.in" -a ! -f "$dp/doxygen.config" ]; then
     (doxygen --version) >/dev/null 2>/dev/null || (echo -e "\n*** ERROR: You need the package 'doxygen' to generate documentation. Please install it (see http://www.doxygen.org/)."; exit 1) || exit 1
     created_files="$created_files $dp/doxygen.config.in"
     doxygen -g "$dp/doxygen.config.tmp" >/dev/null
     echo -e "# @""configure_input""@\n" > "$dp/doxygen.config.in";
-    sed -e 's%^\(PROJECT_NAME[[:space:]]*=\).*%\1 @PACKAGE_NAME@%' \
-        -e 's%^\(PROJECT_NUMBER[[:space:]]*=\).*%\1 @PACKAGE_VERSION@%' \
+    sed -e 's%^\(PROJECT_NAME[[:space:]]*=\).*%\1 '"$package_name"'%' \
+        -e 's%^\(PROJECT_NUMBER[[:space:]]*=\).*%\1 '"$package_version"'%' \
         -e 's%^\(OUTPUT_DIRECTORY[[:space:]]*=\).*%\1 .%' \
         -e 's%^\(INPUT[[:space:]]*=\).*%\1'"$input_dirs"'%' \
         -e 's%^\(FILE_PATTERNS[[:space:]]*=\).*%\1 *.cxx *.h *.dox%' \
         -e 's%^\(QUIET[[:space:]]*=\).*%\1 YES%' \
         -e 's%^\(PREDEFINED[[:space:]]*=\).*%\1 DOXYGEN protected_notdocumented=private%' \
+        -e 's%^\(TABSIZE[[:space:]]*=\).*%\1 8%' \
         -e 's%^\(MACRO_EXPANSION[[:space:]]*=\).*%\1 YES%' \
         -e 's%^\(EXPAND_ONLY_PREDEF[[:space:]]*=\).*%\1 YES%' \
         -e 's%^\(HAVE_DOT[[:space:]]*=\).*%\1 @HAVE_DOT@%' \

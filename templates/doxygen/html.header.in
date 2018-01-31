@@ -4,10 +4,10 @@
 <head>
 <meta http-equiv="content-type" content="text/html; charset=UTF-8">
 <meta name="Author" content="Carlo Wood">
-<meta name="description" content="@PACKAGE_NAME@ version @VERSION@">
+<meta name="description" content="@PACKAGE_NAME@">
 <title>@PACKAGE_NAME@ documentation</title>
 <link href="doxygen.css" rel="stylesheet" type="text/css">
-<link href="@PACKAGE@.css" rel="stylesheet" type="text/css">
+<link href="main.css" rel="stylesheet" type="text/css">
 </head>
 
 <body>
@@ -15,7 +15,7 @@
 <table class="header">
 <tr>
 <td><img src="images/silvrhed.png"></td>
-<td>edit html.header</td>
+<td>edit html.header.in</td>
 </tr>
 </table>
 
