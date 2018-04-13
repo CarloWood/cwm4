@@ -469,7 +469,7 @@ run()
 rm -rf autom4te.cache config.cache
 
 if test ! -f Makefile.am; then
-  echo -e "\n*** WARNING: Missing Makefile.am. Copying a default one. Edit it!"
+  echo -e "\n*** WARNING: Missing Makefile.am. Copying a default one. Edit it!\n"
   cp cwm4/templates/root_Makefile.am Makefile.am
   created_files="$created_files Makefile.am"
 fi
@@ -508,6 +508,14 @@ if test "$generate_makefile_am" = "yes"; then
   cp cwm4/templates/root_Makefile.am Makefile.am
 fi
 
+if test -n "$created_files"; then
+  echo -e "\n*WARNING:**********************************************************"
+  echo "* The following files were generated:"
+  echo "* $created_files"
+  echo "* Edit them and add them to your repository! Then re-run autogen.sh."
+  exit
+fi
+
 if test "$using_libtool" = "yes"; then
   # Set SED and M4 to scripts that cause libtoolize to process configure.ac properly.
   export SED="$(pwd)/cwm4/scripts/SED.sh"
@@ -533,20 +541,13 @@ run "$AUTOMAKE --add-missing --foreign"
 echo
 project_name=`basename "$PWD"`
 
-if test -n "$created_files"; then
-  echo -e "\n*WARNING:**********************************************************"
-  echo "* The following files were generated:"
-  echo "* $created_files"
-  echo "* Edit them and add them to your repository! Then re-run autogen.sh."
+echo -n "Now you can do '"
+if [ ! -d ../$project_name-objdir ]; then
+  echo -n "mkdir ../$project_name-objdir; "
+fi
+echo -n "cd ../$project_name-objdir; "
+if test -n "$CONFIGURE_OPTIONS"; then
+  echo "configure'."
 else
-  echo -n "Now you can do '"
-  if [ ! -d ../$project_name-objdir ]; then
-    echo -n "mkdir ../$project_name-objdir; "
-  fi
-  echo -n "cd ../$project_name-objdir; "
-  if test -n "$CONFIGURE_OPTIONS"; then
-    echo "configure'."
-  else
-    echo "../$project_name/configure --enable-maintainer-mode [--help]'."
-  fi
+  echo "../$project_name/configure --enable-maintainer-mode [--help]'."
 fi
