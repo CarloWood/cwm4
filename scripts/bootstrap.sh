@@ -20,22 +20,25 @@ if test ! -f configure.ac; then
   else
     generate_configure_ac="yes"
   fi
+else
+  if ! grep '^m4_include(\[cwm4/configure_ac_top\.m4\])' configure.ac >/dev/null; then
+    echo "Missing 'm4_include([cwm4/configure_ac_top.m4])' in configure.ac."
+    generate_configure_ac="yes"
+  fi
+  if ! grep '^m4_include(\[cwm4/configure_ac_bottom\.m4\])' configure.ac >/dev/null; then
+    echo "Missing 'm4_include([cwm4/configure_ac_bottom.m4])' in configure.ac."
+    generate_configure_ac="yes"
+  fi
 fi
 
-if ! grep '^m4_include(\[cwm4/configure_ac_top\.m4\])' configure.ac >/dev/null; then
-  echo "Missing 'm4_include([cwm4/configure_ac_top.m4])' in configure.ac."
-  generate_configure_ac="yes"
-fi
-
-if ! grep '^m4_include(\[cwm4/configure_ac_bottom\.m4\])' configure.ac >/dev/null; then
-  echo "Missing 'm4_include([cwm4/configure_ac_bottom.m4])' in configure.ac."
-  generate_configure_ac="yes"
-fi
-
+created_files=
 if test "$generate_configure_ac" = "yes"; then
+  created_files="configure.ac"
   if test -e configure.ac; then
     echo "WARNING: Replacing your configure.ac with a new one. Please edit it! The old configure.ac was renamed to configure.ac.bak."
     mv configure.ac configure.ac.bak
+  else
+    echo -e "\n*** WARNING: Missing configure.ac. Copying a default one. Edit it!"
   fi
   CW_PACKAGE_NAME="$(basename $(pwd))"
   CW_BUGREPORT="$GIT_AUTHOR_EMAIL"
@@ -369,7 +372,6 @@ for dp in $doc_paths; do
     version="$package_version"
   fi
 
-  created_files=
   if [ ! -f "$dp/Makefile.am" -a ! -f "$dp/Makefile.in" -a ! -f "$dp/Makefile" ]; then
     created_files="$created_files $dp/Makefile.am"
     cp cwm4/templates/doxygen/Makefile.am $dp
@@ -441,14 +443,6 @@ for dp in $doc_paths; do
 
 done
 
-if test -n "$created_files"; then
-  echo -e "\n*WARNING:**********************************************************"
-  echo "* The following files were generated:"
-  echo "* $created_files"
-  echo "* Edit them and add them to your repository!"
-  echo
-fi
-
 fi # using_doxygen
 
 if test "$using_libtool" = "yes"; then
@@ -477,6 +471,7 @@ rm -rf autom4te.cache config.cache
 if test ! -f Makefile.am; then
   echo -e "\n*** WARNING: Missing Makefile.am. Copying a default one. Edit it!"
   cp cwm4/templates/root_Makefile.am Makefile.am
+  created_files="$created_files Makefile.am"
 fi
 
 if ! egrep '^[[:space:]]*SUBDIRS[[:space:]]*=.*@CW_SUBDIRS@' Makefile.am >/dev/null; then
@@ -538,13 +533,20 @@ run "$AUTOMAKE --add-missing --foreign"
 echo
 project_name=`basename "$PWD"`
 
-echo -n "Now you can do '"
-if [ ! -d ../$project_name-objdir ]; then
-  echo -n "mkdir ../$project_name-objdir; "
-fi
-echo -n "cd ../$project_name-objdir; "
-if test -n "$CONFIGURE_OPTIONS"; then
-  echo "configure'."
+if test -n "$created_files"; then
+  echo -e "\n*WARNING:**********************************************************"
+  echo "* The following files were generated:"
+  echo "* $created_files"
+  echo "* Edit them and add them to your repository! Then re-run autogen.sh."
 else
-  echo "../$project_name/configure --enable-maintainer-mode [--help]'."
+  echo -n "Now you can do '"
+  if [ ! -d ../$project_name-objdir ]; then
+    echo -n "mkdir ../$project_name-objdir; "
+  fi
+  echo -n "cd ../$project_name-objdir; "
+  if test -n "$CONFIGURE_OPTIONS"; then
+    echo "configure'."
+  else
+    echo "../$project_name/configure --enable-maintainer-mode [--help]'."
+  fi
 fi
