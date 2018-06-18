@@ -35,7 +35,7 @@ AC_DEFUN([CW_SYS_MALLOC_OVERHEAD],
 AC_TRY_RUN([#include <stddef.h>
 #include <stdlib.h>
 
-bool bulk_alloc(size_t malloc_overhead_attempt, size_t size)
+int bulk_alloc(size_t malloc_overhead_attempt, size_t size)
 {
   int const number = 100;
   long int distance = 9999;
@@ -52,7 +52,7 @@ bool bulk_alloc(size_t malloc_overhead_attempt, size_t size)
   return (distance == (long int)size);
 }
 
-int main(int argc, char* [])
+int main(int argc, char* argv[])
 {
   if (argc == 1)
     exit(0);	// This wasn't the real test yet
