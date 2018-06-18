@@ -32,7 +32,7 @@ dnl
 AC_DEFUN([CW_SYS_MALLOC_OVERHEAD],
 [AC_CACHE_CHECK(malloc overhead in bytes, cw_cv_system_mallocoverhead,
 [AC_LANG_PUSH(C)
-CW_SYS_MALLOC_OVERHEAD_CFLAGS_save="$CFLAGS"
+SYS_MALLOC_OVERHEAD_CFLAGS_save="$CFLAGS"
 CFLAGS="-std=c11 $CFLAGS"
 AC_TRY_RUN([#include <cstddef>
 #include <cstdlib>
@@ -77,7 +77,7 @@ cw_cv_system_mallocoverhead=$?,
     cw_cv_system_mallocoverhead=4 dnl Guess a default for cross compiling
     ;;
 esac])
-CFLAGS="$CW_SYS_MALLOC_OVERHEAD_CFLAGS_save"
+CFLAGS="$SYS_MALLOC_OVERHEAD_CFLAGS_save"
 AC_LANG_POP(C)])
 eval "CW_MALLOC_OVERHEAD=$cw_cv_system_mallocoverhead"
 AC_SUBST(CW_MALLOC_OVERHEAD)
