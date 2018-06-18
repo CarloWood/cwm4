@@ -31,7 +31,10 @@ dnl allocated for a call to malloc.
 dnl
 AC_DEFUN([CW_SYS_MALLOC_OVERHEAD],
 [AC_CACHE_CHECK(malloc overhead in bytes, cw_cv_system_mallocoverhead,
-[AC_TRY_RUN([#include <cstddef>
+[AC_LANG_PUSH(C)
+CW_SYS_MALLOC_OVERHEAD_CFLAGS_save="$CFLAGS"
+CFLAGS="-std=c11 $CFLAGS"
+AC_TRY_RUN([#include <cstddef>
 #include <cstdlib>
 
 bool bulk_alloc(size_t malloc_overhead_attempt, size_t size)
@@ -73,7 +76,9 @@ cw_cv_system_mallocoverhead=$?,
   *)
     cw_cv_system_mallocoverhead=4 dnl Guess a default for cross compiling
     ;;
-esac])])
+esac])
+CFLAGS="$CW_SYS_MALLOC_OVERHEAD_CFLAGS_save"
+AC_LANG_POP(C)])
 eval "CW_MALLOC_OVERHEAD=$cw_cv_system_mallocoverhead"
 AC_SUBST(CW_MALLOC_OVERHEAD)
 m4_pattern_allow(CW_MALLOC_OVERHEAD)
