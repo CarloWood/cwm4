@@ -54,6 +54,7 @@ AC_LANG_SAVE
 AC_LANG_C
 AC_TRY_RUN([#include <sys/types.h>
 #include <$cw_socket_header>
+#include <stdlib.h>
 #include <fcntl.h>
 #include <sys/ioctl.h>
 #include <sys/file.h>
@@ -67,16 +68,16 @@ int main(int argc, char* argv[])
   size_t l = sizeof(x);
   int f = socket(AF_INET, SOCK_DGRAM, 0);
   if (argc == 1)
-    exit(0);
+    return 0;
   if (f >= 0 && !(fcntl(f, F_SETFL, (*argv[1] == 'P') ? O_NONBLOCK : O_NDELAY)))
   {
     signal(SIGALRM, alarmed);
     alarm(2);
     recvfrom(f, b, 12, 0, &x, ($cw_recvfrom_param_six_t)&l);
     alarm(0);
-    exit(0);
+    return 0;
   }
-  exit(1);
+  return 1;
 }],
 [./conftest POSIX
 if test "$?" = "0"; then

@@ -67,6 +67,8 @@ int main(void)
   exit(0);
 }
 EOF
+AC_LANG_SAVE
+AC_LANG_CPLUSPLUS
 save_CXXFLAGS="$CXXFLAGS"
 CXXFLAGS="`echo $CXXFLAGS | sed -e 's/-Werror//g'`"
 if { (eval echo configure: \"$ac_compile\") 1>&5; (eval $ac_compile) 2>&1 | tee conftest.out >&5; }; then
@@ -87,5 +89,6 @@ else
   AC_MSG_ERROR([Configuration problem: Failed to compile a test program])
 fi
 CXXFLAGS="$save_CXXFLAGS"
+AC_LANG_RESTORE
 rm -f conftest*
 ])
