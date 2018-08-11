@@ -30,7 +30,9 @@ dnl Extract the type of ARGUMENT argument of function FUNCTION with ARGUMENTS ar
 dnl INIT are possibly needed #includes.  The result is put in `cw_result'.
 dnl
 AC_DEFUN([CW_TYPE_EXTRACT_FROM],
-[cat > conftest.$ac_ext <<EOF
+[AC_LANG_SAVE
+AC_LANG_CPLUSPLUS
+cat > conftest.$ac_ext <<EOF
 [$2]
 #ifdef __cplusplus
 #include <cstdlib>
@@ -89,5 +91,6 @@ else
   AC_MSG_ERROR([Configuration problem: Failed to compile a test program])
 fi
 CXXFLAGS="$save_CXXFLAGS"
+AC_LANG_RESTORE
 rm -f conftest*
 ])
