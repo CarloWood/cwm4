@@ -67,6 +67,7 @@ int main(void)
   exit(0);
 }
 EOF
+cp conftest.$ac_ext /tmp/troep.cpp
 save_CXXFLAGS="$CXXFLAGS"
 CXXFLAGS="`echo $CXXFLAGS | sed -e 's/-Werror//g'`"
 if { (eval echo configure: \"$ac_compile\") 1>&5; (eval $ac_compile) 2>&1 | tee conftest.out >&5; }; then
