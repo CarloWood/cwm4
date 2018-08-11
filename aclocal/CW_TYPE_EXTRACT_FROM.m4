@@ -38,8 +38,9 @@ AC_DEFUN([CW_TYPE_EXTRACT_FROM],
 #else
 #define ARGF f
 #endif
+enum foo_t { x };
 template<typename ARG>
-  void detect_type(ARG)
+  foo_t detect_type(ARG)
   {
     return reinterpret_cast<ARG*>(0);
   }
@@ -61,7 +62,7 @@ echo "ARG$3)) { ARG$4 arg;" >> conftest.$ac_ext
 cat >> conftest.$ac_ext <<EOF
   detect_type(arg);
 }
-int main(void)
+int main()
 {
   foo($1);
   exit(0);
@@ -72,7 +73,6 @@ save_CXXFLAGS="$CXXFLAGS"
 CXXFLAGS="`echo $CXXFLAGS | sed -e 's/-Werror//g'`"
 if { (eval echo configure: \"$ac_compile\") 1>&5; (eval $ac_compile) 2>&1 | tee conftest.out >&5; }; then
 changequote(, )dnl
-  cat conftest.out > /tmp/troep
   cw_result="`grep 'detect_type<.*>' conftest.out | sed -e 's/.*detect_type<//g' -e 's/>[^>]*//' | head -n 1`"
   if test -z "$cw_result"; then
     cw_result="`cat conftest.out`"
