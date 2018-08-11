@@ -71,6 +71,7 @@ save_CXXFLAGS="$CXXFLAGS"
 CXXFLAGS="`echo $CXXFLAGS | sed -e 's/-Werror//g'`"
 if { (eval echo configure: \"$ac_compile\") 1>&5; (eval $ac_compile) 2>&1 | tee conftest.out >&5; }; then
 changequote(, )dnl
+  cat conftest.out > /tmp/troep
   cw_result="`grep 'detect_type<.*>' conftest.out | sed -e 's/.*detect_type<//g' -e 's/>[^>]*//' | head -n 1`"
   if test -z "$cw_result"; then
     cw_result="`cat conftest.out`"
