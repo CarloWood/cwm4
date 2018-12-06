@@ -530,18 +530,13 @@ fi
 if test -n "$ACLOCAL_PATH"; then
   echo "ACLOCAL_PATH is set ($ACLOCAL_PATH)!"
 fi
-echo -- "Running 'run $ACLOCAL -I cwm4/aclocal -I m4/aclocal'"
-#run "$ACLOCAL -I cwm4/aclocal -I m4/aclocal"
+run "$ACLOCAL -I cwm4/aclocal -I m4/aclocal"
 if test "$using_gtkdoc" = "yes"; then
   run "$GTKDOCIZE"
 fi
-echo -- "Running 'run $AUTOHEADER'"
-#run "$AUTOHEADER"
-echo -- "Running 'run $AUTOCONF'"
-#run "$AUTOCONF"
-echo -- "Running 'run $AUTOMAKE --add-missing --foreign'"
-#run "$AUTOMAKE --add-missing --foreign"
-exit 0
+run "$AUTOHEADER"
+run "$AUTOCONF"
+run "$AUTOMAKE --add-missing --foreign"
 
 echo
 project_name=`basename "$PWD"`
