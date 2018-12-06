@@ -539,6 +539,7 @@ run "$AUTOHEADER"
 echo -- "Running 'run $AUTOMAKE --add-missing --foreign'"
 run "$AUTOMAKE --add-missing --foreign"
 echo -- "Running 'run $AUTOCONF'"
+echo 0
 run "$AUTOCONF"
 
 echo
