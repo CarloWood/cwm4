@@ -536,10 +536,10 @@ if test "$using_gtkdoc" = "yes"; then
 fi
 echo -- "Running 'run $AUTOHEADER'"
 run "$AUTOHEADER"
-echo -- "Running 'run $AUTOCONF'"
-run "$AUTOCONF"
 echo -- "Running 'run $AUTOMAKE --add-missing --foreign'"
 run "$AUTOMAKE --add-missing --foreign"
+echo -- "Running 'run $AUTOCONF'"
+run "$AUTOCONF"
 
 echo
 project_name=`basename "$PWD"`
