@@ -534,8 +534,11 @@ run "$ACLOCAL -I cwm4/aclocal -I m4/aclocal"
 if test "$using_gtkdoc" = "yes"; then
   run "$GTKDOCIZE"
 fi
+echo -- "Running 'run $AUTOHEADER'"
 run "$AUTOHEADER"
+echo -- "Running 'run $AUTOCONF'"
 run "$AUTOCONF"
+echo -- "Running 'run $AUTOMAKE --add-missing --foreign'"
 run "$AUTOMAKE --add-missing --foreign"
 
 echo
