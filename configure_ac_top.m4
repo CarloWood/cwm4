@@ -7,7 +7,7 @@ dnl Package name and version
 AC_INIT(CW_PACKAGE_NAME, CW_VERSION_MAJOR.CW_VERSION_MINOR.CW_VERSION_REVISION, CW_BUGREPORT)
 
 dnl Automake options.
-AM_INIT_AUTOMAKE(m4_sinclude(m4/min_automake_version.m4)[foreign subdir-objects])
+dnl AM_INIT_AUTOMAKE(m4_sinclude(m4/min_automake_version.m4)[foreign subdir-objects])
 
 dnl Minimum autoconf version to use.
 AC_PREREQ(m4_sinclude(m4/min_autoconf_version.m4))
