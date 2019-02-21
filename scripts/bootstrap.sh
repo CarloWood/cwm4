@@ -535,8 +535,8 @@ if test "$using_gtkdoc" = "yes"; then
   run "$GTKDOCIZE"
 fi
 run "$AUTOHEADER"
-run "$AUTOCONF"
 run "$AUTOMAKE --add-missing --foreign"
+run "$AUTOCONF"
 
 echo
 project_name=`basename "$PWD"`
