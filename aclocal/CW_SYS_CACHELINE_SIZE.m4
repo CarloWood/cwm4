@@ -90,8 +90,8 @@ size_t cache_line_size() {
 
 #else
 #error Unrecognized platform
-#endif], [printf("%lu\n", cache_line_size());])],
-[cw_cv_system_cachelinesize=$(conftest$EXEEXT)],
+#endif], [fprintf(stderr, "%lu\n", cache_line_size());])],
+[cw_cv_system_cachelinesize=$(./conftest$EXEEXT 2>&1)],
 [AC_MSG_ERROR(Failed to compile a test program!?)])
 AC_LANG_POP(C)])
 eval "CW_CACHELINE_SIZE=$cw_cv_system_cachelinesize"
