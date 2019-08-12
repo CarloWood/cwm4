@@ -90,7 +90,7 @@ if test "$(echo $GIT_COMMITTER_EMAIL | md5sum | cut -d \  -f 1)" = "$1"; then
   # and fix the url of remotes when needed.
   git submodule foreach -q '
       if test -f "configure.m4" -o "$name" = "cwm4"; then
-        if test -z "$(git config -f $toplevel/.gitmodules submodule.$name.branch)"; then
+        if ! git config -f $toplevel/.gitmodules submodule.$name.branch >/dev/null; then
           echo "  $name: '"$red"'Setting submodule.$name.branch to master!'"$reset"'"
           git config -f $toplevel/.gitmodules "submodule.$name.branch" master
         fi
