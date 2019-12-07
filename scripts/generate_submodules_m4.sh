@@ -52,7 +52,7 @@ if test "$opt_foreach" -eq 0; then
 AC_SUBST([CW_SUBDIRS], "CW_SUBMODULE_SUBDIRS")
 #AM_SUBST_NOTMAKE([CW_SUBDIRS])
 AC_CONFIG_FILES(CW_SUBMODULE_CONFIG_FILES)
-AC_CONFIG_FILES([], [], [\${srcdir}/cwm4/scripts/convert_config_h.sh])
+AC_CONFIG_FILES([], [], [\${srcdir}/cwm4/scripts/convert_config_h.sh \${config_headers}])
 EOF
   else
     cat << EOF >> m4/submodules.m4
