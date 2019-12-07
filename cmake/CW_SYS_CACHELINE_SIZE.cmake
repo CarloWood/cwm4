@@ -26,11 +26,11 @@
 
 # CW_SYS_CACHELINE_SIZE
 #
-# Set cw_cv_sys_cacheline_size to the size of a cache line, in bytes.
+# Set CW_CACHELINE_SIZE to the size of a cache line, in bytes.
 #
 # To use this, add the following line in config.h.in:
 #
-#     static constexpr int cacheline_size_c = @cw_cv_sys_cacheline_size@;
+#     static constexpr int cacheline_size_c = @CW_CACHELINE_SIZE@;
 #
 
 include_guard(GLOBAL)
@@ -38,7 +38,7 @@ include_guard(GLOBAL)
 set(CW_SYS_CACHELINE_SIZE_MODULE_PATH "${CMAKE_CURRENT_LIST_DIR}")
 
 function(CW_SYS_CACHELINE_SIZE)
-  if (NOT DEFINED CACHE{cw_cv_sys_cacheline_size})
+  if (NOT DEFINED CACHE{CW_CACHELINE_SIZE})
     set(CMAKE_TRY_COMPILE_CONFIGURATION "Release")
     try_run(run_works
             compile_works
@@ -51,7 +51,7 @@ function(CW_SYS_CACHELINE_SIZE)
     elseif (NOT run_works EQUAL 0)
       message(FATAL_ERROR "Failed to run test program CW_SYS_CACHELINE_SIZE.c: ${run_output}")
     else ()
-      set(cw_cv_sys_cacheline_size ${run_output} CACHE INTERNAL "")
+      set(CW_CACHELINE_SIZE ${run_output} CACHE INTERNAL "")
     endif ()
   endif()
 endfunction()

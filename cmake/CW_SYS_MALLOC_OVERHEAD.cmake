@@ -28,18 +28,18 @@ include_guard(GLOBAL)
 
 # CW_SYS_MALLOC_OVERHEAD
 #
-# Set cw_cv_sys_malloc_overhead to be the number of bytes extra
+# Set CW_MALLOC_OVERHEAD to be the number of bytes extra
 # allocated for a call to malloc.
 #
 # To use this, add the following line in config.h.in:
 #
-#     static constexpr size_t malloc_overhead_c = @cw_cv_sys_malloc_overhead@;
+#     static constexpr size_t malloc_overhead_c = @CW_MALLOC_OVERHEAD@;
 #
 
 set(CW_SYS_MALLOC_OVERHEAD_MODULE_PATH "${CMAKE_CURRENT_LIST_DIR}")
 
 function(CW_SYS_MALLOC_OVERHEAD)
-  if (NOT DEFINED CACHE{cw_cv_sys_malloc_overhead})
+  if (NOT DEFINED CACHE{CW_MALLOC_OVERHEAD})
     set(CMAKE_TRY_COMPILE_CONFIGURATION "Release")
     try_run(run_works
             compile_works
@@ -52,7 +52,7 @@ function(CW_SYS_MALLOC_OVERHEAD)
     elseif (NOT run_works EQUAL 0)
       message(FATAL_ERROR "Failed to run test program CW_SYS_MALLOC_OVERHEAD.c: ${run_output}")
     else ()
-      set(cw_cv_sys_malloc_overhead ${run_output} CACHE INTERNAL "")
+      set(CW_MALLOC_OVERHEAD ${run_output} CACHE INTERNAL "")
     endif ()
   endif()
 endfunction()
