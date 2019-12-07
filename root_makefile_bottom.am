@@ -1,5 +1,7 @@
-ac_config.h.in: $(srcdir)/config.h.in
-	cp $(srcdir)/config.h.in ac_config.h.in
+CONFIGURE_DEPENDENCIES = $(srcdir)/ac_config.h.in
+
+$(srcdir)/ac_config.h.in: $(srcdir)/config.h.in
+	cp $(srcdir)/config.h.in $(srcdir)/ac_config.h.in
 
 maintainer-clean-local:
 	rm -rf $(srcdir)/m4
