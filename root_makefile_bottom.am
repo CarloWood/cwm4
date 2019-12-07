@@ -1,3 +1,6 @@
+ac_config.h.in: $(srcdir)/config.h.in
+	cp $(srcdir)/config.h.in ac_config.h.in
+
 maintainer-clean-local:
 	rm -rf $(srcdir)/m4
 
