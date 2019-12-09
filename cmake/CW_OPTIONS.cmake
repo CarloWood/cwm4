@@ -24,6 +24,33 @@
 # file appears in them. The GNU General Public License (GPL) does govern
 # all other use of the material that constitutes the cwm4 project.
 
+# This module should only be included from AICxxProject.
+#
+# It sets the following global variables:
+#
+# OptionEnableDebug                     - set when CMAKE_BUILD_TYPE is not Release and -DEnableDebug:BOOL=ON (defaults to CW_BUILD_TYPE_IS_DEBUG)
+# OptionEnableLibcwd                    - set when CMAKE_BUILD_TYPE is not Release and OptionEnableDebug is true,
+#                                         and -DEnableLibcwd:BOOL=ON (defaults to Libcwd_r_FOUND)
+#
+# The following variables are intended to be used with the macro 'option'
+# defined below.
+#
+# CW_BUILD_TYPE_IS_RELEASE              - true iff CMAKE_BUILD_TYPE = Release
+# CW_BUILD_TYPE_IS_NOT_RELEASE          - true iff CMAKE_BUILD_TYPE != Release
+# CW_BUILD_TYPE_IS_RELWITHDEBINFO       - true iff CMAKE_BUILD_TYPE = RelWithDebInfo
+# CW_BUILD_TYPE_IS_DEBUG                - true iff CMAKE_BUILD_TYPE = Debug
+#
+# Usage example,
+#
+#       # Option 'EnableDebug' compiles in debug mode.
+#       option( EnableDebug
+#               "Build for debugging" ${CW_BUILD_TYPE_IS_DEBUG}
+#               "CW_BUILD_TYPE_IS_NOT_RELEASE" OFF )
+#
+# where argument four is a semi-colon separated list of variables
+# that must be true for this option to be added (otherwise OFF,
+# argument five).
+
 include_guard(GLOBAL)
 
 # Params: <option-name> <help-string> <default> <dependent-list> <default2>
@@ -60,19 +87,19 @@ macro(option)
   if ( NOT option_dependent_list_is_true )
     # Use the <default2> parameter.
     if ( ${ARGV4} )
-      set( Option${ARGV0} ON )
+      set( Option${ARGV0} ON CACHE INTERNAL "" )
     else ()
-      set( Option${ARGV0} OFF )
+      set( Option${ARGV0} OFF CACHE INTERNAL "" )
     endif ()
   elseif ( "${${ARGV0}}" STREQUAL "ON" OR "${${ARGV0}}" STREQUAL "OFF" )
     # Just (re-)set the help string.
     set( ${ARGV0} "${${ARGV0}}" CACHE BOOL "${ARGV1}" FORCE )
-    set( Option${ARGV0} ${${ARGV0}} )
+    set( Option${ARGV0} ${${ARGV0}} CACHE INTERNAL "" )
     set( extra_info " (cached)")
   else ()
     # Use the <default> that was passed.
     set( ${ARGV0} "DEFAULT" CACHE STRING "${ARGV1}; can be ON or OFF" )
-    set( Option${ARGV0} ${ARGV2} )
+    set( Option${ARGV0} ${ARGV2} CACHE INTERNAL "" )
     set( extra_info " (default)" )
   endif ()
 
@@ -102,39 +129,41 @@ else ()
 endif ()
 message( DEBUG "CMAKE_BUILD_TYPE = ${CMAKE_BUILD_TYPE}" )
 if (CMAKE_BUILD_TYPE STREQUAL "Release")
-  set( CW_BUILD_TYPE_IS_RELEASE ON )
+  set( CW_BUILD_TYPE_IS_RELEASE ON CACHE INTERNAL "" )
+  set( CW_BUILD_TYPE_IS_NOT_RELEASE OFF CACHE INTERNAL "" )
 else ()
-  set( CW_BUILD_TYPE_IS_RELEASE OFF )
+  set( CW_BUILD_TYPE_IS_RELEASE OFF CACHE INTERNAL "" )
+  set( CW_BUILD_TYPE_IS_NOT_RELEASE ON CACHE INTERNAL "" )
 endif ()
 if (CMAKE_BUILD_TYPE STREQUAL "RelWithDebInfo")
-  set( CW_BUILD_TYPE_IS_RELWITHDEBINFO ON )
+  set( CW_BUILD_TYPE_IS_RELWITHDEBINFO ON CACHE INTERNAL "" )
 else ()
-  set( CW_BUILD_TYPE_IS_RELWITHDEBINFO OFF )
+  set( CW_BUILD_TYPE_IS_RELWITHDEBINFO OFF CACHE INTERNAL "" )
 endif ()
 if (CMAKE_BUILD_TYPE STREQUAL "Debug")
-  set( CW_BUILD_TYPE_IS_DEBUG ON )
+  set( CW_BUILD_TYPE_IS_DEBUG ON CACHE INTERNAL "" )
 else ()
-  set( CW_BUILD_TYPE_IS_DEBUG OFF )
+  set( CW_BUILD_TYPE_IS_DEBUG OFF CACHE INTERNAL "" )
 endif ()
 message( STATUS "Option CMAKE_BUILD_TYPE =\n\t${CMAKE_BUILD_TYPE}" )
 
 # Option 'EnableDebug' compiles in debug mode.
 option( EnableDebug
         "Build for debugging" ${CW_BUILD_TYPE_IS_DEBUG}
-        "CW_BUILD_TYPE_IS_DEBUG" OFF )
+        "CW_BUILD_TYPE_IS_NOT_RELEASE" OFF )
 
 message( DEBUG "OptionEnableDebug is ${OptionEnableDebug}" )
-if ( OptionEnableDebug )
-  add_compile_definitions(DEBUG)
-endif ()
 
-include(FindLibcwd_r)
-message(STATUS "Libcwd_r_LIBRARIES = \"${Libcwd_r_LIBRARIES}\"")
-message(STATUS "Libcwd_r_LINK_LIBRARIES = \"${Libcwd_r_LINK_LIBRARIES}\"")
-message(STATUS "Libcwd_r_LIBRARY_DIRS = \"${Libcwd_r_LIBRARY_DIRS}\"")
-message(STATUS "Libcwd_r_LDFLAGS = \"${Libcwd_r_LDFLAGS}\"")
-message(STATUS "Libcwd_r_LDFLAGS_OTHER = \"${Libcwd_r_LDFLAGS_OTHER}\"")
-message(STATUS "Libcwd_r_INCLUDE_DIRS = \"${Libcwd_r_INCLUDE_DIRS}\"")
-message(STATUS "Libcwd_r_CFLAGS = \"${Libcwd_r_CFLAGS}\"")
-message(STATUS "Libcwd_r_CFLAGS_OTHER = \"${Libcwd_r_CFLAGS_OTHER}\"")
+if (CW_BUILD_TYPE_IS_NOT_RELEASE AND OptionEnableDebug)
+  find_package( PkgConfig )
+  pkg_check_modules( Libcwd_r libcwd_r IMPORTED_TARGET GLOBAL )
+endif()
 
+# Option 'EnableLibcwd' links with libcwd in debug mode.
+option( EnableLibcwd
+        "link with libcwd" ${Libcwd_r_FOUND}
+        "CW_BUILD_TYPE_IS_NOT_RELEASE;OptionEnableDebug" OFF )
+
+if (OptionEnableLibcwd AND NOT Libcwd_r_FOUND)
+  message( FATAL_ERROR "EnableLibcwd specified but libcwd_r not found!" )
+endif()
