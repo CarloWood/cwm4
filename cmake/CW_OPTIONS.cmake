@@ -1,3 +1,31 @@
+# option cmake macro -- this file is part of cwm4.
+# Copyright (C) 2019  Carlo Wood <carlo@alinoe.com>
+#
+# This program is free software; you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation; either version 2, or (at your option)
+# any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program; if not, write to the Free Software
+# Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA
+# 02111-1307, USA.
+#
+# As a special exception, the author gives unlimited permission to copy,
+# distribute and modify the configure scripts that are the output of
+# by a tool like cmake when using these functions as input.  You need
+# not follow the terms of the GNU General Public License when using or
+# distributing such scripts, even though portions of the text of this
+# file appears in them. The GNU General Public License (GPL) does govern
+# all other use of the material that constitutes the cwm4 project.
+
+include_guard(GLOBAL)
+
 # Params: <option-name> <help-string> <default> <dependent-list> <default2>
 #
 # Sets 'Option<option-name>' to ON or OFF.
@@ -5,7 +33,7 @@
 # this is cached and reused the next time. Otherwise <default> is used.
 #
 # <dependent-list> is a list with zero or more variable names (semicolon
-# separated) that must all be TRUE however, or the value of
+# separated) that must all be true however, or the value of
 # 'Option<option-name>' is set to <default2> (defaults to OFF).
 #
 # option-name   : The name of the option. For example "EnableDebug".
@@ -19,13 +47,13 @@ macro(option)
   set( extra_info "" )
   set( forced_value FALSE )
 
-  set( option_dependent_list_is_true TRUE )
+  set( option_dependent_list_is_true true )
   foreach ( OptionDependency ${ARGV3} )
     if ( NOT ${OptionDependency} )
       set( option_dependent_list_is_true FALSE )
-      set( extra_info " (forced because ${OptionDependency} is not true)" )
-      set( forced_value TRUE )
-      message( DEBUG "  dependency: ${OptionDependency} is not TRUE; using argument 5 (${ARGV4})" )
+      set( extra_info " (forced because ${OptionDependency} is OFF)" )
+      set( forced_value true )
+      message( DEBUG "  dependency: ${OptionDependency} is OFF; using argument 5 (${ARGV4})" )
       break()
     endif ()
   endforeach()
@@ -89,3 +117,24 @@ else ()
   set( CW_BUILD_TYPE_IS_DEBUG OFF )
 endif ()
 message( STATUS "Option CMAKE_BUILD_TYPE =\n\t${CMAKE_BUILD_TYPE}" )
+
+# Option 'EnableDebug' compiles in debug mode.
+option( EnableDebug
+        "Build for debugging" ${CW_BUILD_TYPE_IS_DEBUG}
+        "CW_BUILD_TYPE_IS_DEBUG" OFF )
+
+message( DEBUG "OptionEnableDebug is ${OptionEnableDebug}" )
+if ( OptionEnableDebug )
+  add_compile_definitions(DEBUG)
+endif ()
+
+include(FindLibcwd_r)
+message(STATUS "Libcwd_r_LIBRARIES = \"${Libcwd_r_LIBRARIES}\"")
+message(STATUS "Libcwd_r_LINK_LIBRARIES = \"${Libcwd_r_LINK_LIBRARIES}\"")
+message(STATUS "Libcwd_r_LIBRARY_DIRS = \"${Libcwd_r_LIBRARY_DIRS}\"")
+message(STATUS "Libcwd_r_LDFLAGS = \"${Libcwd_r_LDFLAGS}\"")
+message(STATUS "Libcwd_r_LDFLAGS_OTHER = \"${Libcwd_r_LDFLAGS_OTHER}\"")
+message(STATUS "Libcwd_r_INCLUDE_DIRS = \"${Libcwd_r_INCLUDE_DIRS}\"")
+message(STATUS "Libcwd_r_CFLAGS = \"${Libcwd_r_CFLAGS}\"")
+message(STATUS "Libcwd_r_CFLAGS_OTHER = \"${Libcwd_r_CFLAGS_OTHER}\"")
+

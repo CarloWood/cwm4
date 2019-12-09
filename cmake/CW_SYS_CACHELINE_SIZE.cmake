@@ -24,6 +24,8 @@
 # file appears in them. The GNU General Public License (GPL) does govern
 # all other use of the material that constitutes the cwm4 project.
 
+include_guard(GLOBAL)
+
 # CW_SYS_CACHELINE_SIZE
 #
 # Set CW_CACHELINE_SIZE to the size of a cache line, in bytes.
@@ -32,8 +34,6 @@
 #
 #     static constexpr int cacheline_size_c = @CW_CACHELINE_SIZE@;
 #
-
-include_guard(GLOBAL)
 
 set(CW_SYS_CACHELINE_SIZE_MODULE_PATH "${CMAKE_CURRENT_LIST_DIR}")
 
