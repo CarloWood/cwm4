@@ -15,7 +15,7 @@ if test -d .git; then
   # The following line is parsed by configure.ac to find the maintainer hash. Do not change its format!
   MAINTAINER_HASH=15014aea5069544f695943cfe3a5348c
   # If this was a clone without --recursive, fix that fact.
-  if test ! -e cwm4/scripts/bootstrap.sh; then
+  if test ! -e cwm4/scripts/real_maintainer.sh; then
     git submodule update --init --recursive
   fi
   # If new git submodules were added by someone else, get them.
@@ -37,7 +37,9 @@ if test -d .git; then
     echo "autogen.sh: Failed to update one or more submodules. Does it have uncommitted changes?"
     exit 1
   fi
-  cwm4/scripts/do_submodules.sh
+  if test -e configure.ac; then
+    cwm4/scripts/do_submodules.sh
+  fi
 else
   # Clueless user check.
   if test -f configure; then
@@ -47,7 +49,7 @@ else
       echo "If you insist on running it and know what you are doing, then first remove the 'configure' script."
     fi
     exit 0
-  elif test ! -e cwm4/scripts/bootstrap.sh; then
+  elif test ! -e cwm4/scripts/real_maintainer.sh; then
     echo "Houston, we have a problem: the cwm4 git submodule is missing from your source tree!?"
     echo "I'd suggest to clone the source code of this project from github:"
     echo "git clone --recursive https://github.com/@PROJECT_URL@"
@@ -55,5 +57,7 @@ else
   fi
 fi
 
-# Run the autotool commands.
-exec cwm4/scripts/bootstrap.sh
+if test -e configure.ac; then
+  # Run the autotool commands.
+  exec cwm4/scripts/bootstrap.sh
+fi
