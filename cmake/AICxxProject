@@ -1,0 +1,13 @@
+include_guard(GLOBAL)
+
+list( APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/cwm4/cmake" )
+set( project_root "${CMAKE_CURRENT_SOURCE_DIR}" )
+include( AICxxProject )
+
+# Add target maintainer-clean.
+add_custom_target(maintainer-clean
+    # The current directory is CMAKE_CURRENT_BINARY_DIR.
+    COMMAND ${CMAKE_CURRENT_SOURCE_DIR}/cwm4/scripts/cmake_maintainer_clean.sh $(MAKE)
+)
+
+# vi:syntax=cmake
