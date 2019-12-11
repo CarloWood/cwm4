@@ -10,6 +10,15 @@ if test "$(realpath $0)" != "$(realpath $(pwd)/autogen.sh)"; then
   exit 1
 fi
 
+# Check if we want to configure for cmake (only).
+if test command -v cmake >/dev/null; then
+  if -n "$AUTOGEN_CMAKE_ONLY" -o ! -e configure.ac; then
+    AUTOGEN_CMAKE_ONLY=1
+  else
+    echo "Configuring for both autotools and cmake. Set AUTOGEN_CMAKE_ONLY=1 in environment to only configure for cmake."
+  fi
+fi
+
 if test -d .git; then
   # Take care of git submodule related stuff.
   # The following line is parsed by configure.ac to find the maintainer hash. Do not change its format!
