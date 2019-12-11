@@ -69,11 +69,13 @@ if test "$(echo $GIT_COMMITTER_EMAIL | md5sum | cut -d \  -f 1)" = "$1"; then
     fi
   fi
 
-  # Is OUTPUT_DIRECTORY set?
-  if m4 -P cwm4/sugar.m4 configure.ac | egrep '^[[:space:]]*CW_DOXYGEN' >/dev/null; then
-    if test -z "$OUTPUT_DIRECTORY"; then
-      echo "Error: the environment variable OUTPUT_DIRECTORY is not set."
-      exit 1
+  if test -e configure.ac; then
+    # Is OUTPUT_DIRECTORY set?
+    if m4 -P cwm4/sugar.m4 configure.ac | egrep '^[[:space:]]*CW_DOXYGEN' >/dev/null; then
+      if test -z "$OUTPUT_DIRECTORY"; then
+        echo "Error: the environment variable OUTPUT_DIRECTORY is not set."
+        exit 1
+      fi
     fi
   fi
 
