@@ -14,8 +14,9 @@ fi
 if command -v cmake >/dev/null; then
   if test -n "$AUTOGEN_CMAKE_ONLY" -o ! -e configure.ac; then
     AUTOGEN_CMAKE_ONLY=1
-  else
-    echo "Configuring for both autotools and cmake. Set AUTOGEN_CMAKE_ONLY=1 in environment to only configure for cmake."
+  elif test -e CMakeLists.txt; then
+    echo "*** Configuring for both autotools and cmake."
+    echo "*** Set AUTOGEN_CMAKE_ONLY=1 in environment to only configure for cmake."
   fi
 fi
 
