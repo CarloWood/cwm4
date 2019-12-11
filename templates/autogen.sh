@@ -60,4 +60,14 @@ fi
 if test -e configure.ac; then
   # Run the autotool commands.
   exec cwm4/scripts/bootstrap.sh
+elif test -n "$CMAKE_CONFIGURE_OPTIONS"; then
+  # This uses bash functions 'configure' and 'make' basically passing $CMAKE_CONFIGURE_OPTIONS
+  # to cmake and running 'make' inside build-release; see below.
+  echo "Now run: configure && make"
+else
+  echo "To make a Release build, run:"
+  echo "mkdir build-Release"
+  echo "cd build-Release"
+  echo "cmake .."
+  echo "make"
 fi
