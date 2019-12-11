@@ -11,7 +11,7 @@ if test "$(realpath $0)" != "$(realpath $(pwd)/autogen.sh)"; then
 fi
 
 # Check if we want to configure for cmake (only).
-if test command -v cmake >/dev/null; then
+if command -v cmake >/dev/null; then
   if -n "$AUTOGEN_CMAKE_ONLY" -o ! -e configure.ac; then
     AUTOGEN_CMAKE_ONLY=1
   else
