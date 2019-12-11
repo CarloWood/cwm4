@@ -46,7 +46,7 @@ if test -d .git; then
     echo "autogen.sh: Failed to update one or more submodules. Does it have uncommitted changes?"
     exit 1
   fi
-  if test -e configure.ac; then
+  if test -z "$AUTOGEN_CMAKE_ONLY"; then
     cwm4/scripts/do_submodules.sh
   fi
 else
@@ -66,11 +66,11 @@ else
   fi
 fi
 
-if test -e configure.ac; then
+if test -z "$AUTOGEN_CMAKE_ONLY"; then
   # Run the autotool commands.
   exec cwm4/scripts/bootstrap.sh
 elif test -n "$CMAKE_CONFIGURE_OPTIONS"; then
-  # This uses bash functions 'configure' and 'make' basically passing $CMAKE_CONFIGURE_OPTIONS
+  # I uses bash functions 'configure' and 'make' basically passing $CMAKE_CONFIGURE_OPTIONS
   # to cmake and running 'make' inside build-release; see below.
   echo "Now run: configure && make"
 else
