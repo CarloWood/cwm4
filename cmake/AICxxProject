@@ -1,7 +1,17 @@
 include_guard(GLOBAL)
 
+# Add extra build types.
+string(REGEX REPLACE "( -DNDEBUG$|-DNDEBUG )" "" CMAKE_CXX_FLAGS_BETATEST "${CMAKE_CXX_FLAGS_RELEASE}" )
+string(REGEX REPLACE "( -DNDEBUG$|-DNDEBUG )" "" CMAKE_C_FLAGS_BETATEST "${CMAKE_C_FLAGS_RELEASE}" )
+string(REGEX REPLACE "-DNDEBUG " "" CMAKE_CXX_FLAGS_RELWITHDEBUG "${CMAKE_CXX_FLAGS_RELWITHDEBINFO} -DDEBUG" )
+string(REGEX REPLACE "-DNDEBUG " "" CMAKE_C_FLAGS_RELWITHDEBUG "${CMAKE_C_FLAGS_RELWITHDEBINFO} -DDEBUG" )
+
+# Add CMAKE_MODULE_PATH.
 list( APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/cwm4/cmake" )
+# Set project_root.
 set( project_root "${CMAKE_CURRENT_SOURCE_DIR}" )
+
+# Include the module that is included by every (sub)directory for everything else.
 include( AICxxProject )
 
 # Add target maintainer-clean.

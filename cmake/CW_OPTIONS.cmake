@@ -28,7 +28,8 @@
 #
 # It sets the following global variables:
 #
-# OptionEnableDebug                     - set when CMAKE_BUILD_TYPE is not Release and -DEnableDebug:BOOL=ON (defaults to CW_BUILD_TYPE_IS_DEBUG)
+# OptionEnableDebug                     - set when CMAKE_BUILD_TYPE is not Release and -DEnableDebug:BOOL=ON
+#                                         (defaults to CW_BUILD_TYPE_IS_DEBUG || CW_BUILD_TYPE_IS_RELWITHDEBUG)
 # OptionEnableLibcwd                    - set when CMAKE_BUILD_TYPE is not Release and OptionEnableDebug is true,
 #                                         and -DEnableLibcwd:BOOL=ON (defaults to Libcwd_r_FOUND)
 #
@@ -39,6 +40,8 @@
 # CW_BUILD_TYPE_IS_NOT_RELEASE          - true iff CMAKE_BUILD_TYPE != Release
 # CW_BUILD_TYPE_IS_RELWITHDEBINFO       - true iff CMAKE_BUILD_TYPE = RelWithDebInfo
 # CW_BUILD_TYPE_IS_DEBUG                - true iff CMAKE_BUILD_TYPE = Debug
+# CW_BUILD_TYPE_IS_BETATEST             - true iff CMAKE_BUILD_TYPE = BetaTest
+# CW_BUILD_TYPE_IS_RELWITHDEBUG         - true iff CMAKE_BUILD_TYPE = RelWithDebug
 #
 # Usage example,
 #
@@ -143,9 +146,14 @@ elseif ( "${BUILD_TYPE_UPPER}" STREQUAL "DEBUG" )
   set( CMAKE_BUILD_TYPE "Debug" CACHE STRING "Build Type" FORCE )
 elseif ( "${BUILD_TYPE_UPPER}" STREQUAL "RELWITHDEBINFO" )
   set( CMAKE_BUILD_TYPE "RelWithDebInfo" CACHE STRING "Build Type" FORCE )
+elseif ( "${BUILD_TYPE_UPPER}" STREQUAL "BETATEST" )
+  set( CMAKE_BUILD_TYPE "BetaTest" CACHE STRING "Build Type" FORCE )
+elseif ( "${BUILD_TYPE_UPPER}" STREQUAL "RELWITHDEBUG" )
+  set( CMAKE_BUILD_TYPE "RelWithDebug" CACHE STRING "Build Type" FORCE )
 else ()
   message( FATAL_ERROR "Unknown CMAKE_BUILD_TYPE \"${CMAKE_BUILD_TYPE}\"." )
 endif ()
+set( default_enable_debug OFF )
 if (NOT CMAKE_BUILD_TYPE STREQUAL "Release")
   set( CW_BUILD_TYPE_IS_RELEASE OFF CACHE INTERNAL "" )
   set( CW_BUILD_TYPE_IS_NOT_RELEASE ON CACHE INTERNAL "" )
@@ -155,13 +163,22 @@ if (CMAKE_BUILD_TYPE STREQUAL "RelWithDebInfo")
 endif ()
 if (CMAKE_BUILD_TYPE STREQUAL "Debug")
   set( CW_BUILD_TYPE_IS_DEBUG ON CACHE INTERNAL "" )
+  set( default_enable_debug ON )
+endif ()
+if (CMAKE_BUILD_TYPE STREQUAL "BetaTest")
+  set( CW_BUILD_TYPE_IS_BETATEST ON CACHE INTERNAL "" )
+endif ()
+if (CMAKE_BUILD_TYPE STREQUAL "RelWithDebug")
+  set( CW_BUILD_TYPE_IS_RELWITHDEBUG ON CACHE INTERNAL "" )
+  set( default_enable_debug ON )
 endif ()
 message( STATUS "Option CMAKE_BUILD_TYPE =\n\t${CMAKE_BUILD_TYPE}" )
 #message( STATUS "Option CMAKE_BUILD_TYPE = ${CMAKE_BUILD_TYPE}" )
 
-# Option 'EnableDebug' compiles in debug mode.
+# Option 'EnableDebug' compiles in debug mode: we want debug code, debug output (if available),
+# asserts, debug info - but not necessary no optimization.
 option( EnableDebug
-        "Build for debugging" ${CW_BUILD_TYPE_IS_DEBUG}
+        "Build for debugging" ${default_enable_debug}
         "CW_BUILD_TYPE_IS_NOT_RELEASE" OFF )
 
 message( DEBUG "OptionEnableDebug is ${OptionEnableDebug}" )
