@@ -29,7 +29,9 @@ for dir in "${dirs[@]}"; do
   if [ -e "$dir"/Makefile ]; then
     echo "Maintainer cleaning $dir"
     rm -rf "$dir"/CMakeFiles "$dir"/CMakeCache.txt "$dir"/cmake_install.cmake "$dir"/Makefile
-    # Should be entirely empty now.
-    rmdir $dir
+    if [ "$dir" != "." ]; then
+      # Should be entirely empty now.
+      rmdir "$dir"
+    fi
   fi
 done
