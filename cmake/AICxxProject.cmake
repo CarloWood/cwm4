@@ -17,7 +17,7 @@ else ()
 endif ()
 
 # Add support for CMAKE_BUILD_TYPE, EnableDebug, EnableGlobalDebug, EnableLibcwd
-include(CW_OPTIONS)
+include( CW_OPTIONS )
 
 #==============================================================================
 # Find required libraries
@@ -27,4 +27,4 @@ set( THREADS_PREFER_PTHREAD_FLAG true ) # See https://stackoverflow.com/a/395475
 find_package( Threads REQUIRED )
 
 # Initialize AICXX_OBJECTS_LIST
-include(AICxxObjectsList)
+include( AICxxObjectsList )

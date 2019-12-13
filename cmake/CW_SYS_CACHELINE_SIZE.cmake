@@ -24,7 +24,7 @@
 # file appears in them. The GNU General Public License (GPL) does govern
 # all other use of the material that constitutes the cwm4 project.
 
-include_guard(GLOBAL)
+include_guard( GLOBAL )
 
 # CW_SYS_CACHELINE_SIZE
 #
@@ -35,23 +35,23 @@ include_guard(GLOBAL)
 #     static constexpr int cacheline_size_c = @CW_CACHELINE_SIZE@;
 #
 
-set(CW_SYS_CACHELINE_SIZE_MODULE_PATH "${CMAKE_CURRENT_LIST_DIR}")
+set( CW_SYS_CACHELINE_SIZE_MODULE_PATH "${CMAKE_CURRENT_LIST_DIR}" )
 
-function(CW_SYS_CACHELINE_SIZE)
+function( CW_SYS_CACHELINE_SIZE )
   if (NOT DEFINED CACHE{CW_CACHELINE_SIZE})
-    set(CMAKE_TRY_COMPILE_CONFIGURATION "Release")
-    try_run(run_works
+    set( CMAKE_TRY_COMPILE_CONFIGURATION "Release" )
+    try_run( run_works
             compile_works
             ${CMAKE_CURRENT_BINARY_DIR}/cw_utils_sys_cacheline_size
             ${CW_SYS_CACHELINE_SIZE_MODULE_PATH}/CW_SYS_CACHELINE_SIZE.c
             COMPILE_OUTPUT_VARIABLE compile_output
             RUN_OUTPUT_VARIABLE run_output)
     if (NOT compile_works)
-      message(FATAL_ERROR "Failed to compile test program CW_SYS_CACHELINE_SIZE.c: ${compile_output}")
+      message( FATAL_ERROR "Failed to compile test program CW_SYS_CACHELINE_SIZE.c: ${compile_output}" )
     elseif (NOT run_works EQUAL 0)
-      message(FATAL_ERROR "Failed to run test program CW_SYS_CACHELINE_SIZE.c: ${run_output}")
+      message( FATAL_ERROR "Failed to run test program CW_SYS_CACHELINE_SIZE.c: ${run_output}" )
     else ()
-      set(CW_CACHELINE_SIZE ${run_output} CACHE INTERNAL "")
+      set( CW_CACHELINE_SIZE ${run_output} CACHE INTERNAL "" )
     endif ()
-  endif()
-endfunction()
+  endif ()
+endfunction ()

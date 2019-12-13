@@ -54,7 +54,7 @@
 # that must be true for this option to be added (otherwise OFF,
 # argument five).
 
-include_guard(GLOBAL)
+include_guard( GLOBAL )
 
 # Clear INTERNAL cache values at start of project.
 set( CW_BUILD_TYPE_IS_RELEASE ON CACHE INTERNAL "" )
@@ -80,7 +80,7 @@ unset( OptionEnableLibcwd )
 # dependent-list: A semi-colon separated list of variables that all have to be true.
 # default2      : The value to use when one or more of the variables in dependent-list is not true.
 #
-macro(option)
+macro( option )
   message( DEBUG "  in: ${ARGV0} = ${${ARGV0}}" )
   set( extra_info "" )
   set( forced_value FALSE )
@@ -103,7 +103,7 @@ macro(option)
         message( DEBUG "  dependency: ${name} is ${value}; using argument 5 (${ARGV4})" )
         break()
       endif ()
-    endforeach()
+    endforeach ()
   endif ()
   if ( NOT option_dependent_list_is_true )
     # Use the <default2> parameter.
@@ -191,7 +191,7 @@ if (CW_BUILD_TYPE_IS_NOT_RELEASE AND OptionEnableDebug)
   else ()
     set( default_enable_libcwd OFF )
   endif ()
-endif()
+endif ()
 
 # Option 'EnableLibcwd' links with libcwd in debug mode.
 option( EnableLibcwd
@@ -200,4 +200,4 @@ option( EnableLibcwd
 
 if (OptionEnableLibcwd AND NOT Libcwd_r_FOUND)
   message( FATAL_ERROR "EnableLibcwd specified but libcwd_r not found!" )
-endif()
+endif ()
