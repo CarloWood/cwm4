@@ -2,14 +2,14 @@
 set( CMAKE_MESSAGE_LOG_LEVEL "STATUS" )
 
 # Check if AICxxProject was included correctly.
-if ( NOT project_root )
+if ( NOT top_srcdir )
   message( FATAL_ERROR
     "Add the following to the top of the CMakeLists.txt file, just below the `project(...)` command, in the root of the project:\n"
     "  include(cwm4/cmake/AICxxProject)    # <=== ADD THIS\n" )
 endif ()
 
 # Print the current subdirectory, relative to the project root.
-file( RELATIVE_PATH current_subdirectory "${project_root}" "${CMAKE_CURRENT_SOURCE_DIR}" )
+file( RELATIVE_PATH current_subdirectory "${top_srcdir}" "${CMAKE_CURRENT_SOURCE_DIR}" )
 if ( "${current_subdirectory}" STREQUAL "" )
   message( STATUS "----------------------------------------------------\n** Configuring project ${CMAKE_PROJECT_NAME}:" )
 else ()

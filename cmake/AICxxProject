@@ -8,8 +8,9 @@ string( REGEX REPLACE "-DNDEBUG " "" CMAKE_C_FLAGS_RELWITHDEBUG "${CMAKE_C_FLAGS
 
 # Add CMAKE_MODULE_PATH.
 list( APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/cwm4/cmake" )
-# Set project_root.
-set( project_root "${CMAKE_CURRENT_SOURCE_DIR}" )
+# Set top_srcdir and top_bindir.
+set( top_srcdir "${CMAKE_CURRENT_SOURCE_DIR}" )
+set( top_objdir "${CMAKE_CURRENT_BINARY_DIR}" )
 
 # Include the module that is included by every (sub)directory for everything else.
 include( AICxxProject )

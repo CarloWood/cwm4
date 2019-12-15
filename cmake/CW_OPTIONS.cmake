@@ -46,7 +46,7 @@
 # Usage example,
 #
 #       # Option 'EnableDebug' compiles in debug mode.
-#       option( EnableDebug
+#       cw_option( EnableDebug
 #               "Build for debugging" ${CW_BUILD_TYPE_IS_DEBUG}
 #               "CW_BUILD_TYPE_IS_NOT_RELEASE" OFF )
 #
@@ -80,7 +80,7 @@ unset( OptionEnableLibcwd )
 # dependent-list: A semi-colon separated list of variables that all have to be true.
 # default2      : The value to use when one or more of the variables in dependent-list is not true.
 #
-macro( option )
+macro( cw_option )
   message( DEBUG "  in: ${ARGV0} = ${${ARGV0}}" )
   set( extra_info "" )
   set( forced_value FALSE )
@@ -177,7 +177,7 @@ message( STATUS "Option CMAKE_BUILD_TYPE =\n\t${CMAKE_BUILD_TYPE}" )
 
 # Option 'EnableDebug' compiles in debug mode: we want debug code, debug output (if available),
 # asserts, debug info - but not necessary no optimization.
-option( EnableDebug
+cw_option( EnableDebug
         "Build for debugging" ${default_enable_debug}
         "CW_BUILD_TYPE_IS_NOT_RELEASE" OFF )
 
@@ -194,7 +194,7 @@ if (CW_BUILD_TYPE_IS_NOT_RELEASE AND OptionEnableDebug)
 endif ()
 
 # Option 'EnableLibcwd' links with libcwd in debug mode.
-option( EnableLibcwd
+cw_option( EnableLibcwd
         "link with libcwd" "${default_enable_libcwd}"
         "CW_BUILD_TYPE_IS_NOT_RELEASE;OptionEnableDebug" OFF )
 
