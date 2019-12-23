@@ -55,6 +55,12 @@
 # argument five).
 
 include_guard( GLOBAL )
+include( color_vars )
+set( Option "${BoldCyan}Option${ColourReset}" )
+set( OptionColor "${Green}" )
+set( OptionColorYay "${Green}" )
+set( OptionColorAlert "${Red}" )
+set( OptionColorBuildType "${OptionColorAlert}" )
 
 # Clear INTERNAL cache values at start of project.
 set( CW_BUILD_TYPE_IS_RELEASE ON CACHE INTERNAL "" )
@@ -127,11 +133,14 @@ macro( cw_option )
   # Clobber the cached variable (as a normal variable) to make it harder to accidently use it.
   set( ${ARGV0} "Use the variable Option${ARGV0} instead of ${ARGV0}." )
   if ( forced_value )
-    message( DEBUG "Option ${ARGV0} (${ARGV1}) =\n\t${Option${ARGV0}}${extra_info}" )
-    #message( DEBUG "Option ${ARGV0} (${ARGV1}) = ${Option${ARGV0}}${extra_info}" )
+    message( DEBUG "${Option} ${OptionColor}${ARGV0}${ColourReset} (${ARGV1}) =\n\t${Option${ARGV0}}${extra_info}" )
+    #message( DEBUG "${Option} ${ARGV0} (${ARGV1}) = ${Option${ARGV0}}${extra_info}" )
+  elseif ( (${Option${ARGV0}} AND ${ARGV2}) OR NOT (${Option${ARGV0}} OR ${ARGV2}) )
+    message( STATUS "${Option} ${OptionColor}${ARGV0}${ColourReset} (${ARGV1}) =\n\t${OptionColorYay}${Option${ARGV0}}${ColourReset}${extra_info}" )
+    #message( STATUS "${Option} ${ARGV0} (${ARGV1}) = ${OptionColorYay}${Option${ARGV0}}${ColourReset}${extra_info}" )
   else ()
-    message( STATUS "Option ${ARGV0} (${ARGV1}) =\n\t${Option${ARGV0}}${extra_info}" )
-    #message( STATUS "Option ${ARGV0} (${ARGV1}) = ${Option${ARGV0}}${extra_info}" )
+    message( STATUS "${Option} ${OptionColor}${ARGV0}${ColourReset} (${ARGV1}) =\n\t${OptionColorAlert}${Option${ARGV0}}${ColourReset}${extra_info}" )
+    #message( STATUS "${Option} ${ARGV0} (${ARGV1}) = ${OptionColorAlert}${Option${ARGV0}}${ColourReset}${extra_info}" )
   endif ()
 endmacro ()
 
@@ -142,6 +151,7 @@ endif ()
 string( TOUPPER "${CMAKE_BUILD_TYPE}" BUILD_TYPE_UPPER )
 if ( "${BUILD_TYPE_UPPER}" STREQUAL "RELEASE" )
   set( CMAKE_BUILD_TYPE "Release" CACHE STRING "Build Type" FORCE )
+  set( OptionColorBuildType "${OptionColorYay}" )
 elseif ( "${BUILD_TYPE_UPPER}" STREQUAL "DEBUG" )
   set( CMAKE_BUILD_TYPE "Debug" CACHE STRING "Build Type" FORCE )
 elseif ( "${BUILD_TYPE_UPPER}" STREQUAL "RELWITHDEBINFO" )
@@ -172,8 +182,8 @@ if (CMAKE_BUILD_TYPE STREQUAL "RelWithDebug")
   set( CW_BUILD_TYPE_IS_RELWITHDEBUG ON CACHE INTERNAL "" )
   set( default_enable_debug ON )
 endif ()
-message( STATUS "Option CMAKE_BUILD_TYPE =\n\t${CMAKE_BUILD_TYPE}" )
-#message( STATUS "Option CMAKE_BUILD_TYPE = ${CMAKE_BUILD_TYPE}" )
+message( STATUS "${Option} ${OptionColor}CMAKE_BUILD_TYPE${ColourReset} =\n\t${OptionColorBuildType}${CMAKE_BUILD_TYPE}${ColourReset}" )
+#message( STATUS "${Option} ${OptionColor}CMAKE_BUILD_TYPE${ColourReset} = ${OptionColorBuildType}${CMAKE_BUILD_TYPE}${ColourReset}" )
 
 # Option 'EnableDebug' compiles in debug mode: we want debug code, debug output (if available),
 # asserts, debug info - but not necessary no optimization.
