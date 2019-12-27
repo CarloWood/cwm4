@@ -26,6 +26,9 @@ set( top_objdir "${CMAKE_CURRENT_BINARY_DIR}" )
 # The list of OBJECT libraries that this project uses.
 set( AICXX_OBJECTS_LIST "" CACHE INTERNAL "List of OBJECT libaries that this project uses." )
 
+# We need -pthread because we need _REENTRANT to be defined. See https://stackoverflow.com/a/39547577/1487069
+set( THREADS_PREFER_PTHREAD_FLAG true )
+
 # Add support for CMAKE_BUILD_TYPE, EnableDebug, EnableGlobalDebug, EnableLibcwd
 include( CW_OPTIONS )
 
