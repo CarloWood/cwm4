@@ -1,7 +1,7 @@
 # Check if AICxxProject was included correctly.
 if ( NOT top_srcdir )
   message( FATAL_ERROR
-    "Add the following to the top of the CMakeLists.txt file, even before the `project(...)` command, in the root of the project:\n"
+    "Add the following to the top of the CMakeLists.txt file, right after the `project(...)` command, in the root of the project:\n"
     "  include(cwm4/cmake/AICxxProject)    # <=== ADD THIS\n" )
 endif ()
 

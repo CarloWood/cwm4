@@ -1,11 +1,9 @@
 include_guard(GLOBAL)
 
-# This header must be included at the very top of the CMakeLists.txt
-# in the project root even before the project() line (required by Hunter).
-if ( PROJECT_NAME )
+# This header must be included at the top of the top level CMakeLists.txt right after the `project(...) command`.
+if ( NOT CMAKE_PROJECT_NAME )
   message( FATAL_ERROR "Use `include(cwm4/cmake/AICxxProject)` in the top-level CMakeLists.txt BEFORE the `project(...)` command." )
 endif ()
-
 message( STATUS "----------------------------------------------------\n** Configuring project ${CMAKE_PROJECT_NAME}:" )
 
 # Default message log level. Use cmake --log-level=debug to get DEBUG output.
@@ -19,6 +17,7 @@ string( REGEX REPLACE "-DNDEBUG " "" CMAKE_C_FLAGS_RELWITHDEBUG "${CMAKE_C_FLAGS
 
 # Add CMAKE_MODULE_PATH.
 list( APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/cwm4/cmake" )
+
 # Set top_srcdir and top_bindir.
 set( top_srcdir "${CMAKE_CURRENT_SOURCE_DIR}" )
 set( top_objdir "${CMAKE_CURRENT_BINARY_DIR}" )
