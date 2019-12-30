@@ -3,6 +3,6 @@ include( cwm4/gate/cmake/HunterGate.cmake )
 
 # Hunter Gate to use when Hunter is turned on.
 HunterGate(
-    URL "https://github.com/ruslo/hunter/archive/v0.23.214.tar.gz"
-    SHA1 "e14bc153a7f16d6a5eeec845fb0283c8fad8c358"
+    URL "https://github.com/cpp-pm/hunter/archive/v0.23.240.tar.gz"
+    SHA1 "ca19f3769e6c80cfdd19d8b12ba5102c27b074e0"
 )
