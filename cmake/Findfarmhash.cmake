@@ -1,45 +1,28 @@
-# Distributed under the OSI-approved BSD 3-Clause License.  See accompanying
-# file Copyright.txt or https://cmake.org/licensing for details.
+#[[
 
-#[=======================================================================[.rst:
 Findfarmhash
--------
 
 Finds the farmhash library.
 
 Imported Targets
-^^^^^^^^^^^^^^^^
+----------------
 
 This module provides the following imported targets, if found:
 
-``farmhash::farmhash``
-  The farmhash library
-
-Result Variables
-^^^^^^^^^^^^^^^^
-
-This will define the following variables:
-
-``farmhash_FOUND``
-  True if the system has the farmhash library.
-``farmhash_VERSION``
-  The version of the farmhash library which was found.
-``farmhash_INCLUDE_DIRS``
-  Include directories needed to use farmhash.
-``farmhash_LIBRARIES``
-  Libraries needed to link to farmhash.
+ `farmhash::farmhash`
+      The farmhash library
 
 Cache Variables
-^^^^^^^^^^^^^^^
+---------------
 
-The following cache variables may also be set:
+The following cache variables may be set as well, if found:
 
-``farmhash_INCLUDE_DIR``
-  The directory containing ``farmhash.h``.
-``farmhash_LIBRARY``
-  The path to the farmhash library.
+ `farmhash_INCLUDE_DIR`
+      The directory containing `farmhash.h`.
+ `farmhash_LIBRARY`
+      The path to the farmhash library.
 
-#]=======================================================================]
+#=======================================================================]]
 
 find_package( PkgConfig )
 pkg_check_modules( PC_farmhash QUIET farmhash )
