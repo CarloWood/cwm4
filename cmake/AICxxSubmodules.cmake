@@ -2,8 +2,8 @@
 include_guard( GLOBAL )
 
 # This is a list of all aicxx submodules that exist.
-# Submodules on the right depend on the submodules on the left.
-set( AICxxSubmodules cwds utils threadsafe threadpool evio statefultask )
+# Submodules on the right depend on the submodules on the left (but not on events).
+set( AICxxSubmodules cwds utils events threadsafe threadpool evio statefultask )
 
 foreach( subdir ${AICxxSubmodules} )
   get_filename_component( _fullpath "${subdir}" REALPATH )
