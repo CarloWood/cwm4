@@ -12,7 +12,7 @@ include( FetchContent )
 set( HUNTER_PACKAGES farmhash )
 
 # Use local git submodule in the source tree.
-FetchContent_Declare( SetupHunter SOURCE_DIR "${CMAKE_CURRENT_SOURCE_DIR}/cwm4/hunter/gate" )
+FetchContent_Declare( SetupHunter SOURCE_DIR "${CMAKE_CURRENT_SOURCE_DIR}/cwm4/gate" )
 # Initialize Hunter and build external pacakges.
 FetchContent_MakeAvailable( SetupHunter )
 
