@@ -25,25 +25,6 @@ set( top_objdir "${CMAKE_CURRENT_BINARY_DIR}" )
 # The list of OBJECT libraries that this project uses.
 set( AICXX_OBJECTS_LIST "" CACHE INTERNAL "List of OBJECT libaries that this project uses." )
 
-# Does project include Hunter?
-if ( NOT COMMAND hunter_add_package )
-  # To get rid of this warning, add support for
-  # (Hunter)[https://cpp-pm-hunter.readthedocs.io/en/latest/index.html]
-  # to your project by adding the following right before the `project(...)`
-  # command in the top-level CMakeLists.txt file:
-  #
-  #     # Note: use -DHUNTER_ENABLED=NO to turn off the usage of Hunter.
-  #     include( cwm4/gate/cmake/HunterGate.cmake )
-  #     # Hunter Gate to use when Hunter is turned on.
-  #     HunterGate(
-  #         URL "https://github.com/ruslo/hunter/archive/v0.23.214.tar.gz"
-  #         SHA1 "e14bc153a7f16d6a5eeec845fb0283c8fad8c358"
-  #     )
-  message( WARNING "Support for Hunter is not included. Voiding calls to hunter_add_package." )
-  macro(hunter_add_package)
-  endmacro ()
-endif ()
-
 # Set CMAKE_CXX_COMPILER_LAUNCHER.
 include( ccache )
 
