@@ -43,7 +43,7 @@ if test -d .git; then
     fi
   fi
   # Update all submodules.
-  if ! cwm4/scripts/update_submodules.sh --recursive; then
+  if ! git submodule foreach --recursive cwm4/scripts/update_submodule.sh; then
     echo "autogen.sh: Failed to update one or more submodules. Does it have uncommitted changes?"
     exit 1
   fi
