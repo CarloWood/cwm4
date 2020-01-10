@@ -22,7 +22,7 @@ do
       opt_recursive=$1
       do_foreach=1
       ;;
-    --reentery)
+    --reentry)
       initial_call=0
       ;;
     --)
@@ -64,9 +64,12 @@ else
   toplevel="$4"
   # Make sure we are in the right directory.
   cd "$toplevel/$path" || exit 1
+  echo "Current directory is now \"$toplevel/$path\"; name = $name; path = $path; sha1 = $sha1; toplevel = $toplevel"
+  exit 0
   # Does the parent project want us to checkout a branch for this module?
   SUBMODULE_BRANCH=$(git config -f "$toplevel/.gitmodules" submodule.$name.branch)
   if test -n "$SUBMODULE_BRANCH"; then
+    echo "Calling git checkout $SUBMODULE_BRANCH"
     git checkout $SUBMODULE_BRANCH 2>&1 |\
       awk '
         /^(Your branch is up-to-date with|Already on)/ { printf("'"$green%s$reset"'\n", $0); next }
@@ -74,6 +77,7 @@ else
         /use "git push" to publish your local commits/ { next }
         { printf("'"$red%s$reset"'\n", $0) }' || exit 1
       
+    echo "Calling git pull --ff-only"
     git pull --ff-only || exit 1
     if test $(git rev-parse HEAD) != "$sha1"; then
       # Update the parent project to point to the head of this branch.
@@ -81,15 +85,19 @@ else
       SN1=$(git stash list | grep '^stash' | wc --lines)
       git stash save --quiet Automatic stash of parent project by update_submodules.sh
       SN2=$(git stash list | grep '^stash' | wc --lines)
+      echo "Calling git add $path"
       git add $path
+      echo "Calling git commit -m \"Updating submodule reference to current HEAD of branch $SUBMODULE_BRANCH of $name\""
       git commit -m "Updating submodule reference to current HEAD of branch $SUBMODULE_BRANCH of $name"
       if test $SN1 -ne $SN2; then
+        echo "Calling git stash pop --quiet"
         git stash pop --quiet
       fi
       popd >/dev/null
     fi
   elif test $(git rev-parse HEAD) != "$sha1"; then
     # No submodule.$name.branch for this submodule. Just checkout the detached HEAD.
+    echo "Calling git checkout $sha1"
     git checkout $sha1
   fi
   echo
@@ -97,12 +105,15 @@ fi
 
 if test $do_foreach -eq 1; then
   if test -n "$opt_init"; then
+    echo "Calling git submodule init"
     git submodule init
   fi
   # Make sure the submodules even exist.
+  echo "Calling git submodule update"
   git submodule update
   # Call this script recursively for all submodules.
-  git submodule foreach "$FULL_PATH --reentery $opt_init $opt_recursive"' $name $path $sha1 $toplevel' |\
+  echo "Calling git submodule foreach \"$FULL_PATH --reentry $opt_init $opt_recursive\"' $name $path $sha1 $toplevel'"
+  git submodule foreach "$FULL_PATH --reentry $opt_init $opt_recursive"' $name $path $sha1 $toplevel' |\
     awk '
       /^Already/ { printf("'"$green%s$reset"'\n", $0); next }
       { print }'
