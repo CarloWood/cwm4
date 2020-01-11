@@ -8,6 +8,9 @@ red="$esc[31m"
 green="$esc[32m"
 orange="$esc[33m"
 
+# Options.
+verbose=0
+
 # Arguments.
 name="$1"
 path="$2"
@@ -35,7 +38,7 @@ fi
 submodule_branch=$(git config -f "$toplevel/.gitmodules" submodule.$name.branch)
 
 if [ -n "$submodule_branch" ]; then
-  show_already=1
+  show_already=$verbose
   if [ "$submodule_branch" != "$current_branch" ]; then
     git checkout "$submodule_branch" |\
         awk '
@@ -63,6 +66,6 @@ elif test $(git rev-parse HEAD) != "$sha1"; then
   # No submodule.$name.branch for this submodule. Just checkout the detached HEAD.
   echo "$prefix$name: Running 'git checkout $sha1'"
   git checkout $sha1
-else
+elif [ $verbose -eq 1 ]; then
   echo "$prefix$green""Submodule $name is already on detached HEAD $sha1.$reset"
 fi
