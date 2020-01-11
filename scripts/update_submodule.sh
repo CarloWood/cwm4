@@ -2,8 +2,8 @@
 
 # Colors.
 esc=""
-reset="$esc""[0m"
-prefix="$esc""[36m***""$reset"
+reset="$esc[0m"
+prefix="$esc[36m*** $reset"
 red="$esc[31m"
 green="$esc[32m"
 orange="$esc[33m"
@@ -13,9 +13,12 @@ name="$1"
 path="$2"
 sha1="$3"
 toplevel="$4"
+if -n "$5"; then
+  prefix="$5"
+fi
 
 # Depth first.
-git submodule foreach "$0"' $name "$path" $sha1 "$toplevel"'
+git submodule foreach "$0"' $name "$path" $sha1 "$toplevel"'" '$path: '"
 
 #echo "name = $name"
 #echo "path = \"$path\""
@@ -45,10 +48,10 @@ if [ -n "$submodule_branch" ]; then
   read left_count right_count < <(git rev-list --count --left-right @...@{u})
   if [ $right_count -ne 0 ]; then
     test $left_count -eq 0 || exit 1 # We can't fast forward.
-    echo "  $orange""Fast forwarding $submodule_branch of $path $right_count commits...$reset"
+    echo "$prefix$orange""Fast forwarding $submodule_branch of $path $right_count commits...$reset"
     git merge --ff-only || exit 1
   elif [ $show_already -eq 1 ]; then
-    echo "  $green""Submodule $name is already on branch $current_branch.$reset"
+    echo "$prefix$green""Submodule $name is already on branch $current_branch.$reset"
   fi
   if [ "$(git rev-parse HEAD)" != "$sha1" ]; then
     # Update the parent project to point to the head of this branch.
@@ -58,8 +61,8 @@ if [ -n "$submodule_branch" ]; then
   fi
 elif test $(git rev-parse HEAD) != "$sha1"; then
   # No submodule.$name.branch for this submodule. Just checkout the detached HEAD.
-  echo "$name: Running 'git checkout $sha1'"
+  echo "$prefix$name: Running 'git checkout $sha1'"
   git checkout $sha1
 else
-  echo "  $green""Submodule $name is already on detached HEAD $sha1.$reset"
+  echo "$prefix$green""Submodule $name is already on detached HEAD $sha1.$reset"
 fi
