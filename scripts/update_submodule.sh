@@ -29,6 +29,7 @@ fi
 submodule_branch=$(git config -f "$toplevel/.gitmodules" submodule.$name.branch)
 
 if [ -n "$submodule_branch" ]; then
+  show_already=1
   if [ "$submodule_branch" != "$current_branch" ]; then
     git checkout "$submodule_branch" |\
         awk '
@@ -36,18 +37,19 @@ if [ -n "$submodule_branch" ]; then
           /^Your branch is ahead of/ { printf("'"  $orange%s$reset"'\n", $0); next }
           /use "git push" to publish your local commits/ { next }
           { printf("'"  $red%s$reset"'\n", $0) }' || exit 1
-    read left_count right_count < <(git rev-list --count --left-right @...@{u})
-    if [ $right_count -ne 0 ]; then
-      test $left_count -eq 0 || exit 1 # We can't fast forward.
-      echo "  Fast forwarning $right_count commits..."
-      git merge --ff-only || exit 1
-    fi
-    if [ "$(git rev-parse HEAD)" != "$sha1" ]; then
-      # Update the parent project to point to the head of this branch.
-      git -C "$toplevel" commit -m "Updating gitlink $path to point to current $submodule_branch branch." -o -- "$path"
-    fi
-  else
+    show_already=0
+  fi
+  read left_count right_count < <(git rev-list --count --left-right @...@{u})
+  if [ $right_count -ne 0 ]; then
+    test $left_count -eq 0 || exit 1 # We can't fast forward.
+    echo "  Fast forwarding $submodule_branch $right_count commits..."
+    git merge --ff-only || exit 1
+  elif [[ show_already == 1 ]]; then
     echo "  $green""Already on branch $current_branch.$reset"
+  fi
+  if [ "$(git rev-parse HEAD)" != "$sha1" ]; then
+    # Update the parent project to point to the head of this branch.
+    git -C "$toplevel" commit -m "Updating gitlink $path to point to current $submodule_branch branch." -o -- "$path"
   fi
 elif test $(git rev-parse HEAD) != "$sha1"; then
   # No submodule.$name.branch for this submodule. Just checkout the detached HEAD.
