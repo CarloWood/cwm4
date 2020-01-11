@@ -36,19 +36,19 @@ if [ -n "$submodule_branch" ]; then
   if [ "$submodule_branch" != "$current_branch" ]; then
     git checkout "$submodule_branch" |\
         awk '
-          /^(Your branch is up-to-date with|Already on)/ { printf("'"  $green%s$reset"'\n", $0); next }
-          /^Your branch is ahead of/ { printf("'"  $orange%s$reset"'\n", $0); next }
+          /^(Your branch is up-to-date with|Already on)/ { printf("'"  $green$name: %s$reset"'\n", $0); next }
+          /^Your branch is ahead of/ { printf("'"  $orange$name: %s$reset"'\n", $0); next }
           /use "git push" to publish your local commits/ { next }
-          { printf("'"  $red%s$reset"'\n", $0) }' || exit 1
+          { printf("'"  $red$name: %s$reset"'\n", $0) }' || exit 1
     show_already=0
   fi
   read left_count right_count < <(git rev-list --count --left-right @...@{u})
   if [ $right_count -ne 0 ]; then
     test $left_count -eq 0 || exit 1 # We can't fast forward.
-    echo "  Fast forwarding $submodule_branch $right_count commits..."
+    echo "  Fast forwarding $submodule_branch of $path $right_count commits..."
     git merge --ff-only || exit 1
   elif [ $show_already -eq 1 ]; then
-    echo "  $green""Already on branch $current_branch.$reset"
+    echo "  $green""Submodule $name is already on branch $current_branch.$reset"
   fi
   if [ "$(git rev-parse HEAD)" != "$sha1" ]; then
     # Update the parent project to point to the head of this branch.
@@ -59,5 +59,5 @@ elif test $(git rev-parse HEAD) != "$sha1"; then
   echo "$name: Running 'git checkout $sha1'"
   git checkout $sha1
 else
-  echo "  $green""Already on detached HEAD $sha1.$reset"
+  echo "  $green""Submodule $name is already on detached HEAD $sha1.$reset"
 fi
