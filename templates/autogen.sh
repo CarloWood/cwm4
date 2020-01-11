@@ -45,7 +45,7 @@ if test -d .git; then
   # Update all submodules. update_submodule.sh doesn't access the remote, so we need to fetch first.
   echo "*** Fetching new commits (recursively)..."
   git fetch --jobs=8 --recurse-submodules-default=yes
-  if ! git submodule foreach "$(realpath cwm4/scripts/update_submodule.sh)"' $name "$path" $sha1 "$toplevel"'; then
+  if ! git submodule --quiet foreach "$(realpath cwm4/scripts/update_submodule.sh)"' $name "$path" $sha1 "$toplevel"'; then
     echo "autogen.sh: Failed to update one or more submodules. Does it have uncommitted changes?"
     exit 1
   fi

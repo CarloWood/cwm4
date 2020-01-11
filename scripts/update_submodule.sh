@@ -18,7 +18,7 @@ if [ -n "$5" ]; then
 fi
 
 # Depth first.
-git submodule foreach "$0"' $name "$path" $sha1 "$toplevel"'" '$path: '"
+git submodule --quiet foreach "$0"' $name "$path" $sha1 "$toplevel"'" '$path: '"
 
 #echo "name = $name"
 #echo "path = \"$path\""
