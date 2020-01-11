@@ -115,5 +115,5 @@ if test "$(echo $GIT_COMMITTER_EMAIL | md5sum | cut -d \  -f 1)" = "$1"; then
       fi'
 fi
 
-# Continue to run update_submodules.sh.
+# Continue to run update_submodule.sh in each submodule.
 exit 2
