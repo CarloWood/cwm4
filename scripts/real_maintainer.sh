@@ -63,7 +63,7 @@ if test "$(echo $GIT_COMMITTER_EMAIL | md5sum | cut -d \  -f 1)" = "$1"; then
   if test "$CWM4HASH" != "$CWM4COMMIT"; then
     if git diff-index --quiet --cached HEAD; then
       echo -e "\n$prefix $red""Updating submodule reference to current HEAD of branch $CWM4_BRANCH of cwm4!$reset"
-      git add cwm4 && git commit -m "Automatic commit: update of submodule reference cwm4 to current HEAD of branch $CWM4_BRANCH"
+      git commit -m "Updating gitlink cwm4 to point to current $CWM4_BRANCH branch." -o -- cwm4
     elif test x"$(git rev-parse --abbrev-ref HEAD)" != x"$CWM4_BRANCH"; then
       echo -e "\n$prefix $red""Please checkout $CWM4_BRANCH in cwm4 and add it to the current project!$reset"
     fi
