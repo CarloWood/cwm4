@@ -14,7 +14,7 @@ path="$2"
 sha1="$3"
 toplevel="$4"
 if [ -n "$5" ]; then
-  prefix="$5"
+  prefix="$esc[36m$5$reset"
 fi
 
 # Depth first.
@@ -57,7 +57,7 @@ if [ -n "$submodule_branch" ]; then
     # Update the parent project to point to the head of this branch.
     git -C "$toplevel" commit -m "Updating gitlink $path to point to current $submodule_branch branch." -o -- "$path" |\
         awk '
-          /Updating gitlink/ { printf("'"  $orange%s$reset"'\n", $0) }' || exit 1
+          /Updating gitlink/ { printf("'"$prefix$orange%s$reset"'\n", $0) }' || exit 1
   fi
 elif test $(git rev-parse HEAD) != "$sha1"; then
   # No submodule.$name.branch for this submodule. Just checkout the detached HEAD.
