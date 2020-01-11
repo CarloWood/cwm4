@@ -14,6 +14,9 @@ path="$2"
 sha1="$3"
 toplevel="$4"
 
+# Depth first.
+git submodule foreach "$0"' $name "$path" $sha1 "$toplevel"'
+
 #echo "name = $name"
 #echo "path = \"$path\""
 #echo "sha1 = $sha1"
