@@ -44,7 +44,7 @@ if [ -n "$submodule_branch" ]; then
     test $left_count -eq 0 || exit 1 # We can't fast forward.
     echo "  Fast forwarding $submodule_branch $right_count commits..."
     git merge --ff-only || exit 1
-  elif [[ show_already == 1 ]]; then
+  elif [ $show_already -eq 1 ]; then
     echo "  $green""Already on branch $current_branch.$reset"
   fi
   if [ "$(git rev-parse HEAD)" != "$sha1" ]; then
