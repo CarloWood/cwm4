@@ -45,14 +45,16 @@ if [ -n "$submodule_branch" ]; then
   read left_count right_count < <(git rev-list --count --left-right @...@{u})
   if [ $right_count -ne 0 ]; then
     test $left_count -eq 0 || exit 1 # We can't fast forward.
-    echo "  Fast forwarding $submodule_branch of $path $right_count commits..."
+    echo "  $orange""Fast forwarding $submodule_branch of $path $right_count commits...$reset"
     git merge --ff-only || exit 1
   elif [ $show_already -eq 1 ]; then
     echo "  $green""Submodule $name is already on branch $current_branch.$reset"
   fi
   if [ "$(git rev-parse HEAD)" != "$sha1" ]; then
     # Update the parent project to point to the head of this branch.
-    git -C "$toplevel" commit -m "Updating gitlink $path to point to current $submodule_branch branch." -o -- "$path"
+    git -C "$toplevel" commit -m "Updating gitlink $path to point to current $submodule_branch branch." -o -- "$path" |\
+        awk '
+          /Updating gitlink/ { printf("'"  $orange%s$reset"'\n", $0) }' || exit 1
   fi
 elif test $(git rev-parse HEAD) != "$sha1"; then
   # No submodule.$name.branch for this submodule. Just checkout the detached HEAD.
