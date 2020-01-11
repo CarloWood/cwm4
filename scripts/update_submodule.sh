@@ -13,7 +13,7 @@ name="$1"
 path="$2"
 sha1="$3"
 toplevel="$4"
-if -n "$5"; then
+if [ -n "$5" ]; then
   prefix="$5"
 fi
 
