@@ -1,10 +1,8 @@
 #! /bin/bash
 
-# To use this script, create .git/hooks/pre-push with the line
+# To use this script, create a symbolic link from .git/hooks/pre-push to cwm4/hooks/pre-push:
 #
-# exec git submodule --quiet foreach --recursive "$(realpath cwm4/scripts/submodule_pre-push.sh)"' "$sm_path" $sha1 "$toplevel"'
-#
-# and make it executable.
+# $ cd .git/hooks && ln -s ../../cwm4/hooks/pre-push
 #
 # To create the alias, run
 #
