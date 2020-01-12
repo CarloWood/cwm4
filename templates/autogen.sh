@@ -50,8 +50,8 @@ if test -d .git; then
     echo "autogen.sh: Failed to update one or more submodules. Does it have uncommitted changes?"
     exit 1
   fi
-  echo "*** Updaing submodule gitlinks..."
-  if ! git submodule --quiet foreach "$(realpath cwm4/scripts/update_submodule.sh)"' --commit $name "$path" $sha1 "$toplevel"'; then
+  echo "*** Updating submodule gitlinks..."
+  if ! git submodule --quiet foreach "$(realpath cwm4/scripts/update_submodule.sh)"' --quiet --commit $name "$path" $sha1 "$toplevel"'; then
     echo "autogen.sh: Failed to update one or more submodules. Does it have uncommitted changes?"
     exit 1
   fi
