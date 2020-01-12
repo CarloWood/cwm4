@@ -10,14 +10,19 @@ orange="$esc[33m"
 
 # Options.
 verbose=1
-quiet=
+commit=0
+quiet_opt=
+commit_opt=
 while [[ $# -gt 0 ]]
 do
   case $1 in
     --quiet)
       verbose=0
-      quiet=" --quiet"
+      quiet_opt=" --quiet"
       ;;
+    --commit)
+      commit=1
+      commit_opt=" --commit"
     --)
       break;
       ;;
@@ -42,7 +47,7 @@ if [ -n "$5" ]; then
 fi
 
 # Depth first.
-git submodule --quiet foreach "$0$quiet"' $name "$path" $sha1 "$toplevel"'" '$path: '"
+git submodule --quiet foreach "$0$quiet_opt$commit_opt"' $name "$path" $sha1 "$toplevel"'" '$path: '"
 
 #echo "name = $name"
 #echo "path = \"$path\""
@@ -77,13 +82,14 @@ if [ -n "$submodule_branch" ]; then
   fi
   read left_count right_count < <(git rev-list --count --left-right @...@{u})
   if [ $right_count -ne 0 ]; then
+    test $commit -eq 0 || fatal_error "Can fast forward while --commit is given?!"
     test $left_count -eq 0 || fatal_error "Can not fast forward $path."
     echo "$prefix$orange""Fast forwarding $submodule_branch of $path $right_count commits...$reset"
     git merge --ff-only || fatal_error "git merge --ff-only failed!"
   elif [ $show_already -eq 1 ]; then
     echo "$prefix$green""Submodule $name is already on branch $current_branch.$reset"
   fi
-  if [ "$(git rev-parse HEAD)" != "$sha1" ]; then
+  if [ $commit -ne 0 -a "$(git rev-parse HEAD)" != "$sha1" ]; then
     # Update the parent project to point to the head of this branch.
     git -C "$toplevel" commit -m "Updating gitlink $path to point to current HEAD of $submodule_branch branch." -o -- "$path" |\
         awk '
