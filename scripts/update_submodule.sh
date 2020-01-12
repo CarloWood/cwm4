@@ -50,6 +50,12 @@ git submodule --quiet foreach "$0$quiet"' $name "$path" $sha1 "$toplevel"'" '$pa
 #echo "toplevel = \"$toplevel\""
 # toplevel + path = pwd
 
+function fatal_error()
+{
+  echo $prefix$red"$@"$reset
+  exit 1
+}
+
 current_branch="$(git symbolic-ref HEAD 2>/dev/null)"
 if [[ $? == 0 ]]; then
   current_branch=${current_branch#refs/heads/}
@@ -66,14 +72,14 @@ if [ -n "$submodule_branch" ]; then
           /^(Your branch is up-to-date with|Already on)/ { printf("'"  $green$name: %s$reset"'\n", $0); next }
           /^Your branch is ahead of/ { printf("'"  $orange$name: %s$reset"'\n", $0); next }
           /use "git push" to publish your local commits/ { next }
-          { printf("'"  $red$name: %s$reset"'\n", $0) }' || exit 1
+          { printf("'"  $red$name: %s$reset"'\n", $0) }' || fatal_error "git checkout \"$submodule_branch\" failed?"
     show_already=0
   fi
   read left_count right_count < <(git rev-list --count --left-right @...@{u})
   if [ $right_count -ne 0 ]; then
-    test $left_count -eq 0 || exit 1 # We can't fast forward.
+    test $left_count -eq 0 || fatal_error "Can not fast forward $path."
     echo "$prefix$orange""Fast forwarding $submodule_branch of $path $right_count commits...$reset"
-    git merge --ff-only || exit 1
+    git merge --ff-only || fatal_error "git merge --ff-only failed!"
   elif [ $show_already -eq 1 ]; then
     echo "$prefix$green""Submodule $name is already on branch $current_branch.$reset"
   fi
@@ -81,7 +87,7 @@ if [ -n "$submodule_branch" ]; then
     # Update the parent project to point to the head of this branch.
     git -C "$toplevel" commit -m "Updating gitlink $path to point to current HEAD of $submodule_branch branch." -o -- "$path" |\
         awk '
-          /Updating gitlink/ { printf("'"$prefix$orange%s$reset"'\n", $0) }' || exit 1
+          /Updating gitlink/ { printf("'"$prefix$orange%s$reset"'\n", $0) }' || fatal_error "git -C \"$toplevel\" commit -m \"Updating gitlink $path to point to current HEAD of $submodule_branch branch.\" -o -- \"$path\" failed?"
   fi
 elif test $(git rev-parse HEAD) != "$sha1"; then
   # No submodule.$name.branch for this submodule. Just checkout the detached HEAD.
