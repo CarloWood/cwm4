@@ -54,7 +54,8 @@ if test "$(echo $GIT_COMMITTER_EMAIL | md5sum | cut -d \  -f 1)" = "$1"; then
   fi
   cd cwm4 || exit 1
   if ! git diff-index --quiet HEAD --; then
-    echo -e "\n$prefix $red""Automatically committing uncommitted changes in cwm4!$reset"
+    echo -e "\n$prefix $red""Committing all changes in cwm4!$reset"
+    git diff
     git commit -a -m 'Automatic commit of changes by autogen.sh.'
   fi
   CWM4COMMIT=$(git rev-parse HEAD)
@@ -62,8 +63,8 @@ if test "$(echo $GIT_COMMITTER_EMAIL | md5sum | cut -d \  -f 1)" = "$1"; then
   CWM4HASH=$(git ls-tree HEAD | grep '[[:space:]]cwm4$' | awk '{ print $3 }')
   if test "$CWM4HASH" != "$CWM4COMMIT"; then
     if git diff-index --quiet --cached HEAD; then
-      echo -e "\n$prefix $red""Updating submodule reference to current HEAD of branch $CWM4_BRANCH of cwm4!$reset"
-      git add cwm4 && git commit -m "Automatic commit: update of submodule reference cwm4 to current HEAD of branch $CWM4_BRANCH"
+      echo -e "\n$prefix $red""Updating gitlink cwm4 to current $CWM4_BRANCH branch!$reset"
+      git commit -m "Updating gitlink cwm4 to point to current HEAD of $CWM4_BRANCH branch." -o -- cwm4
     elif test x"$(git rev-parse --abbrev-ref HEAD)" != x"$CWM4_BRANCH"; then
       echo -e "\n$prefix $red""Please checkout $CWM4_BRANCH in cwm4 and add it to the current project!$reset"
     fi
@@ -115,5 +116,5 @@ if test "$(echo $GIT_COMMITTER_EMAIL | md5sum | cut -d \  -f 1)" = "$1"; then
       fi'
 fi
 
-# Continue to run update_submodules.sh.
+# Continue to run update_submodule.sh in each submodule.
 exit 2
