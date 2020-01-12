@@ -55,7 +55,7 @@ if test "$(echo $GIT_COMMITTER_EMAIL | md5sum | cut -d \  -f 1)" = "$1"; then
   cd cwm4 || exit 1
   if ! git diff-index --quiet HEAD --; then
     echo -e "\n$prefix $red""Committing all changes in cwm4!$reset"
-    git diff
+    git --no-pager diff
     git commit -a -m 'Automatic commit of changes by autogen.sh.'
   fi
   CWM4COMMIT=$(git rev-parse HEAD)
