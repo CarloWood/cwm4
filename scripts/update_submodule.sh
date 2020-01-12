@@ -9,7 +9,28 @@ green="$esc[32m"
 orange="$esc[33m"
 
 # Options.
-verbose=0
+verbose=1
+quiet=
+while [[ $# -gt 0 ]]
+do
+  case $1 in
+    --quiet)
+      verbose=0
+      quiet=" --quiet"
+      ;;
+    --)
+      break;
+      ;;
+    -*)
+      echo "Unknown option $1"
+      exit 1
+      ;;
+    *)
+      break
+      ;;
+  esac
+  shift
+done
 
 # Arguments.
 name="$1"
@@ -21,7 +42,7 @@ if [ -n "$5" ]; then
 fi
 
 # Depth first.
-git submodule --quiet foreach "$0"' $name "$path" $sha1 "$toplevel"'" '$path: '"
+git submodule --quiet foreach "$0$quiet"' $name "$path" $sha1 "$toplevel"'" '$path: '"
 
 #echo "name = $name"
 #echo "path = \"$path\""
@@ -58,7 +79,7 @@ if [ -n "$submodule_branch" ]; then
   fi
   if [ "$(git rev-parse HEAD)" != "$sha1" ]; then
     # Update the parent project to point to the head of this branch.
-    git -C "$toplevel" commit -m "Updating gitlink $path to point to current $submodule_branch branch." -o -- "$path" |\
+    git -C "$toplevel" commit -m "Updating gitlink $path to point to current HEAD of $submodule_branch branch." -o -- "$path" |\
         awk '
           /Updating gitlink/ { printf("'"$prefix$orange%s$reset"'\n", $0) }' || exit 1
   fi
