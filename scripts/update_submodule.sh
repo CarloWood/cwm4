@@ -23,6 +23,7 @@ do
     --commit)
       commit=1
       commit_opt=" --commit"
+      ;;
     --)
       break;
       ;;
