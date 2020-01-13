@@ -61,7 +61,7 @@ else
 fi
 
 # Determine if this project uses libtool.
-RESULT=$(find . -type d \( -name '.git' -o -name 'cwm4' \) -prune -o -name Makefile.am -exec egrep -l '^[[:alnum:]_]*_LTLIBRARIES[[:space:]]*=' {} \;)
+RESULT=$(find . -type d \( -name '.git' -o -name 'cwm4' \) -prune -o \( -name Makefile.am -o -name makefile.am \) -exec egrep -l '^[[:alnum:]_]*_LTLIBRARIES[[:space:]]*=' {} \;)
 if test -n "$RESULT"; then
   using_libtool="yes"
 else
