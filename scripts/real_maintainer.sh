@@ -133,7 +133,7 @@ if test "$(echo $GIT_COMMITTER_EMAIL | md5sum | cut -d \  -f 1)" = "$1"; then
   GATE_SHA1=$(git ls-remote --quiet --refs --heads https://github.com/CarloWood/gate.git master | cut -f 1)
   HUNTER_SHA1=$(git ls-remote --quiet --refs --heads https://github.com/CarloWood/hunter.git master | cut -f 1)
   CURRENT_GATE_SHA1=$(awk '/GIT_TAG[[:space:]"]+[0-9a-f]{40}.*Gate/ { match($0, /.*GIT_TAG[[:space:]"]+([0-9a-f]{40})/, arr); print arr[1] }' CMakeLists.txt)
-  CURRENT_HUNTER_HUNTER_GIT_TAG=$(awk '/HUNTER_GIT_TAG[[:space:]"]+[0-9a-f]{40}/ { match($0, /.*HUNTER_GIT_TAG[[:space:]"]+([0-9a-f]{40})/, arr); print arr[1] }' CMakeLists.txt)
+  CURRENT_HUNTER_SHA1=$(awk '/HUNTER_GIT_TAG[[:space:]"]+[0-9a-f]{40}/ { match($0, /.*HUNTER_GIT_TAG[[:space:]"]+([0-9a-f]{40})/, arr); print arr[1] }' CMakeLists.txt)
   if [ "$CURRENT_GATE_SHA1" != "$GATE_SHA1" -o "$CURRENT_HUNTER_SHA1" != "$HUNTER_SHA1" ]; then
     echo "CURRENT_GATE_SHA1 = $CURRENT_GATE_SHA1 ; GATE_SHA1 = $GATE_SHA1 ; CURRENT_HUNTER_SHA1 = $CURRENT_HUNTER_SHA1 ; HUNTER_SHA1 = $HUNTER_SHA1"
     sed -r -i -e 's/(.*GIT_TAG.*)([0-9a-f]{40})(.*Gate.*)/\1'$GATE_SHA1'\3/;s/(.*HUNTER_GIT_TAG.*)([0-9a-f]{40})(.*)/\1'$HUNTER_SHA1'\3/' CMakeLists.txt
