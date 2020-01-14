@@ -128,10 +128,11 @@ if test "$(echo $GIT_COMMITTER_EMAIL | md5sum | cut -d \  -f 1)" = "$1"; then
     echo "autogen.sh: Failed to update one or more submodules. Does it have uncommitted changes?"
     exit 1
   fi
+  echo "*** Updating SHA1's in CMakeLists.txt..."
   # Update the SHA1 of hunter in the root CMakeLists.txt.
   GATE_SHA1=$(git ls-remote --quiet --refs --heads https://github.com/CarloWood/gate.git master | cut -f 1)
   HUNTER_SHA1=$(git ls-remote --quiet --refs --heads https://github.com/CarloWood/hunter.git master | cut -f 1)
-  sed -i -e '/\(.*SHA1.*\)\([0-9a-f]{40}\)\(.*Gate.*\)/\1'$GATE_SHA1'\3/;s/\(.*SHA1.*\)\([0-9a-f]{40}\)\(.*Hunter.*\)/\1'$HUNTER_SHA1'\3/' CMakeLists.txt
+  sed -i -e 's/\(.*SHA1.*\)\([0-9a-f]{40}\)\(.*Gate.*\)/\1'$GATE_SHA1'\3/;s/\(.*SHA1.*\)\([0-9a-f]{40}\)\(.*Hunter.*\)/\1'$HUNTER_SHA1'\3/' CMakeLists.txt
 fi
 
 # Continue to run update_submodule.sh in each submodule.
