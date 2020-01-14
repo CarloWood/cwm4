@@ -114,6 +114,24 @@ if test "$(echo $GIT_COMMITTER_EMAIL | md5sum | cut -d \  -f 1)" = "$1"; then
           fi
         fi
       fi'
+
+  # Update all submodules. update_submodule.sh doesn't access the remote, so we need to fetch first.
+  echo "*** Fetching new commits..."
+  git fetch --jobs=8 --recurse-submodules-default=yes
+  echo "*** Doing fast-forward on branched submodules..."
+  if ! git submodule --quiet foreach "$(realpath cwm4/scripts/update_submodule.sh)"' $name "$path" $sha1 "$toplevel"'; then
+    echo "autogen.sh: Failed to update one or more submodules. Does it have uncommitted changes?"
+    exit 1
+  fi
+  echo "*** Updating submodule gitlinks..."
+  if ! git submodule --quiet foreach "$(realpath cwm4/scripts/update_submodule.sh)"' --quiet --commit $name "$path" $sha1 "$toplevel"'; then
+    echo "autogen.sh: Failed to update one or more submodules. Does it have uncommitted changes?"
+    exit 1
+  fi
+  # Update the SHA1 of hunter in the root CMakeLists.txt.
+  GATE_SHA1=$(git ls-remote --quiet --refs --heads https://github.com/CarloWood/gate.git master | cut -f 1)
+  HUNTER_SHA1=$(git ls-remote --quiet --refs --heads https://github.com/CarloWood/hunter.git master | cut -f 1)
+  sed -i -e '/\(.*SHA1.*\)\([0-9a-f]{40}\)\(.*Gate.*\)/\1'$GATE_SHA1'\3/;/\(.*SHA1.*\)\([0-9a-f]{40}\)\(.*Hunter.*\)/\1'$HUNTER_SHA1'\3/' CMakeLists.txt
 fi
 
 # Continue to run update_submodule.sh in each submodule.
