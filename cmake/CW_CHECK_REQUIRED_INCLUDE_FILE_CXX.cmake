@@ -27,18 +27,18 @@
 include_guard( GLOBAL )
 include( CheckIncludeFileCXX )
 
-# CW_CHECK_REQUIRED_INCLUDE_FILE_CXX (<include> <error message>)
+# CW_CHECK_REQUIRED_INCLUDE_FILE_CXX (<include_file> <error_message>)
 #
-# Check if the given <include> file may be included in a CXX source file,
+# Check if the given <include_file> may be included in a CXX source file,
 # if successful store the result in an internal cache entry named derived
-# from <include>. Otherwise print a fatal error <error message>.
+# from <include_file>. Otherwise print a fatal error <error_message>.
 
-function( CW_CHECK_REQUIRED_INCLUDE_FILE_CXX )
-  string( MAKE_C_IDENTIFIER "HAVE_${ARGV0}" include_id )
+function( CW_CHECK_REQUIRED_INCLUDE_FILE_CXX include_file error_message )
+  string( MAKE_C_IDENTIFIER "HAVE_${include_file}" include_id )
   string( TOUPPER "${include_id}" upper_include_id )
-  check_include_file_cxx( "${ARGV0}" "${upper_include_id}" )
+  check_include_file_cxx( "${include_file}" "${upper_include_id}" )
   if (NOT ${upper_include_id} )
     unset( ${upper_include_id} CACHE )
-    message( FATAL_ERROR "\n${ARGV1}\n" )
+    message( FATAL_ERROR "\n${error_message}\n" )
   endif ()
 endfunction ()
