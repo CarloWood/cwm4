@@ -128,21 +128,23 @@ if test "$(echo $GIT_COMMITTER_EMAIL | md5sum | cut -d \  -f 1)" = "$1"; then
     echo "autogen.sh: Failed to update one or more submodules. Does it have uncommitted changes?"
     exit 1
   fi
-  echo "*** Updating SHA1's in CMakeLists.txt..."
-  # Update the SHA1 of hunter in the root CMakeLists.txt.
-  GATE_SHA1=$(git ls-remote --quiet --refs --heads https://github.com/CarloWood/gate.git master | cut -f 1)
-  HUNTER_SHA1=$(git ls-remote --quiet --refs --heads https://github.com/CarloWood/hunter.git master | cut -f 1)
-  CURRENT_GATE_SHA1=$(awk '/GIT_TAG[[:space:]"]+[0-9a-f]{40}.*Gate/ { match($0, /.*GIT_TAG[[:space:]"]+([0-9a-f]{40})/, arr); print arr[1] }' CMakeLists.txt)
-  CURRENT_HUNTER_SHA1=$(awk '/HUNTER_GIT_TAG[[:space:]"]+[0-9a-f]{40}/ { match($0, /.*HUNTER_GIT_TAG[[:space:]"]+([0-9a-f]{40})/, arr); print arr[1] }' CMakeLists.txt)
-  if [ "$CURRENT_GATE_SHA1" != "$GATE_SHA1" -o "$CURRENT_HUNTER_SHA1" != "$HUNTER_SHA1" ]; then
-    if [ "$CURRENT_GATE_SHA1" != "$GATE_SHA1" ]; then
-      echo "gate: $CURRENT_GATE_SHA1 --> $GATE_SHA1"
+  if [ -e CMakeLists.txt ]; then
+    echo "*** Updating SHA1's in CMakeLists.txt..."
+    # Update the SHA1 of hunter in the root CMakeLists.txt.
+    GATE_SHA1=$(git ls-remote --quiet --refs --heads https://github.com/CarloWood/gate.git master | cut -f 1)
+    HUNTER_SHA1=$(git ls-remote --quiet --refs --heads https://github.com/CarloWood/hunter.git master | cut -f 1)
+    CURRENT_GATE_SHA1=$(awk '/GIT_TAG[[:space:]"]+[0-9a-f]{40}.*Gate/ { match($0, /.*GIT_TAG[[:space:]"]+([0-9a-f]{40})/, arr); print arr[1] }' CMakeLists.txt)
+    CURRENT_HUNTER_SHA1=$(awk '/HUNTER_GIT_TAG[[:space:]"]+[0-9a-f]{40}/ { match($0, /.*HUNTER_GIT_TAG[[:space:]"]+([0-9a-f]{40})/, arr); print arr[1] }' CMakeLists.txt)
+    if [ "$CURRENT_GATE_SHA1" != "$GATE_SHA1" -o "$CURRENT_HUNTER_SHA1" != "$HUNTER_SHA1" ]; then
+      if [ "$CURRENT_GATE_SHA1" != "$GATE_SHA1" ]; then
+        echo "gate: $CURRENT_GATE_SHA1 --> $GATE_SHA1"
+      fi
+      if [ "$CURRENT_HUNTER_SHA1" != "$HUNTER_SHA1" ]; then
+        echo "hunter: $CURRENT_HUNTER_SHA1 --> $HUNTER_SHA1"
+      fi
+      sed -r -i -e 's/(.*GIT_TAG.*)([0-9a-f]{40})(.*Gate.*)/\1'$GATE_SHA1'\3/;s/(.*HUNTER_GIT_TAG.*)([0-9a-f]{40})(.*)/\1'$HUNTER_SHA1'\3/' CMakeLists.txt
+      git commit -m 'Update of sha1 of hunter/gate repositories.' -- CMakeLists.txt
     fi
-    if [ "$CURRENT_HUNTER_SHA1" != "$HUNTER_SHA1"]; then
-      echo "hunter: $CURRENT_HUNTER_SHA1 --> $HUNTER_SHA1"
-    fi
-    sed -r -i -e 's/(.*GIT_TAG.*)([0-9a-f]{40})(.*Gate.*)/\1'$GATE_SHA1'\3/;s/(.*HUNTER_GIT_TAG.*)([0-9a-f]{40})(.*)/\1'$HUNTER_SHA1'\3/' CMakeLists.txt
-    git commit -m 'Update of sha1 of hunter/gate repositories.' -- CMakeLists.txt
   fi
 fi
 
