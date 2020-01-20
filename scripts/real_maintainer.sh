@@ -135,7 +135,7 @@ if test "$(echo $GIT_COMMITTER_EMAIL | md5sum | cut -d \  -f 1)" = "$1"; then
     HUNTER_SHA1=$(git ls-remote --quiet --refs --heads https://github.com/CarloWood/hunter.git master | cut -f 1)
     CURRENT_GATE_SHA1=$(awk '/GIT_TAG[[:space:]"]+[0-9a-f]{40}.*Gate/ { match($0, /.*GIT_TAG[[:space:]"]+([0-9a-f]{40})/, arr); print arr[1] }' CMakeLists.txt)
     CURRENT_HUNTER_SHA1=$(awk '/HUNTER_GIT_TAG[[:space:]"]+[0-9a-f]{40}/ { match($0, /.*HUNTER_GIT_TAG[[:space:]"]+([0-9a-f]{40})/, arr); print arr[1] }' CMakeLists.txt)
-    if [ "$CURRENT_GATE_SHA1" != "$GATE_SHA1" -o "$CURRENT_HUNTER_SHA1" != "$HUNTER_SHA1" ]; then
+    if [ -n "$CURRENT_GATE_SHA1" -a \( "$CURRENT_GATE_SHA1" != "$GATE_SHA1" -o "$CURRENT_HUNTER_SHA1" != "$HUNTER_SHA1" \) ]; then
       if [ "$CURRENT_GATE_SHA1" != "$GATE_SHA1" ]; then
         echo "gate: $CURRENT_GATE_SHA1 --> $GATE_SHA1"
       fi
