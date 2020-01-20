@@ -24,6 +24,9 @@ for dir in "${subdirs[@]}"; do
     fi
   fi
 done
+if $MAKE -n maintainer-clean-extra >/dev/null 2>/dev/null; then
+  $MAKE maintainer-clean-extra
+fi
 
 for dir in "${dirs[@]}"; do
   if [ -e "$dir"/Makefile ]; then
