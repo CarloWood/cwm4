@@ -53,7 +53,6 @@
 # where argument four is a semi-colon separated list of variables
 # that must be true for this option to be added (otherwise OFF,
 # argument five).
-
 include_guard( GLOBAL )
 include( color_vars )
 set( Option "${BoldCyan}Option${ColourReset}" )
@@ -185,29 +184,31 @@ endif ()
 message( STATUS "${Option} ${OptionColor}CMAKE_BUILD_TYPE${ColourReset} =\n\t${OptionColorBuildType}${CMAKE_BUILD_TYPE}${ColourReset}" )
 #message( STATUS "${Option} ${OptionColor}CMAKE_BUILD_TYPE${ColourReset} = ${OptionColorBuildType}${CMAKE_BUILD_TYPE}${ColourReset}" )
 
-# Option 'EnableDebug' compiles in debug mode: we want debug code, debug output (if available),
-# asserts, debug info - but not necessary no optimization.
-cw_option( EnableDebug
-        "Build for debugging" ${default_enable_debug}
-        "CW_BUILD_TYPE_IS_NOT_RELEASE" OFF )
+if ( NOT "${PROJECT_NAME}" STREQUAL "libcwd" )
+  # Option 'EnableDebug' compiles in debug mode: we want debug code, debug output (if available),
+  # asserts, debug info - but not necessarily no optimization.
+  cw_option( EnableDebug
+          "Build for debugging" ${default_enable_debug}
+          "CW_BUILD_TYPE_IS_NOT_RELEASE" OFF )
 
-message( DEBUG "OptionEnableDebug is ${OptionEnableDebug}" )
+  message( DEBUG "OptionEnableDebug is ${OptionEnableDebug}" )
 
-if (CW_BUILD_TYPE_IS_NOT_RELEASE AND OptionEnableDebug)
-  find_package( PkgConfig )
-  pkg_check_modules( Libcwd_r libcwd_r IMPORTED_TARGET GLOBAL )
-  if (Libcwd_r_FOUND)
-    set( default_enable_libcwd ON )
-  else ()
-    set( default_enable_libcwd OFF )
+  if (CW_BUILD_TYPE_IS_NOT_RELEASE AND OptionEnableDebug)
+    find_package( PkgConfig )
+    pkg_check_modules( Libcwd_r libcwd_r IMPORTED_TARGET GLOBAL )
+    if (Libcwd_r_FOUND)
+      set( default_enable_libcwd ON )
+    else ()
+      set( default_enable_libcwd OFF )
+    endif ()
   endif ()
-endif ()
 
-# Option 'EnableLibcwd' links with libcwd in debug mode.
-cw_option( EnableLibcwd
-        "link with libcwd" "${default_enable_libcwd}"
-        "CW_BUILD_TYPE_IS_NOT_RELEASE;OptionEnableDebug" OFF )
+  # Option 'EnableLibcwd' links with libcwd in debug mode.
+  cw_option( EnableLibcwd
+          "link with libcwd" "${default_enable_libcwd}"
+          "CW_BUILD_TYPE_IS_NOT_RELEASE;OptionEnableDebug" OFF )
 
-if (OptionEnableLibcwd AND NOT Libcwd_r_FOUND)
-  message( FATAL_ERROR "EnableLibcwd specified but libcwd_r not found!" )
+  if (OptionEnableLibcwd AND NOT Libcwd_r_FOUND)
+    message( FATAL_ERROR "EnableLibcwd specified but libcwd_r not found!" )
+  endif ()
 endif ()
