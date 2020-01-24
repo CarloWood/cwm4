@@ -38,3 +38,11 @@ for dir in "${dirs[@]}"; do
     fi
   fi
 done
+
+# Clean up Hunter gate/setup files.
+rm -f HunterSetup.cmake.in HunterSetup.cmake HunterToolchain.cmake.in HunterToolchain.cmake CMakeDoxyfile.in CMakeDoxygenDefaults.cmake
+rm -rf _3rdParty/Hunter
+rm -rf _deps/cwhuntergate-src _deps/cwhuntergate-subbuild
+# Should be empty now.
+rmdir _3rdParty
+rmdir _deps
