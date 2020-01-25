@@ -42,7 +42,7 @@ dnl Update USE_LIBCWD, LIBCWD(_R)_FLAGS, LIBCWD(_R)_LIBS and CXXFLAGS accordingl
 dnl The first parameter should only contain warning flags: these flags are not used when not using maintainer-mode.
 dnl Second parameter can be [no] (single-threaded), [yes] (multi-threaded) or [both] (single and multi-threaded applications).
 dnl Third parameter can be empty (no limit), or an integer (larger than 0) to limit the maximum number of printed compiler errors.
-CW_OPG_CXXFLAGS([CW_WARNING_FLAGS], [CW_THREADS], [CW_MAX_ERRORS])
+CW_OPG_CXXFLAGS([CW_COMPILE_FLAGS], [CW_THREADS], [CW_MAX_ERRORS])
 
 dnl Use libtool (lt_init.m4 will only exist when the project is actually using libtool).
 m4_sinclude([m4/lt_init.m4])
