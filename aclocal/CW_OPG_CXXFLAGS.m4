@@ -247,7 +247,7 @@ if m4_changequote([`],['])[[m4_changequote(`[',`]') "$3" m4_changequote([`],['])
 fi
 
 # Reassemble CXXFLAGS with max-error, debug and optimization flags.
-[CXXFLAGS=`echo "$CW_STD_FLAG" "$CW_MAX_ERRORS_FLAG $CW_DEBUG_FLAG $CW_WARNING_FLAGS $CW_OPTIMIZE_FLAG !$CW_STRIPPED_CXXFLAGS!" | sed -e 's/^ *//' -e 's/  */ /g' -e 's/ *$//'`]
+[CXXFLAGS=`echo "$CW_STD_FLAG" "$CW_MAX_ERRORS_FLAG $CW_DEBUG_FLAG $CW_WARNING_FLAGS $CW_OPTIMIZE_FLAG $CW_STRIPPED_CXXFLAGS" | sed -e 's/^ *//' -e 's/  */ /g' -e 's/ *$//'`]
 
 dnl Put CXXFLAGS into the Makefile.
 AC_SUBST(CXXFLAGS)
