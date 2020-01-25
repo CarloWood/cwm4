@@ -24,7 +24,7 @@
 # file appears in them. The GNU General Public License (GPL) does govern
 # all other use of the material that constitutes the cwm4 project.
 
-dnl CW_OPG_CXXFLAGS(COMPILER_FLAGS, THREADED, MAX_ERRORS)
+dnl CW_OPG_CXXFLAGS(COMPILE_FLAGS, THREADED, MAX_ERRORS)
 dnl
 dnl Add --enable-debug    (DEBUG, DOXYGEN_DEBUG),
 dnl     --enable-libcwd   (CWDEBUG, DOXYGEN_CWDEBUG),
@@ -40,11 +40,11 @@ dnl
 dnl However, if CXXFLAGS already contains a -g* option then that is used
 dnl instead of the default -g (-ggdb). If it contains a -O* option then
 dnl that is used instead of -O2. Finally, if options are passed to
-dnl the macro as COMPILER_FLAGS then those are used instead of the default
-dnl ones. CXXFLAGS overrule COMPILER_FLAGS, which overrules the defaults
+dnl the macro as COMPILE_FLAGS then those are used instead of the default
+dnl ones. CXXFLAGS overrule COMPILE_FLAGS, which overrules the defaults
 dnl defined in this macro.
 dnl
-dnl COMPILER_FLAGS may only specify -g*, -O*, -W* and/or -std=* flags.
+dnl COMPILE_FLAGS may only specify -g*, -O*, -W* and/or -std=* flags.
 dnl Any other flags will be ignored. In non-maintainer mode also all -W*
 dnl flags are ignored.
 dnl
@@ -82,7 +82,7 @@ AC_ARG_ENABLE(libcwd,        [  --enable-libcwd         link with libcwd @<:@aut
 AC_ARG_ENABLE(optimize,      [  --enable-optimize       do code optimization @<:@auto@:>@], [cw_config_optimize=$enableval], [cw_config_optimize=])
 AC_ARG_ENABLE(profile,       [  --enable-profile        add profiling code @<:@no@:>@], [cw_config_profile=$enableval], [cw_config_profile=])
 
-# Separate -g, -O, -W and -std= of COMPILER_FLAGS.
+# Separate -g, -O, -W and -std= of COMPILE_FLAGS.
 CW_DEBUG_FLAG2=
 CW_OPTIMIZE_FLAG2=
 CW_WARNING_FLAGS2=

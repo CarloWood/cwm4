@@ -23,9 +23,9 @@ define(CW_BUGREPORT, [@CW_BUGREPORT@])
 #define(CW_INTERFACE_VERSION_REVISION, 0)
 #define(CW_INTERFACE_AGE, 0)
 
-# CW_COMPILER_FLAGS may contain warning flags, but also default debug flags (-g*)
+# CW_COMPILE_FLAGS may contain warning flags, but also default debug flags (-g*)
 # and optimization flags (-O*) that which will be stripped when not required.
-define(CW_COMPILER_FLAGS, [-W -Wall -Woverloaded-virtual -Wundef -Wpointer-arith -Wwrite-strings -Winline])
+define(CW_COMPILE_FLAGS, [-W -Wall -Woverloaded-virtual -Wundef -Wpointer-arith -Wwrite-strings -Winline])
 # CW_THREADS can be [no] (single-threaded), [yes] (multi-threaded) or [both] (single and multi-threaded applications).
 define(CW_THREADS, [both])
 # CW_MAX_ERRORS is the maximum number of errors the compiler will show.
