@@ -24,8 +24,8 @@
 # file appears in them. The GNU General Public License (GPL) does govern
 # all other use of the material that constitutes the cwm4 project.
 
-include_guard( GLOBAL )
-set( CW_SYS_TYPEDEFS "" )
+include_guard(GLOBAL)
+set(CW_SYS_TYPEDEFS "")
 
 # CW_DEFINE_TYPE(<old_type> <new_type>)
 #
@@ -36,6 +36,6 @@ set( CW_SYS_TYPEDEFS "" )
 #     @CW_SYS_TYPEDEFS@
 #
 
-function( CW_DEFINE_TYPE old_type new_type )
-  set( CW_SYS_TYPEDEFS "${CW_SYS_TYPEDEFS} using ${new_type} = ${old_type};" PARENT_SCOPE )
-endfunction ()
+function(CW_DEFINE_TYPE old_type new_type)
+  set(CW_SYS_TYPEDEFS "${CW_SYS_TYPEDEFS} using ${new_type} = ${old_type};" PARENT_SCOPE)
+endfunction()

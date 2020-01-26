@@ -4,4 +4,4 @@
 # Boost 1.71 requires CMake 3.15.3 or newer.
 # Boost 1.72 requires CMake 3.16.2 or newer.
 # See https://stackoverflow.com/questions/42123509/cmake-finds-boost-but-the-imported-targets-not-available-for-boost-version/42124857#42124857
-hunter_config( Boost VERSION 1.70.0-p0 )
+hunter_config(Boost VERSION 1.70.0-p0)

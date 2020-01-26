@@ -24,7 +24,7 @@
 # file appears in them. The GNU General Public License (GPL) does govern
 # all other use of the material that constitutes the cwm4 project.
 
-include_guard( GLOBAL )
+include_guard(GLOBAL)
 
 # CW_SYS_PS_WIDE_PID_OPTION
 #
@@ -36,9 +36,9 @@ include_guard( GLOBAL )
 #     static char const* const PS_ARGUMENT = "@PS_ARGUMENT@";
 #
 
-set( CW_SYS_MALLOC_OVERHEAD_MODULE_PATH "${CMAKE_CURRENT_LIST_DIR}" )
+set(CW_SYS_MALLOC_OVERHEAD_MODULE_PATH "${CMAKE_CURRENT_LIST_DIR}")
 
-function( CW_SYS_PS_WIDE_PID_OPTION )
+function(CW_SYS_PS_WIDE_PID_OPTION)
   if (NOT DEFINED CACHE{CW_PS_WIDE_PID_OPTION})
     execute_process(COMMAND ${CMAKE_COMMAND} -E echo_append "-- Checking for (ultra) wide ps output option - ")
     execute_process(COMMAND "${CW_PATH_PROG_PS}" -ww
@@ -102,4 +102,4 @@ function( CW_SYS_PS_WIDE_PID_OPTION )
     execute_process(COMMAND ${CMAKE_COMMAND} -E echo "${CW_PS_WIDE_PID_OPTION}")
   endif ()
   set(PS_ARGUMENT ${CW_PS_WIDE_PID_OPTION} PARENT_SCOPE)
-endfunction ()
+endfunction()

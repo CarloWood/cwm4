@@ -24,8 +24,8 @@
 # file appears in them. The GNU General Public License (GPL) does govern
 # all other use of the material that constitutes the cwm4 project.
 
-include_guard( GLOBAL )
-include( CheckIncludeFileCXX )
+include_guard(GLOBAL)
+include(CheckIncludeFileCXX)
 
 # CW_CHECK_REQUIRED_INCLUDE_FILE_CXX (<include_file> <error_message>)
 #
@@ -33,12 +33,12 @@ include( CheckIncludeFileCXX )
 # if successful store the result in an internal cache entry named derived
 # from <include_file>. Otherwise print a fatal error <error_message>.
 
-function( CW_CHECK_REQUIRED_INCLUDE_FILE_CXX include_file error_message )
-  string( MAKE_C_IDENTIFIER "HAVE_${include_file}" include_id )
-  string( TOUPPER "${include_id}" upper_include_id )
-  check_include_file_cxx( "${include_file}" "${upper_include_id}" )
-  if (NOT ${upper_include_id} )
-    unset( ${upper_include_id} CACHE )
-    message( FATAL_ERROR "\n${error_message}\n" )
+function(CW_CHECK_REQUIRED_INCLUDE_FILE_CXX include_file error_message)
+  string(MAKE_C_IDENTIFIER "HAVE_${include_file}" include_id)
+  string(TOUPPER "${include_id}" upper_include_id)
+  check_include_file_cxx("${include_file}" "${upper_include_id}")
+  if (NOT ${upper_include_id})
+    unset(${upper_include_id} CACHE)
+    message(FATAL_ERROR "\n${error_message}\n")
   endif ()
 endfunction ()
