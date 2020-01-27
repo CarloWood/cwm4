@@ -1,0 +1,21 @@
+# Usage
+#
+#   dump_cmake_variables([A-Z]+)
+#
+function(dump_cmake_variables)
+  string(ASCII 27 _escape)
+  get_cmake_property(_variableNames VARIABLES)
+  list(SORT _variableNames)
+  foreach (_variableName ${_variableNames})
+    if (ARGV0)
+      unset(MATCHED)
+      string(REGEX MATCH ${ARGV0} MATCHED ${_variableName})
+      if (NOT MATCHED)
+	continue()
+      endif()
+    endif()
+    string(REGEX REPLACE "(${_escape})" "\\\\e" _escaped_value1 "${${_variableName}}")
+    string(REGEX REPLACE "(\n)" "\\\\n" _escaped_value2 "${_escaped_value1}")
+    message(STATUS "${_variableName}=${_escaped_value2}")
+  endforeach()
+endfunction()
