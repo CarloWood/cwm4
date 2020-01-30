@@ -35,6 +35,7 @@ set(THREADS_PREFER_PTHREAD_FLAG true)
 include(CW_OPTIONS)
 
 include(dump_cmake_variables)
+message(STATUS "CMAKE_PARENT_LIST_FILE = \"${CMAKE_PARENT_LIST_FILE}\".")
 dump_cmake_variables("CMAKE_")
 
 #==============================================================================
