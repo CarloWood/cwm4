@@ -34,16 +34,8 @@ set(THREADS_PREFER_PTHREAD_FLAG true)
 # Add support for CMAKE_BUILD_TYPE, EnableDebug, EnableGlobalDebug, EnableLibcwd
 include(CW_OPTIONS)
 
-get_cmake_property(_variableNames VARIABLES)
-list(SORT _variableNames)
-foreach (_variableName ${_variableNames})
-  unset(_matched)
-  string(REGEX MATCH "CMAKE_" _matched ${_variableName})
-  if (NOT _matched)
-    continue()
-  endif ()
-  message(STATUS "${_variableName}=${${_variableName}}")
-endforeach ()
+include(dump_cmake_variables)
+dump_cmake_variables("CMAKE_")
 
 #==============================================================================
 # Add target maintainer-clean.
