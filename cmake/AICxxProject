@@ -1,12 +1,17 @@
 include_guard(GLOBAL)
 
+if (CMAKE_CURRENT_SOURCE_DIR STREQUAL CMAKE_SOURCE_DIR)
+  set(_is_main_project TRUE)
+else ()
+  set(_is_main_project FALSE)
+endif ()
+
 # This header must be included at the top of the top level CMakeLists.txt right after the `project(...) command`.
 if (NOT CMAKE_PROJECT_NAME)
   message(FATAL_ERROR "Use `include(cwm4/cmake/AICxxProject)` in the top-level CMakeLists.txt BEFORE the `project(...)` command.")
 endif ()
-include(${CMAKE_CURRENT_LIST_DIR}/dump_cmake_variables.cmake)
-dump_cmake_variables("" "cwd")
-message(STATUS "----------------------------------------------------\n** Configuring project ${CMAKE_PROJECT_NAME}:")
+
+message(STATUS "----------------------------------------------------\n** Configuring project ${PROJECT_NAME}:")
 
 # Default message log level. Use cmake --log-level=debug to get DEBUG output.
 set(CMAKE_MESSAGE_LOG_LEVEL "STATUS")
@@ -36,7 +41,7 @@ set(THREADS_PREFER_PTHREAD_FLAG true)
 # Add support for CMAKE_BUILD_TYPE, EnableDebug, EnableGlobalDebug, EnableLibcwd
 include(CW_OPTIONS)
 
-if (CMAKE_CURRENT_SOURCE_DIR STREQUAL CMAKE_SOURCE_DIR)
+if (_is_main_project)
   #==============================================================================
   # Add target maintainer-clean.
   #
