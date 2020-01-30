@@ -34,16 +34,14 @@ set(THREADS_PREFER_PTHREAD_FLAG true)
 # Add support for CMAKE_BUILD_TYPE, EnableDebug, EnableGlobalDebug, EnableLibcwd
 include(CW_OPTIONS)
 
-include(dump_cmake_variables)
-message(STATUS "CMAKE_PARENT_LIST_FILE = \"${CMAKE_PARENT_LIST_FILE}\".")
-dump_cmake_variables("CMAKE_")
-
-#==============================================================================
-# Add target maintainer-clean.
-#
-add_custom_target( maintainer-clean
-  # The current directory is CMAKE_CURRENT_BINARY_DIR.
-  COMMAND ${CMAKE_CURRENT_SOURCE_DIR}/cwm4/scripts/cmake_maintainer_clean.sh $(MAKE)
-)
+if (CMAKE_CURRENT_SOURCE_DIR STREQUAL CMAKE_SOURCE_DIR)
+  #==============================================================================
+  # Add target maintainer-clean.
+  #
+  add_custom_target( maintainer-clean
+    # The current directory is CMAKE_CURRENT_BINARY_DIR.
+    COMMAND ${CMAKE_CURRENT_SOURCE_DIR}/cwm4/scripts/cmake_maintainer_clean.sh $(MAKE)
+  )
+endif ()
 
 # vi:syntax=cmake
