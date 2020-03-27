@@ -1,5 +1,9 @@
 # Usage
 #
+#   dump_cmake_variables(<var_regex> [<val_regex>])
+#
+# For example, to show all variables names matching '[A-Z]+':
+#
 #   dump_cmake_variables([A-Z]+)
 #
 function(dump_cmake_variables)
