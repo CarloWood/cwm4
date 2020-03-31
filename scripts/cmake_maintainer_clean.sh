@@ -1,6 +1,7 @@
 #! /bin/bash
 
 MAKE="$1"
+GITACHE_PACKAGES="$2"
 
 if [ ! -x "$MAKE" ]; then
   echo "Unexpected error: \"$MAKE\" is not executable."
@@ -32,24 +33,29 @@ for dir in "${subdirs[@]}"; do
     empty_dirs+=("$base")
   fi
 done
+
 # The project root uses the extention -extra.
 if $MAKE -n maintainer-clean-extra >/dev/null 2>/dev/null; then
   echo "Running: $MAKE maintainer-clean-extra"
   $MAKE maintainer-clean-extra
 fi
 
-# Finally remove all cmake stuff and the Makefiles.
+# Remove generated cmake files with ExternalProject definitions for gitache packages.
+if test -n "$GITACHE_PACKAGES"; then
+  for package in $GITACHE_PACKAGES; do
+    rm _deps/gitache-build/packages/$package.cmake
+  done
+fi
+
+# Remove all cmake stuff and the Makefiles.
 subdirs+=("${empty_dirs[@]}")
 IFS=$'\n' sorted=($(sort -r <<<"${subdirs[*]}"))
 unset IFS
+sorted+=(".")
 for dir in "${sorted[@]}"; do
   echo "Maintainer cleaning $dir"
   rm -rf "$dir"/CMakeFiles "$dir"/CMakeCache.txt "$dir"/cmake_install.cmake "$dir"/Makefile
-  if [ "$dir" != "." ]; then
-    # Should be entirely empty now.
-    rmdir "$dir" || find "$dir"
-  fi
 done
 
-# Should be empty now.
-test ! -e _3rdParty || rmdir _3rdParty || find _3rdParty
+# Finally remove all empty directories.
+find . -type d -empty -delete
