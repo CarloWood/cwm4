@@ -13,7 +13,7 @@ endif ()
 
 message(STATUS "----------------------------------------------------\n** Configuring project ${PROJECT_NAME}:")
 
-# Default message log level. Use cmake --log-level=debug to get DEBUG output.
+# Default message log level. Use cmake -DCMAKE_MESSAGE_LOG_LEVEL=DEBUG to get DEBUG output.
 set(CMAKE_MESSAGE_LOG_LEVEL "STATUS")
 
 # Add extra build types.
