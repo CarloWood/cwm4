@@ -40,13 +40,6 @@ if $MAKE -n maintainer-clean-extra >/dev/null 2>/dev/null; then
   $MAKE maintainer-clean-extra
 fi
 
-# Remove generated cmake files with ExternalProject definitions for gitache packages.
-if test -n "$GITACHE_PACKAGES"; then
-  for package in $GITACHE_PACKAGES; do
-    rm _deps/gitache-build/packages/$package.cmake
-  done
-fi
-
 # Remove all cmake stuff and the Makefiles.
 subdirs+=("${empty_dirs[@]}")
 IFS=$'\n' sorted=($(sort -r <<<"${subdirs[*]}"))
