@@ -117,7 +117,9 @@ if test "$(echo $GIT_COMMITTER_EMAIL | md5sum | cut -d \  -f 1)" = "$1"; then
 
   # Update all submodules. update_submodule.sh doesn't access the remote, so we need to fetch first.
   echo "*** Fetching new commits..."
+  echo "CALLING 'git fetch --jobs=8 --recurse-submodules-default=yes'; pwd = $PWD"
   git fetch --jobs=8 --recurse-submodules-default=yes
+  echo "EXIT CODE = $?; RETURNING FROM 'git fetch --jobs=8 --recurse-submodules-default=yes'; pwd = $PWD"
   echo "*** Doing fast-forward on branched submodules..."
   if ! git submodule --quiet foreach "$(realpath cwm4/scripts/update_submodule.sh)"' $name "$path" $sha1 "$toplevel"'; then
     echo "autogen.sh: Failed to update one or more submodules. Does it have uncommitted changes?"
