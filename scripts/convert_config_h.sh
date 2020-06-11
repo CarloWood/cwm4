@@ -2,18 +2,16 @@
 
 srcdir="$(echo $0 | sed -e 's%/cwm4/scripts/convert_config_h\.sh%%')"
 
-SRCFILE="$srcdir/$f.in"
-
-if [ "$SRCFILE" -ef "$f.in" ]; then
-  echo "WARNING: BUILDING IN THE SOURCE TREE IS NOT SUPPORTED."
-  SRCFILE="$srcdir/$f.in.bak"
-  if [ ! -e "$SRCFILE" ]; then
-    echo "Moving $srcdir/$f.in to $srcdir/$f.in.bak because we're about to overwrite it."
-    mv $srcdir/$f.in $srcdir/$f.in.bak
-  fi
-fi
-
 for f in $config_files; do
+  SRCFILE="$srcdir/$f.in"
+  if [ "$SRCFILE" -ef "$f.in" ]; then
+    echo "WARNING: BUILDING IN THE SOURCE TREE IS NOT SUPPORTED."
+    SRCFILE="$srcdir/$f.in.bak"
+    if [ ! -e "$SRCFILE" ]; then
+      echo "Moving $srcdir/$f.in to $srcdir/$f.in.bak because we're about to overwrite it."
+      mv $srcdir/$f.in $srcdir/$f.in.bak
+    fi
+  fi
   if [ $(basename $f) = "config.h" ]; then
     echo "configure: creating $f.in"
     mkdir -p "$(dirname $f)"
