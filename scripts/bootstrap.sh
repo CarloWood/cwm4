@@ -61,7 +61,7 @@ else
 fi
 
 # Determine if this project uses libtool.
-RESULT=$(find . -type d \( -name '.git' -o -name 'cwm4' \) -prune -o -name Makefile.am -exec egrep -l '^[[:alnum:]_]*_LTLIBRARIES[[:space:]]*=' {} \;)
+RESULT=$(find . -type d \( -name '.git' -o -name 'cwm4' \) -prune -o \( -name Makefile.am -o -name makefile.am \) -exec egrep -l '^[[:alnum:]_]*_LTLIBRARIES[[:space:]]*=' {} \;)
 if test -n "$RESULT"; then
   using_libtool="yes"
 else
@@ -105,20 +105,20 @@ GTKDOCIZE=${GTKDOCIZE:-gtkdocize}
 export AUTOMAKE ACLOCAL AUTOCONF AUTOHEADER AUTOM4TE LIBTOOL LIBTOOLIZE GETTEXT GTKDOCIZE
 
 # Sanity checks.
-($AUTOCONF --version) >/dev/null 2>/dev/null || (echo -e "\nERROR: Cannot find '$AUTOCONF'. You need GNU autoconf to install from git (ftp://ftp.gnu.org/gnu/autoconf/)"; exit 1) || exit 1
-($AUTOMAKE --version) >/dev/null 2>/dev/null || (echo -e "\nERROR: Cannot find '$AUTOMAKE'. You need GNU automake $required_automake_version or higher to install from git (ftp://ftp.gnu.org/gnu/automake/)"; exit 1) || exit 1
-($ACLOCAL --version) >/dev/null 2>/dev/null || (echo -e "\nERROR: Cannot find '$ACLOCAL'. Please set the correct environment variable (ACLOCAL)."; exit 1) || exit 1
-($AUTOHEADER --version) >/dev/null 2>/dev/null || (echo -e "\nERROR: Cannot find '$AUTOHEADER'. Please set the correct environment variable (AUTOHEADER)."; exit 1) || exit 1
-($AUTOM4TE --version) >/dev/null 2>/dev/null || (echo -e "\nERROR: Cannot find '$AUTOM4TE'. Please set the correct environment variable (AUTOM4TE)."; exit 1) || exit 1
+($AUTOCONF --version) >/dev/null 2>/dev/null || (echo -e "\nERROR: Cannot find '$AUTOCONF'. You need GNU autoconf to install from git (sudo apt install autoconf)"; exit 1) || exit 1
+($AUTOMAKE --version) >/dev/null 2>/dev/null || (echo -e "\nERROR: Cannot find '$AUTOMAKE'. You need GNU automake $required_automake_version or higher to install from git (sudo apt install automake)"; exit 1) || exit 1
+($ACLOCAL --version) >/dev/null 2>/dev/null || (echo -e "\nERROR: Cannot find '$ACLOCAL' (part of the 'automake' package). Please set the correct environment variable (ACLOCAL)."; exit 1) || exit 1
+($AUTOHEADER --version) >/dev/null 2>/dev/null || (echo -e "\nERROR: Cannot find '$AUTOHEADER' (part of the 'autoconf' package). Please set the correct environment variable (AUTOHEADER)."; exit 1) || exit 1
+($AUTOM4TE --version) >/dev/null 2>/dev/null || (echo -e "\nERROR: Cannot find '$AUTOM4TE' (part of the 'autoconf' package). Please set the correct environment variable (AUTOM4TE)."; exit 1) || exit 1
 if test $using_libtool = "yes"; then
-  ($LIBTOOL --version) >/dev/null 2>/dev/null || (echo -e "\nERROR: Cannot find '$LIBTOOL'. You need GNU libtool $required_libtool_version or higher to install from git (ftp://ftp.gnu.org/gnu/libtool/)"; exit 1) || exit 1
-  ($LIBTOOLIZE --version) >/dev/null 2>/dev/null || (echo -e "\nERROR: Cannot find '$LIBTOOLIZE'. Please set the correct environment variable."; exit 1) || exit 1
+  ($LIBTOOL --version) >/dev/null 2>/dev/null || (echo -e "\nERROR: Cannot find '$LIBTOOL'. You need GNU libtool $required_libtool_version or higher to install from git (sudo apt install libtool-bin)"; exit 1) || exit 1
+  ($LIBTOOLIZE --version) >/dev/null 2>/dev/null || (echo -e "\nERROR: Cannot find '$LIBTOOLIZE' (part of the 'libtool' package). Please set the correct environment variable."; exit 1) || exit 1
 fi
 if test "$using_gettext" = "yes"; then
-  ($GETTEXT --version) >/dev/null 2>/dev/null || (echo -e "\nERROR: Cannot find '$GETTEXT'. Please set the correct environment variable (GETTEXT)."; exit 1) || exit 1
+  ($GETTEXT --version) >/dev/null 2>/dev/null || (echo -e "\nERROR: Cannot find '$GETTEXT' (part of the 'gettext-base' package). Please set the correct environment variable (GETTEXT)."; exit 1) || exit 1
 fi
 if test "$using_gtkdoc" = "yes"; then
-  ($GTKDOCIZE --version) >/dev/null 2>/dev/null || (echo -e "\nERROR: Cannot find '$GTKDOCIZE'. Please set the correct environment variable (GTKDOCIZE)."; exit 1) || exit 1
+  ($GTKDOCIZE --version) >/dev/null 2>/dev/null || (echo -e "\nERROR: Cannot find '$GTKDOCIZE' (part of the 'gtk-doc-tools' package). Please set the correct environment variable (GTKDOCIZE)."; exit 1) || exit 1
 fi
 
 # Determine the version of autoconf.
@@ -530,13 +530,13 @@ fi
 if test -n "$ACLOCAL_PATH"; then
   echo "ACLOCAL_PATH is set ($ACLOCAL_PATH)!"
 fi
-run "$ACLOCAL -I cwm4/aclocal -I m4/aclocal"
+run "$ACLOCAL -I m4/aclocal -I cwm4/aclocal"
 if test "$using_gtkdoc" = "yes"; then
   run "$GTKDOCIZE"
 fi
 run "$AUTOHEADER"
-run "$AUTOCONF"
 run "$AUTOMAKE --add-missing --foreign"
+run "$AUTOCONF"
 
 echo
 project_name=`basename "$PWD"`

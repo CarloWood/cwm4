@@ -54,7 +54,8 @@ if test "$(echo $GIT_COMMITTER_EMAIL | md5sum | cut -d \  -f 1)" = "$1"; then
   fi
   cd cwm4 || exit 1
   if ! git diff-index --quiet HEAD --; then
-    echo -e "\n$prefix $red""Automatically committing uncommitted changes in cwm4!$reset"
+    echo -e "\n$prefix $red""Committing all changes in cwm4!$reset"
+    git --no-pager diff
     git commit -a -m 'Automatic commit of changes by autogen.sh.'
   fi
   CWM4COMMIT=$(git rev-parse HEAD)
@@ -62,18 +63,20 @@ if test "$(echo $GIT_COMMITTER_EMAIL | md5sum | cut -d \  -f 1)" = "$1"; then
   CWM4HASH=$(git ls-tree HEAD | grep '[[:space:]]cwm4$' | awk '{ print $3 }')
   if test "$CWM4HASH" != "$CWM4COMMIT"; then
     if git diff-index --quiet --cached HEAD; then
-      echo -e "\n$prefix $red""Updating submodule reference to current HEAD of branch $CWM4_BRANCH of cwm4!$reset"
-      git add cwm4 && git commit -m "Automatic commit: update of submodule reference cwm4 to current HEAD of branch $CWM4_BRANCH"
+      echo -e "\n$prefix $red""Updating gitlink cwm4 to current $CWM4_BRANCH branch!$reset"
+      git commit -m "Updating gitlink cwm4 to point to current HEAD of $CWM4_BRANCH branch." -o -- cwm4
     elif test x"$(git rev-parse --abbrev-ref HEAD)" != x"$CWM4_BRANCH"; then
       echo -e "\n$prefix $red""Please checkout $CWM4_BRANCH in cwm4 and add it to the current project!$reset"
     fi
   fi
 
-  # Is OUTPUT_DIRECTORY set?
-  if m4 -P cwm4/sugar.m4 configure.ac | egrep '^[[:space:]]*CW_DOXYGEN' >/dev/null; then
-    if test -z "$OUTPUT_DIRECTORY"; then
-      echo "Error: the environment variable OUTPUT_DIRECTORY is not set."
-      exit 1
+  if test -e configure.ac; then
+    # Is OUTPUT_DIRECTORY set?
+    if m4 -P cwm4/sugar.m4 configure.ac | egrep '^[[:space:]]*CW_DOXYGEN' >/dev/null; then
+      if test -z "$OUTPUT_DIRECTORY"; then
+        echo "Error: the environment variable OUTPUT_DIRECTORY is not set."
+        exit 1
+      fi
     fi
   fi
 
@@ -88,9 +91,9 @@ if test "$(echo $GIT_COMMITTER_EMAIL | md5sum | cut -d \  -f 1)" = "$1"; then
 
   # Check if 'branch' is set for all submodules with a configure.m4,
   # and fix the url of remotes when needed.
-  git submodule foreach -q '
+  git submodule foreach --recursive -q '
       if test -f "configure.m4" -o "$name" = "cwm4"; then
-        if test -z "$(git config -f $toplevel/.gitmodules submodule.$name.branch)"; then
+        if ! git config -f $toplevel/.gitmodules submodule.$name.branch >/dev/null; then
           echo "  $name: '"$red"'Setting submodule.$name.branch to master!'"$reset"'"
           git config -f $toplevel/.gitmodules "submodule.$name.branch" master
         fi
@@ -111,7 +114,21 @@ if test "$(echo $GIT_COMMITTER_EMAIL | md5sum | cut -d \  -f 1)" = "$1"; then
           fi
         fi
       fi'
+
+  # Update all submodules. update_submodule.sh doesn't access the remote, so we need to fetch first.
+  echo "*** Fetching new commits..."
+  git fetch --jobs=8 --recurse-submodules-default=yes
+  echo "*** Doing fast-forward on branched submodules..."
+  if ! git submodule --quiet foreach "$(realpath cwm4/scripts/update_submodule.sh)"' $name "$path" $sha1 "$toplevel"'; then
+    echo "autogen.sh: Failed to update one or more submodules. Does it have uncommitted changes?"
+    exit 1
+  fi
+  echo "*** Updating submodule gitlinks..."
+  if ! git submodule --quiet foreach "$(realpath cwm4/scripts/update_submodule.sh)"' --quiet --commit $name "$path" $sha1 "$toplevel"'; then
+    echo "autogen.sh: Failed to update one or more submodules. Does it have uncommitted changes?"
+    exit 1
+  fi
 fi
 
-# Continue to run update_submodules.sh.
+# Continue to run update_submodule.sh in each submodule.
 exit 2
