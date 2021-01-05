@@ -128,7 +128,7 @@ if test x"$cw_wanted" != x"no"; then
     AC_CACHE_CHECK([if libcwd is available], cw_cv_lib_libcwd,
 [    # Check if we have libcwd.
     AC_LANG_SAVE
-    AC_LANG_CPLUSPLUS
+    AC_LANG([C++])
     cw_save_LIBS="$LIBS"
     LIBS="$LIBS $(pkg-config --libs libcwd)"
     AC_LINK_IFELSE([AC_LANG_CALL([], [__libcwd_version])], [cw_cv_lib_libcwd=yes], [cw_cv_lib_libcwd=no])
@@ -145,7 +145,7 @@ if test x"$cw_wanted" != x"no"; then
     AC_CACHE_CHECK([if libcwd_r is available], cw_cv_lib_libcwd_r,
 [    # Check if we have libcwd_r.
     AC_LANG_SAVE
-    AC_LANG_CPLUSPLUS
+    AC_LANG([C++])
     cw_save_LIBS="$LIBS"
     LIBS="$LIBS $(pkg-config --libs libcwd_r)"
     AC_LINK_IFELSE([AC_LANG_CALL([], [__libcwd_version])], [cw_cv_lib_libcwd_r=yes], [cw_cv_lib_libcwd_r=no])

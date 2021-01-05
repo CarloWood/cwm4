@@ -31,7 +31,7 @@ dnl INIT are possibly needed #includes.  The result is put in `cw_result'.
 dnl
 AC_DEFUN([CW_TYPE_EXTRACT_FROM],
 [AC_LANG_SAVE
-AC_LANG_CPLUSPLUS
+AC_LANG([C++])
 cat > conftest.$ac_ext <<EOF
 [$2]
 #ifdef __cplusplus

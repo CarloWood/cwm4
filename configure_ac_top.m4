@@ -8,10 +8,10 @@ AC_INIT(CW_PACKAGE_NAME, CW_VERSION_MAJOR.CW_VERSION_MINOR.CW_VERSION_REVISION, 
 AC_CONFIG_AUX_DIR(.)
 
 dnl Automake options.
-AM_INIT_AUTOMAKE(m4_sinclude(m4/min_automake_version.m4)[foreign subdir-objects])
+AM_INIT_AUTOMAKE(m4_sinclude([m4/min_automake_version.m4])[foreign subdir-objects])
 
 dnl Minimum autoconf version to use.
-AC_PREREQ(m4_sinclude(m4/min_autoconf_version.m4))
+AC_PREREQ(m4_sinclude([m4/min_autoconf_version.m4]))
 
 dnl Some macros that we use.
 m4_define([cwm4_relpath], [m4_if(m4_bregexp($1, [.*[^/]$]), -1, [$1], [$1/])])
@@ -28,7 +28,7 @@ dnl Include maintainer mode targets
 AM_MAINTAINER_MODE
 
 dnl Check for compiler and preprocessor
-AC_PROG_CC_C99
+AC_PROG_CC
 AC_PROG_CXX
 AC_PROG_CXXCPP
 

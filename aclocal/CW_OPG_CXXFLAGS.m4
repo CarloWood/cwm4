@@ -239,7 +239,7 @@ CW_MAX_ERRORS_FLAG=
 if m4_changequote([`],['])[[m4_changequote(`[',`]') "$3" m4_changequote([`],['])=~ ^[0-9]+$ ]]m4_changequote(`[',`]'); then
   if test $3 -gt 0; then
     AC_LANG_SAVE
-    AC_LANG_CPLUSPLUS
+    AC_LANG([C++])
     AX_CHECK_COMPILE_FLAG([-ferror-limit=$3], [CW_MAX_ERRORS_FLAG="-ferror-limit=$3"], [
     AX_CHECK_COMPILE_FLAG([-fmax-errors=$3], [CW_MAX_ERRORS_FLAG="-fmax-errors=$3"], [], [-Werror])], [-Werror])
     AC_LANG_RESTORE
