@@ -33,13 +33,13 @@ AC_DEFUN([CW_SYS_RECURSIVE_BUILTIN_RETURN_ADDRESS],
 AC_LANG_C
 SYS_RECURSIVE_BUILTIN_RETURN_ADDRESS_CFLAGS_save="$CFLAGS"
 CFLAGS=""
-AC_TRY_RUN([
+AC_RUN_IFELSE([AC_LANG_SOURCE([[
 static void* p;
 int f() { return (__builtin_return_address(1) == p) ? 0 : 1; }
-int main() { p = __builtin_return_address(0); return f(); }],
-cw_cv_sys_recursive_builtin_return_address=yes,
-cw_cv_sys_recursive_builtin_return_address=no,
-cw_cv_sys_recursive_builtin_return_address=unknown)
+int main() { p = __builtin_return_address(0); return f(); }]])],
+[cw_cv_sys_recursive_builtin_return_address=yes],
+[cw_cv_sys_recursive_builtin_return_address=no],
+[cw_cv_sys_recursive_builtin_return_address=unknown])
 CFLAGS="$SYS_RECURSIVE_BUILTIN_RETURN_ADDRESS_CFLAGS_save"
 AC_LANG_RESTORE])
 if test "$cw_cv_sys_recursive_builtin_return_address" = "no"; then

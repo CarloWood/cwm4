@@ -31,7 +31,7 @@ dnl typedef getgroups_t instead of defining the macro GETGROUPS_T.
 AC_DEFUN([CW_TYPE_GETGROUPS],
 [AC_REQUIRE([AC_TYPE_UID_T])dnl
 AC_CACHE_CHECK(type of array argument to getgroups, ac_cv_type_getgroups,
-[AC_TRY_RUN(
+[AC_RUN_IFELSE([AC_LANG_SOURCE([
 changequote(<<, >>)dnl
 <<
 /* Thanks to Mike Rendell for this test.  */
@@ -56,13 +56,14 @@ int main()
      happens when gid_t is short but getgroups modifies an array of ints.  */
   return (n > 0 && gidset[n] != val.gval) ? 1 : 0;
 }
->>,
+>>
 changequote([, ])dnl
+])],
   [CW_TYPE_EXTRACT_FROM(getgroups, [#include <unistd.h>], 2, 2)
   eval "cw_result2=\"$cw_result\""
   ac_cv_type_getgroups=`echo "$cw_result2" | sed -e 's/ *\*$//'`],
-  ac_cv_type_getgroups=int,
-  ac_cv_type_getgroups=cross)
+  [ac_cv_type_getgroups=int],
+  [ac_cv_type_getgroups=cross])
 if test "$ac_cv_type_getgroups" = cross; then
   dnl When we can't run the test program (we are cross compiling), presume
   dnl that <unistd.h> has either an accurate prototype for getgroups or none.

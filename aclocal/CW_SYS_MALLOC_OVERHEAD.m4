@@ -32,7 +32,7 @@ dnl
 AC_DEFUN([CW_SYS_MALLOC_OVERHEAD],
 [AC_CACHE_CHECK(malloc overhead in bytes, cw_cv_system_mallocoverhead,
 [AC_LANG_PUSH(C)
-AC_TRY_RUN([#include <stddef.h>
+AC_RUN_IFELSE([AC_LANG_SOURCE([[#include <stddef.h>
 #include <stdlib.h>
 
 int bulk_alloc(size_t malloc_overhead_attempt, size_t size)
@@ -60,11 +60,8 @@ int main(int argc, char* argv[])
     if (bulk_alloc(s, 2048))
       exit(s);
   exit(8);	// Guess a default
-}],
-./conftest run
-cw_cv_system_mallocoverhead=$?,
-[AC_MSG_ERROR(Failed to compile a test program!?)],
-[case $host_alias in						#(
+}]])],[./conftest run
+cw_cv_system_mallocoverhead=$?], [AC_MSG_ERROR(Failed to compile a test program!?)], [case $host_alias in						#(
   *-mingw32)
     cw_cv_system_mallocoverhead=8
     ;;								#(

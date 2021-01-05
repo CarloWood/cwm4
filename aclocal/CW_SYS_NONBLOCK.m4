@@ -52,7 +52,7 @@ CW_TYPE_EXTRACT_FROM(recvfrom, [#include <sys/types.h>
 cw_recvfrom_param_six_t="$cw_result"
 AC_LANG_SAVE
 AC_LANG_C
-AC_TRY_RUN([#include <sys/types.h>
+AC_RUN_IFELSE([AC_LANG_SOURCE([[#include <sys/types.h>
 #include <$cw_socket_header>
 #include <stdlib.h>
 #include <fcntl.h>
@@ -78,7 +78,7 @@ int main(int argc, char* argv[])
     return 0;
   }
   return 1;
-}],
+}]])],
 [./conftest POSIX
 if test "$?" = "0"; then
   cw_cv_system_nonblock=POSIX
