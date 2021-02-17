@@ -97,6 +97,11 @@ if test "$(echo $GIT_COMMITTER_EMAIL | md5sum | cut -d \  -f 1)" = "$1"; then
           echo "  $name: '"$red"'Setting submodule.$name.branch to master!'"$reset"'"
           git config -f $toplevel/.gitmodules "submodule.$name.branch" master
         fi
+        URL=$(git config -f $toplevel/.gitmodules submodule.$name.url)
+        NEWURL=$(echo "$URL" | sed -e '"'"'s%^github-carlo:%https://github.com/%'"'"')
+        if test "$URL" != "$NEWURL"; then
+          echo "  $name: '"$red"'Changing url of .gitmodules to $NEWURL!'"$reset"'"
+        fi
         BRANCH=$(git config -f $toplevel/.gitmodules submodule.$name.branch)
         REMOTE=$(git config branch.$BRANCH.remote)
         if test -n "$GITHUB_REMOTE_NAME" -a x"$REMOTE" != x"$GITHUB_REMOTE_NAME"; then
