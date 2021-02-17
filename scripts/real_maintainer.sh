@@ -101,6 +101,7 @@ if test "$(echo $GIT_COMMITTER_EMAIL | md5sum | cut -d \  -f 1)" = "$1"; then
         NEWURL=$(echo "$URL" | sed -e '"'"'s%^github-carlo:%https://github.com/%'"'"')
         if test "$URL" != "$NEWURL"; then
           echo "  $name: '"$red"'Changing url of .gitmodules to $NEWURL!'"$reset"'"
+          git config -f $toplevel/.gitmodules "submodule.$name.url" "$NEWURL"
         fi
         BRANCH=$(git config -f $toplevel/.gitmodules submodule.$name.branch)
         REMOTE=$(git config branch.$BRANCH.remote)
