@@ -36,7 +36,7 @@ AC_DEFUN([CW_LIB_LIBCAIRO], [
 AC_CACHE_CHECK([if libcairo is available], cw_cv_lib_libcairo, [
 # Check if we have libcairo
 AC_LANG_SAVE
-AC_LANG_C
+AC_LANG([C])
 cw_save_LIBS="$LIBS"
 LIBS="$LIBS `pkg-config --libs cairo`"
 AC_LINK_IFELSE([AC_LANG_CALL([], [cairo_create])], [cw_cv_lib_libcairo=yes], [cw_cv_lib_libcairo=no])

@@ -36,7 +36,7 @@ AC_DEFUN([CW_LIB_LIBXML2], [
 AC_CACHE_CHECK([if libxml2 is available], cw_cv_lib_libxml2, [
 # Check if we have libxml2
 AC_LANG_SAVE
-AC_LANG_C
+AC_LANG([C])
 cw_save_LIBS="$LIBS"
 LIBS="$LIBS `pkg-config --libs libxml-2.0`"
 AC_LINK_IFELSE([AC_LANG_CALL([], [xmlParseFile])], [cw_cv_lib_libxml2=yes], [cw_cv_lib_libxml2=no])

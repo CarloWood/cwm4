@@ -46,12 +46,24 @@ if test "$cw_windows" = no -o "$cw_socket_header" = "sys/socket.h"; then
 save_LIBS="$LIBS"
 LIBS="$cw_socket_library"
 AC_CACHE_CHECK(non-blocking socket flavour, cw_cv_system_nonblock,
-[AC_REQUIRE([AC_TYPE_SIGNAL])
+[AC_REQUIRE([m4_warn([obsolete],
+[your code may safely assume C89 semantics that RETSIGTYPE is void.
+Remove this warning and the `AC_CACHE_CHECK' when you adjust the code.])dnl
+AC_CACHE_CHECK([return type of signal handlers],[ac_cv_type_signal],[AC_COMPILE_IFELSE(
+[AC_LANG_PROGRAM([#include <sys/types.h>
+#include <signal.h>
+],
+		 [return *(signal (0, 0)) (0) == 1;])],
+		   [ac_cv_type_signal=int],
+		   [ac_cv_type_signal=void])])
+AC_DEFINE_UNQUOTED([RETSIGTYPE],[$ac_cv_type_signal],[Define as the return type of signal handlers
+		    (`int' or `void').])
+])
 CW_TYPE_EXTRACT_FROM(recvfrom, [#include <sys/types.h>
 #include <$cw_socket_header>], 6, 6)
 cw_recvfrom_param_six_t="$cw_result"
 AC_LANG_SAVE
-AC_LANG_C
+AC_LANG([C])
 AC_RUN_IFELSE([AC_LANG_SOURCE([[#include <sys/types.h>
 #include <$cw_socket_header>
 #include <stdlib.h>

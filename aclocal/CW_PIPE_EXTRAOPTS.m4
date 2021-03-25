@@ -33,7 +33,7 @@ AC_CACHE_VAL(cw_cv_pipe_flag,
 AC_LANG_SAVE
 AC_LANG([C++])
 CXXFLAGS="-pipe"
-AC_TRY_COMPILE(,,cw_cv_pipe_flag=yes,cw_cv_pipe_flag=no)
+AC_COMPILE_IFELSE([AC_LANG_PROGRAM([[]], [[]])],[cw_cv_pipe_flag=yes],[cw_cv_pipe_flag=no])
 AC_LANG_RESTORE
 CXXFLAGS="$save_CXXFLAGS"])
 if test "$cw_cv_pipe_flag" = yes ; then

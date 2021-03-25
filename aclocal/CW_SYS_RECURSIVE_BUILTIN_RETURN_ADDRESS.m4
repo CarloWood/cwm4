@@ -30,7 +30,7 @@ dnl Determines if __builtin_return_address(1) is supported by compiler.
 AC_DEFUN([CW_SYS_RECURSIVE_BUILTIN_RETURN_ADDRESS],
 [AC_CACHE_CHECK([whether __builtin_return_address(1) works], cw_cv_sys_recursive_builtin_return_address,
 [AC_LANG_SAVE
-AC_LANG_C
+AC_LANG([C])
 SYS_RECURSIVE_BUILTIN_RETURN_ADDRESS_CFLAGS_save="$CFLAGS"
 CFLAGS=""
 AC_RUN_IFELSE([AC_LANG_SOURCE([[
