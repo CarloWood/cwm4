@@ -31,10 +31,11 @@ dnl allocated for a call to malloc.
 dnl
 AC_DEFUN([CW_SYS_MALLOC_OVERHEAD],
 [AC_CACHE_CHECK(malloc overhead in bytes, cw_cv_system_mallocoverhead,
-[AC_TRY_RUN([#include <cstddef>
-#include <cstdlib>
+[AC_LANG_PUSH(C)
+AC_RUN_IFELSE([AC_LANG_SOURCE([[#include <stddef.h>
+#include <stdlib.h>
 
-bool bulk_alloc(size_t malloc_overhead_attempt, size_t size)
+int bulk_alloc(size_t malloc_overhead_attempt, size_t size)
 {
   int const number = 100;
   long int distance = 9999;
@@ -51,7 +52,7 @@ bool bulk_alloc(size_t malloc_overhead_attempt, size_t size)
   return (distance == (long int)size);
 }
 
-int main(int argc, char* [])
+int main(int argc, char* argv[])
 {
   if (argc == 1)
     exit(0);	// This wasn't the real test yet
@@ -59,11 +60,8 @@ int main(int argc, char* [])
     if (bulk_alloc(s, 2048))
       exit(s);
   exit(8);	// Guess a default
-}],
-./conftest run
-cw_cv_system_mallocoverhead=$?,
-[AC_MSG_ERROR(Failed to compile a test program!?)],
-[case $host_alias in						#(
+}]])],[./conftest run
+cw_cv_system_mallocoverhead=$?], [AC_MSG_ERROR(Failed to compile a test program!?)], [case $host_alias in						#(
   *-mingw32)
     cw_cv_system_mallocoverhead=8
     ;;								#(
@@ -73,7 +71,8 @@ cw_cv_system_mallocoverhead=$?,
   *)
     cw_cv_system_mallocoverhead=4 dnl Guess a default for cross compiling
     ;;
-esac])])
+esac])
+AC_LANG_POP(C)])
 eval "CW_MALLOC_OVERHEAD=$cw_cv_system_mallocoverhead"
 AC_SUBST(CW_MALLOC_OVERHEAD)
 m4_pattern_allow(CW_MALLOC_OVERHEAD)

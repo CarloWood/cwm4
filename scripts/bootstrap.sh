@@ -20,22 +20,25 @@ if test ! -f configure.ac; then
   else
     generate_configure_ac="yes"
   fi
+else
+  if ! grep '^m4_include(\[cwm4/configure_ac_top\.m4\])' configure.ac >/dev/null; then
+    echo "Missing 'm4_include([cwm4/configure_ac_top.m4])' in configure.ac."
+    generate_configure_ac="yes"
+  fi
+  if ! grep '^m4_include(\[cwm4/configure_ac_bottom\.m4\])' configure.ac >/dev/null; then
+    echo "Missing 'm4_include([cwm4/configure_ac_bottom.m4])' in configure.ac."
+    generate_configure_ac="yes"
+  fi
 fi
 
-if ! grep '^m4_include(\[cwm4/configure_ac_top\.m4\])' configure.ac >/dev/null; then
-  echo "Missing 'm4_include([cwm4/configure_ac_top.m4])' in configure.ac."
-  generate_configure_ac="yes"
-fi
-
-if ! grep '^m4_include(\[cwm4/configure_ac_bottom\.m4\])' configure.ac >/dev/null; then
-  echo "Missing 'm4_include([cwm4/configure_ac_bottom.m4])' in configure.ac."
-  generate_configure_ac="yes"
-fi
-
+created_files=
 if test "$generate_configure_ac" = "yes"; then
+  created_files="configure.ac"
   if test -e configure.ac; then
     echo "WARNING: Replacing your configure.ac with a new one. Please edit it! The old configure.ac was renamed to configure.ac.bak."
     mv configure.ac configure.ac.bak
+  else
+    echo -e "\n*** WARNING: Missing configure.ac. Copying a default one. Edit it!"
   fi
   CW_PACKAGE_NAME="$(basename $(pwd))"
   CW_BUGREPORT="$GIT_AUTHOR_EMAIL"
@@ -58,7 +61,7 @@ else
 fi
 
 # Determine if this project uses libtool.
-RESULT=$(find . -type d \( -name '.git' -o -name 'cwm4' \) -prune -o -name Makefile.am -exec egrep -l '^[[:alnum:]_]*_LTLIBRARIES[[:space:]]*=' {} \;)
+RESULT=$(find . -type d \( -name '.git' -o -name 'cwm4' \) -prune -o \( -name Makefile.am -o -name makefile.am \) -exec egrep -l '^[[:alnum:]_]*_LTLIBRARIES[[:space:]]*=' {} \;)
 if test -n "$RESULT"; then
   using_libtool="yes"
 else
@@ -102,20 +105,20 @@ GTKDOCIZE=${GTKDOCIZE:-gtkdocize}
 export AUTOMAKE ACLOCAL AUTOCONF AUTOHEADER AUTOM4TE LIBTOOL LIBTOOLIZE GETTEXT GTKDOCIZE
 
 # Sanity checks.
-($AUTOCONF --version) >/dev/null 2>/dev/null || (echo -e "\nERROR: Cannot find '$AUTOCONF'. You need GNU autoconf to install from git (ftp://ftp.gnu.org/gnu/autoconf/)"; exit 1) || exit 1
-($AUTOMAKE --version) >/dev/null 2>/dev/null || (echo -e "\nERROR: Cannot find '$AUTOMAKE'. You need GNU automake $required_automake_version or higher to install from git (ftp://ftp.gnu.org/gnu/automake/)"; exit 1) || exit 1
-($ACLOCAL --version) >/dev/null 2>/dev/null || (echo -e "\nERROR: Cannot find '$ACLOCAL'. Please set the correct environment variable (ACLOCAL)."; exit 1) || exit 1
-($AUTOHEADER --version) >/dev/null 2>/dev/null || (echo -e "\nERROR: Cannot find '$AUTOHEADER'. Please set the correct environment variable (AUTOHEADER)."; exit 1) || exit 1
-($AUTOM4TE --version) >/dev/null 2>/dev/null || (echo -e "\nERROR: Cannot find '$AUTOM4TE'. Please set the correct environment variable (AUTOM4TE)."; exit 1) || exit 1
+($AUTOCONF --version) >/dev/null 2>/dev/null || (echo -e "\nERROR: Cannot find '$AUTOCONF'. You need GNU autoconf to install from git (sudo apt install autoconf)"; exit 1) || exit 1
+($AUTOMAKE --version) >/dev/null 2>/dev/null || (echo -e "\nERROR: Cannot find '$AUTOMAKE'. You need GNU automake $required_automake_version or higher to install from git (sudo apt install automake)"; exit 1) || exit 1
+($ACLOCAL --version) >/dev/null 2>/dev/null || (echo -e "\nERROR: Cannot find '$ACLOCAL' (part of the 'automake' package). Please set the correct environment variable (ACLOCAL)."; exit 1) || exit 1
+($AUTOHEADER --version) >/dev/null 2>/dev/null || (echo -e "\nERROR: Cannot find '$AUTOHEADER' (part of the 'autoconf' package). Please set the correct environment variable (AUTOHEADER)."; exit 1) || exit 1
+($AUTOM4TE --version) >/dev/null 2>/dev/null || (echo -e "\nERROR: Cannot find '$AUTOM4TE' (part of the 'autoconf' package). Please set the correct environment variable (AUTOM4TE)."; exit 1) || exit 1
 if test $using_libtool = "yes"; then
-  ($LIBTOOL --version) >/dev/null 2>/dev/null || (echo -e "\nERROR: Cannot find '$LIBTOOL'. You need GNU libtool $required_libtool_version or higher to install from git (ftp://ftp.gnu.org/gnu/libtool/)"; exit 1) || exit 1
-  ($LIBTOOLIZE --version) >/dev/null 2>/dev/null || (echo -e "\nERROR: Cannot find '$LIBTOOLIZE'. Please set the correct environment variable."; exit 1) || exit 1
+  ($LIBTOOL --version) >/dev/null 2>/dev/null || (echo -e "\nERROR: Cannot find '$LIBTOOL'. You need GNU libtool $required_libtool_version or higher to install from git (sudo apt install libtool-bin)"; exit 1) || exit 1
+  ($LIBTOOLIZE --version) >/dev/null 2>/dev/null || (echo -e "\nERROR: Cannot find '$LIBTOOLIZE' (part of the 'libtool' package). Please set the correct environment variable."; exit 1) || exit 1
 fi
 if test "$using_gettext" = "yes"; then
-  ($GETTEXT --version) >/dev/null 2>/dev/null || (echo -e "\nERROR: Cannot find '$GETTEXT'. Please set the correct environment variable (GETTEXT)."; exit 1) || exit 1
+  ($GETTEXT --version) >/dev/null 2>/dev/null || (echo -e "\nERROR: Cannot find '$GETTEXT' (part of the 'gettext-base' package). Please set the correct environment variable (GETTEXT)."; exit 1) || exit 1
 fi
 if test "$using_gtkdoc" = "yes"; then
-  ($GTKDOCIZE --version) >/dev/null 2>/dev/null || (echo -e "\nERROR: Cannot find '$GTKDOCIZE'. Please set the correct environment variable (GTKDOCIZE)."; exit 1) || exit 1
+  ($GTKDOCIZE --version) >/dev/null 2>/dev/null || (echo -e "\nERROR: Cannot find '$GTKDOCIZE' (part of the 'gtk-doc-tools' package). Please set the correct environment variable (GTKDOCIZE)."; exit 1) || exit 1
 fi
 
 # Determine the version of autoconf.
@@ -188,9 +191,9 @@ if test x"$required_autoconf_version" = x; then
 fi
 
 echo "dnl This file is automatically generated, do not edit. Edit autogen_versions instead." > m4/min_automake_version.m4
-echo "$required_automake_version dnl" >> m4/min_automake_version.m4
+echo "[$required_automake_version] dnl" >> m4/min_automake_version.m4
 echo "dnl This file is automatically generated, do not edit. Edit autogen_versions instead." > m4/min_autoconf_version.m4
-echo "$required_autoconf_version dnl" >> m4/min_autoconf_version.m4
+echo "[$required_autoconf_version] dnl" >> m4/min_autoconf_version.m4
 
 version_compare() {
   if [[ $1 == $2 ]]; then
@@ -304,29 +307,12 @@ if [ $? -eq 2 ]; then
   cd ..
 fi
 
-# Do some git sanity checks.
-if test -d .git; then
-  PUSH_RECURSESUBMODULES="$(git config push.recurseSubmodules)"
-  if test -z "$PUSH_RECURSESUBMODULES"; then
-    # Use this as default for now.
-    git config push.recurseSubmodules check
-    echo -e "\n*** WARNING: git config push.recurseSubmodules was not set!"
-    echo "***      To prevent pushing a project that references unpushed submodules,"
-    echo "***      this config was set to 'check'. Use instead the command"
-    echo "***      > git config push.recurseSubmodules on-demand"
-    echo "***      to automatically push submodules when pushing a reference to them."
-    echo "***      See http://stackoverflow.com/a/10878273/1487069 and"
-    echo "***      http://stackoverflow.com/a/34615803/1487069 more more info."
-    echo
-  fi
-fi
-
 if test "$using_doxygen" = "yes"; then
 
 if expr "$CW_DOXYGEN_LINE" : "^[[:space:]]*CW_DOXYGEN[[:space:]]*[^(]" > /dev/null ||
    expr "$CW_DOXYGEN_LINE" : "^[[:space:]]*CW_DOXYGEN[[:space:]]*$" > /dev/null; then
   echo -e "\n*ERROR:**********************************************************"
-  echo "* Using CW_DOXYGEN without arguments. Please specify directories to generate documtation in."
+  echo "* Using CW_DOXYGEN without arguments. Please specify directories to generate documentation in."
   echo "* Use a dot (.) for the root directory. For example:"
   echo "* CW_DOXYGEN([. src utils])"
   exit 1
@@ -369,7 +355,6 @@ for dp in $doc_paths; do
     version="$package_version"
   fi
 
-  created_files=
   if [ ! -f "$dp/Makefile.am" -a ! -f "$dp/Makefile.in" -a ! -f "$dp/Makefile" ]; then
     created_files="$created_files $dp/Makefile.am"
     cp cwm4/templates/doxygen/Makefile.am $dp
@@ -441,14 +426,6 @@ for dp in $doc_paths; do
 
 done
 
-if test -n "$created_files"; then
-  echo -e "\n*WARNING:**********************************************************"
-  echo "* The following files were generated:"
-  echo "* $created_files"
-  echo "* Edit them and add them to your repository!"
-  echo
-fi
-
 fi # using_doxygen
 
 if test "$using_libtool" = "yes"; then
@@ -475,8 +452,9 @@ run()
 rm -rf autom4te.cache config.cache
 
 if test ! -f Makefile.am; then
-  echo -e "\n*** WARNING: Missing Makefile.am. Copying a default one. Edit it!"
+  echo -e "\n*** WARNING: Missing Makefile.am. Copying a default one. Edit it!\n"
   cp cwm4/templates/root_Makefile.am Makefile.am
+  created_files="$created_files Makefile.am"
 fi
 
 if ! egrep '^[[:space:]]*SUBDIRS[[:space:]]*=.*@CW_SUBDIRS@' Makefile.am >/dev/null; then
@@ -513,6 +491,14 @@ if test "$generate_makefile_am" = "yes"; then
   cp cwm4/templates/root_Makefile.am Makefile.am
 fi
 
+if test -n "$created_files"; then
+  echo -e "\n*WARNING:**********************************************************"
+  echo "* The following files were generated:"
+  echo "* $created_files"
+  echo "* Edit them and add them to your repository! Then re-run autogen.sh."
+  exit
+fi
+
 if test "$using_libtool" = "yes"; then
   # Set SED and M4 to scripts that cause libtoolize to process configure.ac properly.
   export SED="$(pwd)/cwm4/scripts/SED.sh"
@@ -527,13 +513,13 @@ fi
 if test -n "$ACLOCAL_PATH"; then
   echo "ACLOCAL_PATH is set ($ACLOCAL_PATH)!"
 fi
-run "$ACLOCAL -I cwm4/aclocal -I m4/aclocal"
+run "$ACLOCAL -I m4/aclocal -I cwm4/aclocal"
 if test "$using_gtkdoc" = "yes"; then
   run "$GTKDOCIZE"
 fi
 run "$AUTOHEADER"
-run "$AUTOCONF"
 run "$AUTOMAKE --add-missing --foreign"
+run "$AUTOCONF"
 
 echo
 project_name=`basename "$PWD"`

@@ -1,16 +1,17 @@
 dnl Detect unexpanded macros.
-m4_pattern_forbid(AX_)
-m4_pattern_forbid(CW_)
-m4_pattern_forbid(LT_)
+m4_pattern_forbid([^AX_]) dnl These macros are defined in the package 'autoconf-archive' available from the ubuntu "universe" repository.
+m4_pattern_forbid([^CW_])
+m4_pattern_forbid([^LT_])
 
 dnl Package name and version
-AC_INIT(CW_PACKAGE_NAME, CW_VERSION_MAJOR.CW_VERSION_MINOR.CW_VERSION_REVISION, CW_BUGREPORT)
+AC_INIT([CW_PACKAGE_NAME],[CW_VERSION_MAJOR.CW_VERSION_MINOR.CW_VERSION_REVISION],[CW_BUGREPORT])
+AC_CONFIG_AUX_DIR(.)
 
 dnl Automake options.
-AM_INIT_AUTOMAKE(m4_sinclude(m4/min_automake_version.m4)[foreign])
+AM_INIT_AUTOMAKE(m4_sinclude([m4/min_automake_version.m4])[foreign subdir-objects])
 
 dnl Minimum autoconf version to use.
-AC_PREREQ(m4_sinclude(m4/min_autoconf_version.m4))
+AC_PREREQ([2.71])
 
 dnl Some macros that we use.
 m4_define([cwm4_relpath], [m4_if(m4_bregexp($1, [.*[^/]$]), -1, [$1], [$1/])])
@@ -27,7 +28,7 @@ dnl Include maintainer mode targets
 AM_MAINTAINER_MODE
 
 dnl Check for compiler and preprocessor
-AC_PROG_CC_C99
+AC_PROG_CC
 AC_PROG_CXX
 AC_PROG_CXXCPP
 
@@ -38,6 +39,7 @@ AC_SUBST(VERSIONINFO)])
 
 dnl Add --enable-debug (DEBUG, DOXYGEN_DEBUG), --enable-libcwd (CWDEBUG, DOXYGEN_CWDEBUG), --enable-optimize and --enable-profile options.
 dnl Update USE_LIBCWD, LIBCWD(_R)_FLAGS, LIBCWD(_R)_LIBS and CXXFLAGS accordingly.
+dnl The first parameter should only contain warning flags: these flags are not used when not using maintainer-mode.
 dnl Second parameter can be [no] (single-threaded), [yes] (multi-threaded) or [both] (single and multi-threaded applications).
 dnl Third parameter can be empty (no limit), or an integer (larger than 0) to limit the maximum number of printed compiler errors.
 CW_OPG_CXXFLAGS([CW_COMPILE_FLAGS], [CW_THREADS], [CW_MAX_ERRORS])

@@ -1,5 +1,5 @@
-# CW_PIPE_EXTRAOPTS m4 macro -- this file is part of cwm4.
-# Copyright (C) 2006 Carlo Wood <carlo@alinoe.com>
+# CW_DEFINE_TYPE cmake function -- this file is part of cwm4.
+# Copyright (C) 2019  Carlo Wood <carlo@alinoe.com>
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -18,31 +18,24 @@
 #
 # As a special exception, the author gives unlimited permission to copy,
 # distribute and modify the configure scripts that are the output of
-# by a tool like autoconf when using these macros as input.  You need
+# by a tool like cmake when using these functions as input.  You need
 # not follow the terms of the GNU General Public License when using or
 # distributing such scripts, even though portions of the text of this
 # file appears in them. The GNU General Public License (GPL) does govern
 # all other use of the material that constitutes the cwm4 project.
 
-dnl CW_PIPE_EXTRAOPTS
-dnl If the compiler understands -pipe, add it to EXTRAOPTS if not already.
-AC_DEFUN([CW_PIPE_EXTRAOPTS],
-[AC_MSG_CHECKING([if the compiler understands -pipe])
-AC_CACHE_VAL(cw_cv_pipe_flag,
-[save_CXXFLAGS="$CXXFLAGS"
-AC_LANG_SAVE
-AC_LANG([C++])
-CXXFLAGS="-pipe"
-AC_COMPILE_IFELSE([AC_LANG_PROGRAM([[]], [[]])],[cw_cv_pipe_flag=yes],[cw_cv_pipe_flag=no])
-AC_LANG_RESTORE
-CXXFLAGS="$save_CXXFLAGS"])
-if test "$cw_cv_pipe_flag" = yes ; then
-  AC_MSG_RESULT(yes)
-  x=`echo "$EXTRAOPTS" | grep 'pipe' 2>/dev/null`
-  if test "$x" = "" ; then
-    EXTRAOPTS="$EXTRAOPTS -pipe"
-  fi
-else
-  AC_MSG_RESULT(no)
-fi
-])
+include_guard(GLOBAL)
+set(CW_SYS_TYPEDEFS "")
+
+# CW_DEFINE_TYPE(<old_type> <new_type>)
+#
+# Append 'using new_type = old_type;' to CW_SYS_TYPEDEFS.
+#
+# To use this, add the following line in config.h.in:
+#
+#     @CW_SYS_TYPEDEFS@
+#
+
+function(CW_DEFINE_TYPE old_type new_type)
+  set(CW_SYS_TYPEDEFS "${CW_SYS_TYPEDEFS} using ${new_type} = ${old_type};" PARENT_SCOPE)
+endfunction()

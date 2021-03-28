@@ -50,7 +50,7 @@
 # are set as appropriate for the non-threaded case.
 # If THREADED is set to [yes] or [both] then CWD_R_FLAGS and CWD_R_LIBS
 # are set as appropriate for the threaded case.
-# This the default ACTION_IF_FOUND, if WANTED is unequal "no".
+# This is the default ACTION_IF_FOUND, if WANTED is unequal "no".
 #
 # If the required librarie(s) could be found then the macros
 # LIBCWD_FLAGS, LIBCWD_LIBS, LIBCWD_R_FLAGS and LIBCWD_R_LIBS
@@ -58,9 +58,9 @@
 # the macro `cw_used_libcwd' is set to "yes".
 #
 # If the required librarie(s) (as per THREADED, not WANTED) could
-# not be found then all four LIB* macros will be empty and
-# `cw_used_libcwd' is set to "no". The AM_CONDITIONAL `LIBCWD_USED'
-# is also set accordingly.
+# not be found then LIBCWD_R_FLAGS is set to "-pthread", the other
+# three LIB* macros will be empty and `cw_used_libcwd' is set to "no".
+# The AM_CONDITIONAL `LIBCWD_USED' is also set accordingly.
 #
 # The default ACTION-IF-NOT-FOUND is to print an error message;
 # ACTION-IF-NOT-FOUND is only executed when WANTED is "yes" and
@@ -88,6 +88,7 @@
 # The '*' under THREADED mean 'any', yes, no or both.
 # A '*' under 'libcwd* exists' means "not tested".
 # 'error' under cw_used_libcwd means that it is set to no, and a fatal error message is printed.
+# 'empty' under LIBCWD_R_* means that LIBCWD_R_LIBS is empty and LIBCWD_R_FLAGS is set to '-pthread'.
 
 AC_DEFUN([CW_LIB_LIBCWD],
 [
@@ -127,7 +128,7 @@ if test x"$cw_wanted" != x"no"; then
     AC_CACHE_CHECK([if libcwd is available], cw_cv_lib_libcwd,
 [    # Check if we have libcwd.
     AC_LANG_SAVE
-    AC_LANG_CPLUSPLUS
+    AC_LANG([C++])
     cw_save_LIBS="$LIBS"
     LIBS="$LIBS $(pkg-config --libs libcwd)"
     AC_LINK_IFELSE([AC_LANG_CALL([], [__libcwd_version])], [cw_cv_lib_libcwd=yes], [cw_cv_lib_libcwd=no])
@@ -144,7 +145,7 @@ if test x"$cw_wanted" != x"no"; then
     AC_CACHE_CHECK([if libcwd_r is available], cw_cv_lib_libcwd_r,
 [    # Check if we have libcwd_r.
     AC_LANG_SAVE
-    AC_LANG_CPLUSPLUS
+    AC_LANG([C++])
     cw_save_LIBS="$LIBS"
     LIBS="$LIBS $(pkg-config --libs libcwd_r)"
     AC_LINK_IFELSE([AC_LANG_CALL([], [__libcwd_version])], [cw_cv_lib_libcwd_r=yes], [cw_cv_lib_libcwd_r=no])
@@ -180,7 +181,7 @@ if test x"$cw_wanted" != x"no"; then
     fi
     if test x"$cw_threaded" = x"yes" -o x"$cw_threaded" = x"both"; then
       m4_default([$4], [dnl
-      LIBCWD_R_FLAGS="$CWD_R_FLAGS"
+      LIBCWD_R_FLAGS="${CWD_R_FLAGS:--pthread}"
       LIBCWD_R_LIBS="$CWD_R_LIBS"])
     fi
   fi

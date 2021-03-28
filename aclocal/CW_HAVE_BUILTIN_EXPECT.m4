@@ -1,5 +1,5 @@
-# CW_PIPE_EXTRAOPTS m4 macro -- this file is part of cwm4.
-# Copyright (C) 2006 Carlo Wood <carlo@alinoe.com>
+# CW_HAVE_BUILTIN_EXPECT m4 macro -- this file is part of cwm4.
+# Copyright (C) 2018 Carlo Wood <carlo@alinoe.com>
 #
 # This program is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -24,25 +24,21 @@
 # file appears in them. The GNU General Public License (GPL) does govern
 # all other use of the material that constitutes the cwm4 project.
 
-dnl CW_PIPE_EXTRAOPTS
-dnl If the compiler understands -pipe, add it to EXTRAOPTS if not already.
-AC_DEFUN([CW_PIPE_EXTRAOPTS],
-[AC_MSG_CHECKING([if the compiler understands -pipe])
-AC_CACHE_VAL(cw_cv_pipe_flag,
-[save_CXXFLAGS="$CXXFLAGS"
-AC_LANG_SAVE
-AC_LANG([C++])
-CXXFLAGS="-pipe"
-AC_COMPILE_IFELSE([AC_LANG_PROGRAM([[]], [[]])],[cw_cv_pipe_flag=yes],[cw_cv_pipe_flag=no])
-AC_LANG_RESTORE
-CXXFLAGS="$save_CXXFLAGS"])
-if test "$cw_cv_pipe_flag" = yes ; then
-  AC_MSG_RESULT(yes)
-  x=`echo "$EXTRAOPTS" | grep 'pipe' 2>/dev/null`
-  if test "$x" = "" ; then
-    EXTRAOPTS="$EXTRAOPTS -pipe"
+# CW_HAVE_BUILTIN_EXPECT
+# ----------------------
+#
+# This macro tests if the compiler supports the __builtin_expect feature.
+
+AC_DEFUN([CW_HAVE_BUILTIN_EXPECT], [
+  AC_CACHE_CHECK([if __builtin_expect is available], cw_cv_have_builtin_expect, [
+                  AC_LINK_IFELSE([AC_LANG_PROGRAM(, return __builtin_expect(main != 0, 1))],
+                                 [cw_cv_have_builtin_expect=yes],
+                                 [cw_cv_have_builtin_expect=no])])
+  if test "$cw_cv_have_builtin_expect" = "no"; then
+    AC_DEFINE(HAVE_BUILTIN_EXPECT, 0,
+              [Define to 1 if compiler supports __builtin_expect])
+  else
+    AC_DEFINE(HAVE_BUILTIN_EXPECT, 1,
+              [Define to 1 if compiler supports __builtin_expect])
   fi
-else
-  AC_MSG_RESULT(no)
-fi
 ])

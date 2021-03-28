@@ -37,7 +37,7 @@ AC_DEFUN([CW_LIB_LIBCW], [
 AC_CACHE_CHECK([if libcw is available], cw_cv_lib_libcw, [
 # Check if we have libcw
 AC_LANG_SAVE
-AC_LANG_CPLUSPLUS
+AC_LANG([C++])
 cw_cv_lib_libcw=yes
 dnl Get libs and flags of libcw.
 pkg-config --libs libcw >/dev/null

@@ -36,7 +36,7 @@ AC_DEFUN([CW_LIB_LIBXMLWRAPP], [
 AC_CACHE_CHECK([if libxmlwrapp is available], cw_cv_lib_libxmlwrapp, [
 # Check if we have libxmlwrapp
 AC_LANG_SAVE
-AC_LANG_C
+AC_LANG([C])
 cw_save_LIBS="$LIBS"
 LIBS="$LIBS `pkg-config --libs xmlwrapp`"
 AC_LINK_IFELSE([AC_LANG_CALL([], [xmlParseFile])], [cw_cv_lib_libxmlwrapp=yes], [cw_cv_lib_libxmlwrapp=no])

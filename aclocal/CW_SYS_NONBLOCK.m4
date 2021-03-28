@@ -24,12 +24,12 @@
 # file appears in them. The GNU General Public License (GPL) does govern
 # all other use of the material that constitutes the cwm4 project.
 
-dnl CW_NBLOCK
+dnl CW_SYS_NONBLOCK
 dnl
-dnl Defines CW_CONFIG_NBLOCK to be `POSIX', `BSD', `SYSV' or `WIN32'
+dnl Defines CW_CONFIG_NONBLOCK to be `POSIX', `BSD', `SYSV' or `WIN32'
 dnl depending on whether socket non-blocking stuff is posix, bsd, sysv
 dnl or win32 style respectively.
-AC_DEFUN([CW_NBLOCK],
+AC_DEFUN([CW_SYS_NONBLOCK],
 [AC_REQUIRE([CW_SOCKET])
 case "$host_alias" in		# (
   *-mingw32)			# (
@@ -45,15 +45,28 @@ esac
 if test "$cw_windows" = no -o "$cw_socket_header" = "sys/socket.h"; then
 save_LIBS="$LIBS"
 LIBS="$cw_socket_library"
-AC_CACHE_CHECK(non-blocking socket flavour, cw_cv_system_nblock,
-[AC_REQUIRE([AC_TYPE_SIGNAL])
+AC_CACHE_CHECK(non-blocking socket flavour, cw_cv_system_nonblock,
+[AC_REQUIRE([m4_warn([obsolete],
+[your code may safely assume C89 semantics that RETSIGTYPE is void.
+Remove this warning and the `AC_CACHE_CHECK' when you adjust the code.])dnl
+AC_CACHE_CHECK([return type of signal handlers],[ac_cv_type_signal],[AC_COMPILE_IFELSE(
+[AC_LANG_PROGRAM([#include <sys/types.h>
+#include <signal.h>
+],
+		 [return *(signal (0, 0)) (0) == 1;])],
+		   [ac_cv_type_signal=int],
+		   [ac_cv_type_signal=void])])
+AC_DEFINE_UNQUOTED([RETSIGTYPE],[$ac_cv_type_signal],[Define as the return type of signal handlers
+		    (`int' or `void').])
+])
 CW_TYPE_EXTRACT_FROM(recvfrom, [#include <sys/types.h>
 #include <$cw_socket_header>], 6, 6)
 cw_recvfrom_param_six_t="$cw_result"
 AC_LANG_SAVE
-AC_LANG_C
-AC_TRY_RUN([#include <sys/types.h>
+AC_LANG([C])
+AC_RUN_IFELSE([AC_LANG_SOURCE([[#include <sys/types.h>
 #include <$cw_socket_header>
+#include <stdlib.h>
 #include <fcntl.h>
 #include <sys/ioctl.h>
 #include <sys/file.h>
@@ -67,40 +80,40 @@ int main(int argc, char* argv[])
   size_t l = sizeof(x);
   int f = socket(AF_INET, SOCK_DGRAM, 0);
   if (argc == 1)
-    exit(0);
+    return 0;
   if (f >= 0 && !(fcntl(f, F_SETFL, (*argv[1] == 'P') ? O_NONBLOCK : O_NDELAY)))
   {
     signal(SIGALRM, alarmed);
     alarm(2);
     recvfrom(f, b, 12, 0, &x, ($cw_recvfrom_param_six_t)&l);
     alarm(0);
-    exit(0);
+    return 0;
   }
-  exit(1);
-}],
+  return 1;
+}]])],
 [./conftest POSIX
 if test "$?" = "0"; then
-  cw_cv_system_nblock=POSIX
+  cw_cv_system_nonblock=POSIX
 else
   ./conftest BSD
   if test "$?" = "0"; then
-    cw_cv_system_nblock=BSD
+    cw_cv_system_nonblock=BSD
   else
-    cw_cv_system_nblock=SYSV
+    cw_cv_system_nonblock=SYSV
   fi
 fi],
 [AC_MSG_ERROR(Failed to compile a test program!?)],
-[cw_cv_system_nblock=crosscompiled_set_to_POSIX_BSD_or_SYSV
+[cw_cv_system_nonblock=crosscompiled_set_to_POSIX_BSD_or_SYSV
 AC_CACHE_SAVE
-AC_MSG_WARN(Cannot set cw_cv_system_nblock for unknown platform (you are cross-compiling).)
+AC_MSG_WARN(Cannot set cw_cv_system_nonblock for unknown platform (you are cross-compiling).)
 AC_MSG_ERROR(Please edit config.cache and rerun ./configure to correct this!)])
 AC_LANG_RESTORE])
-if test "$cw_cv_system_nblock" = crosscompiled_set_to_POSIX_BSD_or_SYSV; then
-  AC_MSG_ERROR(Please edit config.cache and correct the value of cw_cv_system_nblock, then rerun ./configure)
+if test "$cw_cv_system_nonblock" = crosscompiled_set_to_POSIX_BSD_or_SYSV; then
+  AC_MSG_ERROR(Please edit config.cache and correct the value of cw_cv_system_nonblock, then rerun ./configure)
 fi
 else
-  cw_cv_system_nblock=WIN32
+  cw_cv_system_nonblock=WIN32
 fi
-CW_CONFIG_NBLOCK=$cw_cv_system_nblock
-AC_SUBST(CW_CONFIG_NBLOCK)
+CW_CONFIG_NONBLOCK=$cw_cv_system_nonblock
+AC_SUBST(CW_CONFIG_NONBLOCK)
 LIBS="$save_LIBS"])

@@ -30,7 +30,9 @@ dnl Extract the type of ARGUMENT argument of function FUNCTION with ARGUMENTS ar
 dnl INIT are possibly needed #includes.  The result is put in `cw_result'.
 dnl
 AC_DEFUN([CW_TYPE_EXTRACT_FROM],
-[cat > conftest.$ac_ext <<EOF
+[AC_LANG_SAVE
+AC_LANG([C++])
+cat > conftest.$ac_ext <<EOF
 [$2]
 #ifdef __cplusplus
 #include <cstdlib>
@@ -38,8 +40,9 @@ AC_DEFUN([CW_TYPE_EXTRACT_FROM],
 #else
 #define ARGF f
 #endif
+enum foo_t { x };
 template<typename ARG>
-  void detect_type(ARG)
+  foo_t detect_type(ARG)
   {
     return reinterpret_cast<ARG*>(0);
   }
@@ -61,12 +64,13 @@ echo "ARG$3)) { ARG$4 arg;" >> conftest.$ac_ext
 cat >> conftest.$ac_ext <<EOF
   detect_type(arg);
 }
-int main(void)
+int main()
 {
   foo($1);
   exit(0);
 }
 EOF
+cp conftest.$ac_ext /tmp/troep.cpp
 save_CXXFLAGS="$CXXFLAGS"
 CXXFLAGS="`echo $CXXFLAGS | sed -e 's/-Werror//g'`"
 if { (eval echo configure: \"$ac_compile\") 1>&5; (eval $ac_compile) 2>&1 | tee conftest.out >&5; }; then
@@ -87,5 +91,6 @@ else
   AC_MSG_ERROR([Configuration problem: Failed to compile a test program])
 fi
 CXXFLAGS="$save_CXXFLAGS"
+AC_LANG_RESTORE
 rm -f conftest*
 ])
