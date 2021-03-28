@@ -509,6 +509,11 @@ if test "$using_libtool" = "yes"; then
   #if test ! -e depcomp; then
   #  ln -s cwm4/scripts/depcomp.sh depcomp
   #fi
+  if test ! -e ltmain.sh; then
+    echo "$LIBTOOLIZE failed to install \"ltmain.sh\" in the right place."
+    echo "Please add AC_CONFIG_AUX_DIR([.]) to the configure.ac of your project."
+    exit 3
+  fi
 fi
 if test -n "$ACLOCAL_PATH"; then
   echo "ACLOCAL_PATH is set ($ACLOCAL_PATH)!"
