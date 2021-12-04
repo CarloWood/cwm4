@@ -28,7 +28,7 @@ dnl CW_BUG_G_CONFIG_H
 dnl Check if /usr/include/_G_config.h forgets to define a few macros
 AC_DEFUN([CW_BUG_G_CONFIG_H],
 [AC_LANG_SAVE
-AC_LANG_C
+AC_LANG([C])
 AC_CHECK_FUNCS(labs)
 AC_LANG_RESTORE
 AC_CACHE_CHECK([whether _G_config.h forgets to define macros], cw_cv_sys_G_config_h_macros,

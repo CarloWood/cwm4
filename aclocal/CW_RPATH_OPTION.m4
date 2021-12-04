@@ -31,9 +31,9 @@ AC_DEFUN([CW_RPATH_OPTION],
 [AC_CACHE_CHECK([how to pass a runtime path to the linker], cw_cv_rpath_option,
 [save_CXXFLAGS="$CXXFLAGS"
 AC_LANG_SAVE
-AC_LANG_CPLUSPLUS
+AC_LANG([C++])
 CXXFLAGS="$save_CXXFLAGS -Wl,--rpath,/tmp"
-AC_TRY_LINK(,,[cw_cv_rpath_option="-Wl,--rpath,"],[cw_cv_rpath_option="-Wl,-R"])
+AC_LINK_IFELSE([AC_LANG_PROGRAM([[]], [[]])],[cw_cv_rpath_option="-Wl,--rpath,"],[cw_cv_rpath_option="-Wl,-R"])
 AC_LANG_RESTORE
 CXXFLAGS="$save_CXXFLAGS"])
 RPATH_OPTION="$cw_cv_rpath_option"

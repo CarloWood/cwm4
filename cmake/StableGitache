@@ -1,0 +1,22 @@
+# FetchContent was added to 3.14.
+cmake_minimum_required(VERSION 3.14)
+
+include(FetchContent)
+
+# If a local gitache submodule is present then use that rather than downloading one.
+if (EXISTS ${CMAKE_CURRENT_LIST_DIR}/gitache/.git)
+  # This will disable the use of the GIT_REPOSITORY/GIT_TAG below, and disable the
+  # FetchContent- download and update step. Instead, use the gitache submodule as-is.
+  set(FETCHCONTENT_SOURCE_DIR_GITACHE "${CMAKE_CURRENT_LIST_DIR}/gitache" CACHE INTERNAL "" FORCE)
+endif ()
+
+FetchContent_Declare(
+  gitache
+  GIT_REPOSITORY "https://github.com/CarloWood/gitache.git"
+  GIT_TAG        "bef7d0d52ef3587e310edd43a762f4cc16ef1708"  # Latest SHA1 of branch "stable".
+)
+
+# To enable DEBUG messages, pass -DCMAKE_MESSAGE_LOG_LEVEL=DEBUG to cmake on the command line.
+message(DEBUG "DEBUG: cwm4/cmake/StableGitache: calling `FetchContent_MakeAvailable(gitache)`")
+FetchContent_MakeAvailable(gitache)
+message(DEBUG "DEBUG: cwm4/cmake/StableGitache: returned from `FetchContent_MakeAvailable(gitache)`")
