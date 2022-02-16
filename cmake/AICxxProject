@@ -35,9 +35,6 @@ set(AICXX_OBJECTS_LIST "" CACHE INTERNAL "List of OBJECT libaries that this proj
 # Set CMAKE_CXX_COMPILER_LAUNCHER.
 include(ccache)
 
-# We need -pthread because we need _REENTRANT to be defined. See https://stackoverflow.com/a/39547577/1487069
-set(THREADS_PREFER_PTHREAD_FLAG true)
-
 # Add support for CMAKE_BUILD_TYPE, EnableDebug, EnableGlobalDebug, EnableLibcwd
 include(CW_OPTIONS)
 
