@@ -36,7 +36,7 @@ AC_DEFUN([CW_LIB_LIBGTKMM], [
 AC_CACHE_CHECK([if libgtkmm is available], cw_cv_lib_libgtkmm, [
 # Check if we have libgtkmm
 AC_LANG_SAVE
-AC_LANG_CPLUSPLUS
+AC_LANG([C++])
 cw_save_LIBS="$LIBS"
 LIBS="$LIBS `pkg-config --libs gtkmm-2.4`"
 AC_LINK_IFELSE([AC_LANG_CALL([], [_ZN3Gtk4Main3runERNS_6WindowE])], [cw_cv_lib_libgtkmm=yes], [cw_cv_lib_libgtkmm=no])

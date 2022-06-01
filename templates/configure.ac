@@ -23,13 +23,13 @@ define(CW_BUGREPORT, [@CW_BUGREPORT@])
 #define(CW_INTERFACE_VERSION_REVISION, 0)
 #define(CW_INTERFACE_AGE, 0)
 
-# CW_COMPILE_FLAGS may contain warning flags, but also default debug flags (-g*)
-# and optimization flags (-O*) that which will be stripped when not required.
+# CW_COMPILE_FLAGS may contain warning flags, but also default debug flag (-g*) and/or optimization flag (-O*)
+# which will be stripped when not required, and an optional -std=* flag.
 define(CW_COMPILE_FLAGS, [-W -Wall -Woverloaded-virtual -Wundef -Wpointer-arith -Wwrite-strings -Winline])
 # CW_THREADS can be [no] (single-threaded), [yes] (multi-threaded) or [both] (single and multi-threaded applications).
 define(CW_THREADS, [both])
 # CW_MAX_ERRORS is the maximum number of errors the compiler will show.
-define(CW_MAX_ERRORS, [2])
+define(CW_MAX_ERRORS, 2)
 
 # Include cwm4 header.
 m4_include([cwm4/configure_ac_top.m4])

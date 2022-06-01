@@ -40,7 +40,7 @@ if test x"$CXX" != "x" -o x"$CXXCPP" != "x"; then
   unset ac_cv_prog_CXXCPP
   unset ac_cv_prog_cxx_cross
   unset ac_cv_prog_cxx_works
-  unset ac_cv_prog_gxx
+  unset ac_cv_cxx_compiler_gnu
   unset ac_cv_prog_gxx_version
 fi
 if test x"$CC" != "x" -o x"$CPP" != "x"; then
@@ -49,6 +49,6 @@ if test x"$CC" != "x" -o x"$CPP" != "x"; then
   unset ac_cv_prog_cc_cross
   unset ac_cv_prog_g
   unset ac_cv_prog_cc_works
-  unset ac_cv_prog_gcc
+  unset ac_cv_c_compiler_gnu
 fi
 ])

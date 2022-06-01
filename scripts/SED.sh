@@ -79,6 +79,6 @@ magic="xyzzy"
   fi
   ) | /bin/sed "s/m4_/$magic/g;s/$magic""include(\[\([^]]*\)\])/m4_changequote([,])m4_include(\1)m4_changequote(,)/g;1s/^/m4_changequote(,)/" \
   | m4 -P - \
-  | sed "s/$magic/m4_/g" \
+  | /bin/sed "s/$magic/m4_/g" \
   | /bin/sed "${args[@]}" -- "${params[@]}"
 exit $?

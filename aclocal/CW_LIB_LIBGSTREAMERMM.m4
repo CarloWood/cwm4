@@ -36,7 +36,7 @@ AC_DEFUN([CW_LIB_LIBGSTREAMERMM], [
 AC_CACHE_CHECK([if libgstreamermm is available], cw_cv_lib_libgstreamermm, [
 # Check if we have libgstreamermm
 AC_LANG_SAVE
-AC_LANG_CPLUSPLUS
+AC_LANG([C++])
 cw_save_LIBS="$LIBS"
 LIBS="$LIBS `pkg-config --libs gstreamermm-0.10`"
 AC_LINK_IFELSE([AC_LANG_CALL([], [_ZN3Gst4initERiRPPc])], [cw_cv_lib_libgstreamermm=yes], [cw_cv_lib_libgstreamermm=no])

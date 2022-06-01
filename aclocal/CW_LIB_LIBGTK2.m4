@@ -36,7 +36,7 @@ AC_DEFUN([CW_LIB_LIBGTK2], [
 AC_CACHE_CHECK([if libgtk2 is available], cw_cv_lib_libgtk2, [
 # Check if we have libgtk2
 AC_LANG_SAVE
-AC_LANG_C
+AC_LANG([C])
 cw_save_LIBS="$LIBS"
 LIBS="$LIBS `pkg-config --libs gtk+-2.0`"
 AC_LINK_IFELSE([AC_LANG_CALL([], [gtk_window_new])], [cw_cv_lib_libgtk2=yes], [cw_cv_lib_libgtk2=no])

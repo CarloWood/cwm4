@@ -36,7 +36,7 @@ AC_DEFUN([CW_LIB_LIBGLIB2], [
 AC_CACHE_CHECK([if libglib is available], cw_cv_lib_libglib, [
 # Check if we have libglib
 AC_LANG_SAVE
-AC_LANG_C
+AC_LANG([C])
 cw_save_LIBS="$LIBS"
 LIBS="$LIBS `pkg-config --libs glib-2.0`"
 AC_LINK_IFELSE([AC_LANG_CALL([], [g_string_new])], [cw_cv_lib_libglib=yes], [cw_cv_lib_libglib=no])

@@ -37,7 +37,7 @@ AC_DEFUN([CW_SYS_PCH],
   [ac_save_CXXFLAGS="$CXXFLAGS"
   CXXFLAGS="$CXXFLAGS -Werror -Winvalid-pch -Wno-deprecated"
   AC_LANG_SAVE
-  AC_LANG_CPLUSPLUS
+  AC_LANG([C++])
   echo '#include <math.h>' > conftest.h
   rm -f conftest.h.gch
   if $CXX $CXXFLAGS $CPPFLAGS -x c++-header conftest.h \
