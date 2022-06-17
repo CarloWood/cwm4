@@ -23,6 +23,10 @@ string(REGEX REPLACE "-DNDEBUG " "" CMAKE_CXX_FLAGS_RELWITHDEBUG "${CMAKE_CXX_FL
 string(REGEX REPLACE "-DNDEBUG " "" CMAKE_C_FLAGS_RELWITHDEBUG "${CMAKE_C_FLAGS_RELWITHDEBINFO} -DDEBUG")
 string(REGEX REPLACE "-g " "" CMAKE_CXX_FLAGS_PERF "${CMAKE_CXX_FLAGS_DEBUG} -Og -ggdb3 -fno-omit-frame-pointer")
 string(REGEX REPLACE "-g " "" CMAKE_C_FLAGS_PERF "${CMAKE_C_FLAGS_DEBUG} -Og -ggdb3 -fno-omit-frame-pointer")
+# Set the TRACY flags to the same thing as CMAKE_CXX_FLAGS_RELWITHDEBUG but with -march=native appended.
+# Any existing -march=* is removed.
+string(REGEX REPLACE "-march=[^ ]* " "" CMAKE_CXX_FLAGS_TRACY "${CMAKE_CXX_FLAGS_RELWITHDEBUG} -march=native")
+string(REGEX REPLACE "-march=[^ ]* " "" CMAKE_C_FLAGS_TRACY "${CMAKE_C_FLAGS_RELWITHDEBUG} -march=native")
 
 # Add CMAKE_MODULE_PATH.
 list(APPEND CMAKE_MODULE_PATH "${CMAKE_CURRENT_SOURCE_DIR}/cwm4/cmake")
