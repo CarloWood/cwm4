@@ -8,7 +8,7 @@ endif ()
 
 # This header must be included at the top of the top level CMakeLists.txt right after the `project(...) command`.
 if (NOT CMAKE_PROJECT_NAME)
-  message(FATAL_ERROR "Use `include(cwm4/cmake/AICxxProject)` in the top-level CMakeLists.txt BEFORE the `project(...)` command.")
+  message(FATAL_ERROR "Use `include(cwm4/cmake/AICxxProject)` in the top-level CMakeLists.txt AFTER the `project(...)` command (typically, immediately after the gitache block.")
 endif ()
 
 message(STATUS "----------------------------------------------------\n** Configuring project ${PROJECT_NAME}:")

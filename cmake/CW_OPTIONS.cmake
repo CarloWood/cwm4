@@ -33,7 +33,7 @@
 # OptionEnableLibcwd                    - set when CMAKE_BUILD_TYPE is not Release and OptionEnableDebug is true,
 #                                         and -DEnableLibcwd:BOOL=ON (defaults to libcwd_r_FOUND)
 #
-# The following variables are intended to be used with the macro 'option'
+# The following variables are intended to be used with the macro 'cw_option'
 # defined below.
 #
 # CW_BUILD_TYPE_IS_RELEASE              - true iff CMAKE_BUILD_TYPE = Release
