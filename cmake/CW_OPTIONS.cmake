@@ -33,7 +33,7 @@
 # OptionEnableLibcwd                    - set when CMAKE_BUILD_TYPE is not Release and OptionEnableDebug is true,
 #                                         and -DEnableLibcwd:BOOL=ON (defaults to libcwd_r_FOUND)
 #
-# The following variables are intended to be used with the macro 'option'
+# The following variables are intended to be used with the macro 'cw_option'
 # defined below.
 #
 # CW_BUILD_TYPE_IS_RELEASE              - true iff CMAKE_BUILD_TYPE = Release
@@ -42,6 +42,8 @@
 # CW_BUILD_TYPE_IS_DEBUG                - true iff CMAKE_BUILD_TYPE = Debug
 # CW_BUILD_TYPE_IS_BETATEST             - true iff CMAKE_BUILD_TYPE = BetaTest
 # CW_BUILD_TYPE_IS_RELWITHDEBUG         - true iff CMAKE_BUILD_TYPE = RelWithDebug
+# CW_BUILD_TYPE_IS_PERF                 - true iff CMAKE_BUILD_TYPE = Perf
+# CW_BUILD_TYPE_IS_TRACY                - true iff CMAKE_BUILD_TYPE = Tracy
 #
 # Usage example,
 #
@@ -67,6 +69,10 @@ set(CW_BUILD_TYPE_IS_RELEASE ON CACHE INTERNAL "")
 set(CW_BUILD_TYPE_IS_NOT_RELEASE OFF CACHE INTERNAL "")
 set(CW_BUILD_TYPE_IS_RELWITHDEBINFO OFF CACHE INTERNAL "")
 set(CW_BUILD_TYPE_IS_DEBUG OFF CACHE INTERNAL "")
+set(CW_BUILD_TYPE_IS_BETATEST OFF CACHE INTERNAL "")
+set(CW_BUILD_TYPE_IS_RELWITHDEBUG OFF CACHE INTERNAL "")
+set(CW_BUILD_TYPE_IS_PERF OFF CACHE INTERNAL "")
+set(CW_BUILD_TYPE_IS_TRACY OFF CACHE INTERNAL "")
 unset(OptionEnableDebug)
 unset(OptionEnableLibcwd)
 
@@ -160,6 +166,10 @@ elseif ("${BUILD_TYPE_UPPER}" STREQUAL "BETATEST")
   set(CMAKE_BUILD_TYPE "BetaTest" CACHE STRING "Build Type" FORCE)
 elseif ("${BUILD_TYPE_UPPER}" STREQUAL "RELWITHDEBUG")
   set(CMAKE_BUILD_TYPE "RelWithDebug" CACHE STRING "Build Type" FORCE)
+elseif ("${BUILD_TYPE_UPPER}" STREQUAL "PERF")
+  set(CMAKE_BUILD_TYPE "Perf" CACHE STRING "Build Type" FORCE)
+elseif ("${BUILD_TYPE_UPPER}" STREQUAL "TRACY")
+  set(CMAKE_BUILD_TYPE "Tracy" CACHE STRING "Build Type" FORCE)
 else ()
   message(FATAL_ERROR "Unknown CMAKE_BUILD_TYPE \"${CMAKE_BUILD_TYPE}\".")
 endif ()
@@ -181,6 +191,13 @@ endif ()
 if (CMAKE_BUILD_TYPE STREQUAL "RelWithDebug")
   set(CW_BUILD_TYPE_IS_RELWITHDEBUG ON CACHE INTERNAL "")
   set(default_enable_debug ON)
+endif ()
+if (CMAKE_BUILD_TYPE STREQUAL "Perf")
+  set(CW_BUILD_TYPE_IS_PERF ON CACHE INTERNAL "")
+  set(default_enable_debug ON)
+endif ()
+if (CMAKE_BUILD_TYPE STREQUAL "Tracy")
+  set(CW_BUILD_TYPE_IS_TRACY ON CACHE INTERNAL "")
 endif ()
 message(STATUS "${Option} ${OptionColor}CMAKE_BUILD_TYPE${ColourReset} =\n\t${OptionColorBuildType}${CMAKE_BUILD_TYPE}${ColourReset}")
 #message(STATUS "${Option} ${OptionColor}CMAKE_BUILD_TYPE${ColourReset} = ${OptionColorBuildType}${CMAKE_BUILD_TYPE}${ColourReset}")
