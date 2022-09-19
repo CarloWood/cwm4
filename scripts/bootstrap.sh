@@ -44,14 +44,14 @@ if test "$generate_configure_ac" = "yes"; then
   CW_BUGREPORT="$GIT_AUTHOR_EMAIL"
   sed -e 's/@CW_PACKAGE_NAME@/'"$CW_PACKAGE_NAME"'/;s/@CW_BUGREPORT@/'"$CW_BUGREPORT"'/' cwm4/templates/configure.ac > configure.ac
 else
-  if test $(egrep '^[[:space:]]*define[[:space:]]*\([[:space:]]*CW_(VERSION_MAJOR|VERSION_MINOR|VERSION_REVISION|PACKAGE_NAME|BUGREPORT|COMPILE_FLAGS|THREADS)[[:space:]]*,' configure.ac | sort -u | wc --lines) != 7; then
+  if test $(grep -E '^[[:space:]]*define[[:space:]]*\([[:space:]]*CW_(VERSION_MAJOR|VERSION_MINOR|VERSION_REVISION|PACKAGE_NAME|BUGREPORT|COMPILE_FLAGS|THREADS)[[:space:]]*,' configure.ac | sort -u | wc --lines) != 7; then
     echo '*** ERROR: The follow macros should be defined at the top of configure.ac:'
     echo '***        CW_VERSION_MAJOR, CW_VERSION_MINOR, CW_VERSION_REVISION,'
     echo '***        CW_PACKAGE_NAME, CW_BUGREPORT, CW_COMPILE_FLAGS and CW_THREADS.'
     echo '***        Please see cwm4/templates/configure.ac for an example.'
     exit 1
   fi
-  count="$(egrep '^[[:space:]]*define[[:space:]]*\([[:space:]]*CW_INTERFACE_(VERSION_REVISION|VERSION|AGE)[[:space:]]*,' configure.ac | sort -u | wc --lines)"
+  count="$(grep -E '^[[:space:]]*define[[:space:]]*\([[:space:]]*CW_INTERFACE_(VERSION_REVISION|VERSION|AGE)[[:space:]]*,' configure.ac | sort -u | wc --lines)"
   if test "$count" != 0 -a "$count" != 3; then
     echo '*** ERROR: The follow macros should be defined at the top of configure.ac for a library project:'
     echo '***        CW_INTERFACE_VERSION_REVISION, CW_INTERFACE_VERSION and CW_INTERFACE_AGE.'
@@ -61,7 +61,7 @@ else
 fi
 
 # Determine if this project uses libtool.
-RESULT=$(find . -type d \( -name '.git' -o -name 'cwm4' \) -prune -o \( -name Makefile.am -o -name makefile.am \) -exec egrep -l '^[[:alnum:]_]*_LTLIBRARIES[[:space:]]*=' {} \;)
+RESULT=$(find . -type d \( -name '.git' -o -name 'cwm4' \) -prune -o \( -name Makefile.am -o -name makefile.am \) -exec grep -E -l '^[[:alnum:]_]*_LTLIBRARIES[[:space:]]*=' {} \;)
 if test -n "$RESULT"; then
   using_libtool="yes"
 else
@@ -69,14 +69,14 @@ else
 fi
 
 # Determine if this project uses gettext.
-if m4 -P cwm4/sugar.m4 configure.ac | egrep '^[[:space:]]*AM_GNU_GETTEXT_VERSION' >/dev/null; then
+if m4 -P cwm4/sugar.m4 configure.ac | grep -E '^[[:space:]]*AM_GNU_GETTEXT_VERSION' >/dev/null; then
   using_gettext="yes"
 else
   using_gettext="no"
 fi
 
 # Determine if this project uses doxygen.
-CW_DOXYGEN_LINE=$(egrep '^[[:space:]]*CW_DOXYGEN' configure.ac)
+CW_DOXYGEN_LINE=$(grep -E '^[[:space:]]*CW_DOXYGEN' configure.ac)
 if test -n "$CW_DOXYGEN_LINE"; then
   using_doxygen="yes"
   CW_DOXYGEN_PATHS="$(echo $CW_DOXYGEN_LINE | sed -r -e 's/^[[:space:]]*CW_DOXYGEN[[:space:]]*\(\[*//;s/\]*\).*//')"
@@ -85,7 +85,7 @@ else
 fi
 
 # Determine if this project uses gtk-doc.
-if m4 -P cwm4/sugar.m4 configure.ac | egrep '^[[:space:]]*GTK_DOC_CHECK' >/dev/null; then
+if m4 -P cwm4/sugar.m4 configure.ac | grep -E '^[[:space:]]*GTK_DOC_CHECK' >/dev/null; then
   using_gtkdoc="yes"
 else
   using_gtkdoc="no"
@@ -457,28 +457,28 @@ if test ! -f Makefile.am; then
   created_files="$created_files Makefile.am"
 fi
 
-if ! egrep '^[[:space:]]*SUBDIRS[[:space:]]*=.*@CW_SUBDIRS@' Makefile.am >/dev/null; then
+if ! grep -E '^[[:space:]]*SUBDIRS[[:space:]]*=.*@CW_SUBDIRS@' Makefile.am >/dev/null; then
   echo -e "\n*** ERROR: SUBDIRS in Makefile.am must contain @CW_SUBDIRS@.\n***        For example: SUBDIRS = @CW_SUBDIRS@ src"
   exit 1
 fi
 
-if egrep '^[[:space:]]*EXTRA_DIST[[:space:]]*=' Makefile.am >/dev/null; then
+if grep -E '^[[:space:]]*EXTRA_DIST[[:space:]]*=' Makefile.am >/dev/null; then
   echo -e "\n*** ERROR: EXTRA_DIST should only append new files. Use 'EXTRA_DIST += ...' instead of 'EXTRA_DIST ='."
   exit 1
 fi
 
-if egrep '^[[:space:]]*MAINTAINERCLEANFILES[[:space:]]*=' Makefile.am >/dev/null; then
+if grep -E '^[[:space:]]*MAINTAINERCLEANFILES[[:space:]]*=' Makefile.am >/dev/null; then
   echo -e "\n*** ERROR: MAINTAINERCLEANFILES should only append new files. Use 'MAINTAINERCLEANFILES += ...' instead of 'MAINTAINERCLEANFILES ='."
   exit 1
 fi
 
 generate_makefile_am="no"
-if ! egrep '^[[:space:]]*include[[:space:]]+\$\(srcdir\)/cwm4/root_makefile_top\.am' Makefile.am >/dev/null; then
+if ! grep -E '^[[:space:]]*include[[:space:]]+\$\(srcdir\)/cwm4/root_makefile_top\.am' Makefile.am >/dev/null; then
   echo "Missing 'include \$(srcdir)/cwm4/root_makefile_top.am' in Makefile.am."
   generate_makefile_am="yes"
 fi
 
-if ! egrep '^[[:space:]]*include[[:space:]]+\$\(srcdir\)/cwm4/root_makefile_bottom\.am' Makefile.am >/dev/null; then
+if ! grep -E '^[[:space:]]*include[[:space:]]+\$\(srcdir\)/cwm4/root_makefile_bottom\.am' Makefile.am >/dev/null; then
   echo "Missing 'include \$(srcdir)/cwm4/root_makefile_bottom.am' in Makefile.am."
   generate_makefile_am="yes"
 fi
