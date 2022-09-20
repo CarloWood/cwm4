@@ -50,7 +50,7 @@ if (_is_main_project)
   #
   add_custom_target(maintainer-clean
     # The current directory is CMAKE_CURRENT_BINARY_DIR.
-    COMMAND ${CMAKE_CURRENT_SOURCE_DIR}/cwm4/scripts/cmake_maintainer_clean.sh $(MAKE) \"${GITACHE_PACKAGES}\"
+    COMMAND ${CMAKE_CURRENT_SOURCE_DIR}/cwm4/scripts/cmake_maintainer_clean.sh $$(MAKE) \"${GITACHE_PACKAGES}\"
   )
 endif ()
 
