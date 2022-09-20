@@ -42,14 +42,14 @@ cw_cv_lib_boost_version=none
 cw_cv_lib_boost_version="`echo "$BOOST_VERSION" | grep '^[[1-9]][[0-9]]*[[._]][[0-9]][[0-9]]*$'`"
 if test -z "$cw_cv_lib_boost_version" -a -n "$BOOST_ROOT"; then
   cw_cv_lib_boost_version="`ls -l "$BOOST_ROOT"/lib$cw_boost_build/libboost*.so 2>/dev/null | \
-    egrep '\.so\.[[0-9]]+\.[[0-9]]+(\.[[0-9]]+)?$' |
+    grep -E '\.so\.[[0-9]]+\.[[0-9]]+(\.[[0-9]]+)?$' |
     sed -e 's/.*\.so\.\([[0-9]]*\.[[0-9]]*\)\.[[0-9]]*$/\1/' \
         -e 's/.*\.so\.\([[0-9]]*\.[[0-9]]*\)$/\1/' | \
     sort -nu | tail -n 1 | sed -e 's/.* //'`"
   if test -z "$cw_cv_lib_boost_version"; then
     dnl The double [[...]] below are needed to escape m4, it will result in [...] in the configure script.
     cw_cv_lib_boost_version="`ls "$BOOST_ROOT"/lib$cw_boost_build/libboost* 2>/dev/null | \
-	egrep '.*(-[[0-9_]]*\.(so$|so\.|a$|dll$|lib$)|\.so\.[[0-9]]+\.[[0-9]]+(\.[[0-9]]+)?$)' | \
+	grep -E '.*(-[[0-9_]]*\.(so$|so\.|a$|dll$|lib$)|\.so\.[[0-9]]+\.[[0-9]]+(\.[[0-9]]+)?$)' | \
 	sed -e 's/.*-\([[0-9_]]*\)\.so$/\1/' \
 	    -e 's/.*-\([[0-9_]]*\)\.so\..*/\1/' \
 	    -e 's/.*-\([[0-9_]]*\)\.a$/\1/' \
