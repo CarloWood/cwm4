@@ -1,6 +1,6 @@
 #! /bin/bash
 
-MAKE="$1"
+MAKE="/usr/bin/make"
 GITACHE_PACKAGES="$2"
 
 if [ ! -x "$MAKE" ]; then
