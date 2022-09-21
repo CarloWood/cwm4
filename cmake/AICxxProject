@@ -45,13 +45,19 @@ include(ccache)
 include(CW_OPTIONS)
 
 if (_is_main_project)
+  if (CMAKE_GENERATOR STREQUAL "Ninja")
+    set(generator "ninja")
+  else()
+    set(generator "$(MAKE)")
+  endif()
+
   #==============================================================================
   # Add target maintainer-clean.
   #
   add_custom_target(maintainer-clean
     # The current directory is CMAKE_CURRENT_BINARY_DIR.
     # No longer passing $(MAKE) because then ninja won't work.
-    COMMAND ${CMAKE_CURRENT_SOURCE_DIR}/cwm4/scripts/cmake_maintainer_clean.sh "" \"${GITACHE_PACKAGES}\"
+    COMMAND ${CMAKE_CURRENT_SOURCE_DIR}/cwm4/scripts/cmake_maintainer_clean.sh ${generator} \"${GITACHE_PACKAGES}\"
   )
 endif ()
 

@@ -1,15 +1,27 @@
 #! /bin/bash
 
-MAKE="/usr/bin/make"
+GENERATOR="$1"
 GITACHE_PACKAGES="$2"
+
+if [ "$GENERATOR" = "ninja" ]; then
+  MAKE="$(which ninja)"
+else # GENERATOR
+  MAKE="$GENERATOR"
+fi
 
 if [ ! -x "$MAKE" ]; then
   echo "Unexpected error: \"$MAKE\" is not executable."
   exit 1
 fi
 
-echo "Running 'make clean' ..."
-"$MAKE" --no-print-directory clean
+if [ "$GENERATOR" = "ninja" ]; then
+  echo "Running 'ninja -t clean' ..."
+  "$MAKE" -t clean
+  exit
+else
+  echo "Running 'make clean' ..."
+  "$MAKE" --no-print-directory clean
+fi
 
 # This doesn't work for paths containing new-lines...
 # The sorting makes sure that subdirectories are processed before their parent directory.
@@ -52,3 +64,5 @@ done
 
 # Finally remove all empty directories.
 find . -type d -empty -delete
+
+fi # GENERATOR
