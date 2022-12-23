@@ -41,23 +41,23 @@ set(CW_SYS_MALLOC_OVERHEAD_MODULE_PATH "${CMAKE_CURRENT_LIST_DIR}")
 function(CW_SYS_PS_WIDE_PID_OPTION)
   if (NOT DEFINED CACHE{CW_PS_WIDE_PID_OPTION})
     execute_process(COMMAND ${CMAKE_COMMAND} -E echo_append "-- Checking for (ultra) wide ps output option - ")
-    execute_process(COMMAND "${CW_PATH_PROG_PS}" -ww
+    execute_process(COMMAND "${CW_PATH_PROG_PS}" ww
       RESULT_VARIABLE ww_result
       OUTPUT_FILE "/dev/null"
       ERROR_FILE "/dev/null"
     )
     if (ww_result EQUAL 0)
-      set(ps_wide_pid_option "-ww")
+      set(ps_wide_pid_option "ww")
     else ()
-      execute_process(COMMAND "${CW_PATH_PROG_PS}" -w
+      execute_process(COMMAND "${CW_PATH_PROG_PS}" w
         RESULT_VARIABLE w_result
         OUTPUT_FILE "/dev/null"
         ERROR_FILE "/dev/null"
       )
       if (w_result EQUAL 0)
-        set(ps_wide_pid_option "-w")
+        set(ps_wide_pid_option "w")
       else ()
-        set(ps_wide_pid_option "-f")
+        set(ps_wide_pid_option "f")
       endif ()
     endif ()
     file(REMOVE "${CMAKE_CURRENT_BINARY_DIR}/ps.out")
