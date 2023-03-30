@@ -52,6 +52,14 @@ if (_is_main_project)
   endif()
 
   #==============================================================================
+  # Add target real-clean.
+  #
+  add_custom_target(real-clean
+    # The current directory is CMAKE_CURRENT_BINARY_DIR, but that should be equal to CMAKE_BINARY_DIR because _is_main_project.
+    COMMAND ${CMAKE_COMMAND} --build . --target clean
+  )
+
+  #==============================================================================
   # Add target maintainer-clean.
   #
   add_custom_target(maintainer-clean
