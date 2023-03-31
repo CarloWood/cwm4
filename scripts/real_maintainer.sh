@@ -92,12 +92,13 @@ if test "$(echo $GIT_COMMITTER_EMAIL | md5sum | cut -d \  -f 1)" = "$1"; then
   # Check if 'branch' is set for all submodules with a configure.m4,
   # and fix the url of remotes when needed.
   git submodule foreach --recursive -q '
-      if test -f "configure.m4" -o "$name" = "cwm4"; then
+      URL=$(git config -f $toplevel/.gitmodules submodule.$name.url)
+      regex="^(github-carlo:|https://github\.com/)CarloWood"
+      if [[ $URL =~ $regex ]]; then
         if ! git config -f $toplevel/.gitmodules submodule.$name.branch >/dev/null; then
           echo "  $name: '"$red"'Setting submodule.$name.branch to master!'"$reset"'"
           git config -f $toplevel/.gitmodules "submodule.$name.branch" master
         fi
-        URL=$(git config -f $toplevel/.gitmodules submodule.$name.url)
         NEWURL=$(echo "$URL" | sed -e '"'"'s%^github-carlo:%https://github.com/%'"'"')
         if test "$URL" != "$NEWURL"; then
           echo "  $name: '"$red"'Changing url of .gitmodules to $NEWURL!'"$reset"'"
