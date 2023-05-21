@@ -64,7 +64,7 @@ else
     else
       cw_library_path="`echo $LD_LIBRARY_PATH | sed -e 's/^://;s/:://g;s/:$//'`"
       if test -f "/etc/ld.so.conf"; then
-        cw_ld_so_conf_file_patterns="`egrep '^[[[:space:]]]*include[[[:space:]]]' /etc/ld.so.conf | sed -r -e 's/^[[[:space:]]]*include[[[:space:]]]+//;s/[[[:space:]]]*//g'`"
+        cw_ld_so_conf_file_patterns="`grep -E '^[[[:space:]]]*include[[[:space:]]]' /etc/ld.so.conf | sed -r -e 's/^[[[:space:]]]*include[[[:space:]]]+//;s/[[[:space:]]]*//g'`"
         cw_ld_so_conf_files="/etc/ld.so.conf `ls $cw_ld_so_conf_file_patterns`"
 	cw_library_path="$cw_library_path`cat $cw_ld_so_conf_files 2>/dev/null | \
 	    sed -r -e 's/^[[[:space:]]]*include[[[:space:]]]+.*//;s/#.*//' -e 's/[[:space:]]*//g' -e 's/=[^=]*$//' | \
@@ -89,7 +89,7 @@ else
 	  # The number behind the underscore is prepended with zeroes to a total length of four digits however.
 	  dnl The double [[...]] below are needed to escape m4, it will result in [...] in the configure script.
 	  cw_possible_version_set="`ls "$cw_possible_root"/lib$cw_boost_build/libboost* 2>/dev/null | \
-	      egrep '.*(-[[0-9_]]*\.(so$|so\.|a$|dll$|lib$)|\.so\.[[0-9]]+\.[[0-9]]+(\.[[0-9]]+)?$)' | \
+	      grep -E '.*(-[[0-9_]]*\.(so$|so\.|a$|dll$|lib$)|\.so\.[[0-9]]+\.[[0-9]]+(\.[[0-9]]+)?$)' | \
 	      sed -e 's/.*-\([[0-9_]]*\)\.so$/\1/' \
 	          -e 's/.*-\([[0-9_]]*\)\.so\..*/\1/' \
 	          -e 's/.*-\([[0-9_]]*\)\.a$/\1/' \

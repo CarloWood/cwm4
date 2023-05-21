@@ -38,7 +38,7 @@ if test "$cw_cv_sys_CXX_finger_print" != "$cw_prog_cxx_finger_print" -o \
 changequote(<<, >>)dnl
 # libtool incorrectly uses variables with names that start with lt_cv_ that are NOT cache values.
 # Make sure not to reset those.
-for i in `set | egrep -v '^(ac_cv_prog_[Ccg][CXx]|lt_cv_)' | grep '^[a-z]*_cv_' | sed -e 's/=.*$//'`; do
+for i in `set | grep -E -v '^(ac_cv_prog_[Ccg][CXx]|lt_cv_)' | grep '^[a-z]*_cv_' | sed -e 's/=.*$//'`; do
   unset $i
 done
 changequote([, ])dnl

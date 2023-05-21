@@ -51,9 +51,9 @@ if expr match "$BOOST_VERSION" '[[0-9]]*\.[[0-9]]*$' >/dev/null; then
 elif test "$cw_cv_lib_boost_toolset" = "not found" -a -n "$BOOST_ROOT" -a -n "$BOOST_VERSION"; then
   dnl The double [[...]] below are needed to escape m4, it will result in [...] in the configure script.
   cw_cv_lib_boost_toolset="`ls "$BOOST_ROOT"/lib$cw_boost_build/libboost* 2>/dev/null | \
-      egrep '.*-'$BOOST_VERSION'\.(so$|so\.|a$|dll$|lib$)' | \
+      grep -E '.*-'$BOOST_VERSION'\.(so$|so\.|a$|dll$|lib$)' | \
       sed -r -e 's%.*/libboost_[[^/-]]*-([[^./-]]*).*-'$BOOST_VERSION'\.(so|so\..*|a|dll|lib)$%\1%' | \
-      egrep -v '(^mt$|libboost_)' | sort -u`"
+      grep -E -v '(^mt$|libboost_)' | sort -u`"
   test -n "$cw_cv_lib_boost_toolset" || cw_cv_lib_boost_toolset="none"
 fi
 ])

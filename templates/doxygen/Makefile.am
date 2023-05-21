@@ -5,7 +5,11 @@ all-local: doxygen.config html.header html.footer
 	if test -n "`ls $(srcdir)/images/*.png 2>/dev/null`"; then \
 	  $(INSTALL) -m 644 $(srcdir)/images/*.png $(builddir)/html/images; \
 	fi
-	mv html/doxygen.png $(builddir)/html/images
+	if test -e 'html/doxygen.svg'; then \
+	  mv html/doxygen.svg $(builddir)/html/images; \
+	else \
+	  mv html/doxygen.png $(builddir)/html/images; \
+	fi
 	test -f $(srcdir)/main.css && $(INSTALL) -m 644 $(srcdir)/main.css $(builddir)/html
 
 maintainer-clean-local:

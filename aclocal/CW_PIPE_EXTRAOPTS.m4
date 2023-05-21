@@ -31,9 +31,9 @@ AC_DEFUN([CW_PIPE_EXTRAOPTS],
 AC_CACHE_VAL(cw_cv_pipe_flag,
 [save_CXXFLAGS="$CXXFLAGS"
 AC_LANG_SAVE
-AC_LANG_CPLUSPLUS
+AC_LANG([C++])
 CXXFLAGS="-pipe"
-AC_TRY_COMPILE(,,cw_cv_pipe_flag=yes,cw_cv_pipe_flag=no)
+AC_COMPILE_IFELSE([AC_LANG_PROGRAM([[]], [[]])],[cw_cv_pipe_flag=yes],[cw_cv_pipe_flag=no])
 AC_LANG_RESTORE
 CXXFLAGS="$save_CXXFLAGS"])
 if test "$cw_cv_pipe_flag" = yes ; then

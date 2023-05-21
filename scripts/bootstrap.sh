@@ -44,14 +44,14 @@ if test "$generate_configure_ac" = "yes"; then
   CW_BUGREPORT="$GIT_AUTHOR_EMAIL"
   sed -e 's/@CW_PACKAGE_NAME@/'"$CW_PACKAGE_NAME"'/;s/@CW_BUGREPORT@/'"$CW_BUGREPORT"'/' cwm4/templates/configure.ac > configure.ac
 else
-  if test $(egrep '^[[:space:]]*define[[:space:]]*\([[:space:]]*CW_(VERSION_MAJOR|VERSION_MINOR|VERSION_REVISION|PACKAGE_NAME|BUGREPORT|COMPILE_FLAGS|THREADS)[[:space:]]*,' configure.ac | sort -u | wc --lines) != 7; then
+  if test $(grep -E '^[[:space:]]*define[[:space:]]*\([[:space:]]*CW_(VERSION_MAJOR|VERSION_MINOR|VERSION_REVISION|PACKAGE_NAME|BUGREPORT|COMPILE_FLAGS|THREADS)[[:space:]]*,' configure.ac | sort -u | wc --lines) != 7; then
     echo '*** ERROR: The follow macros should be defined at the top of configure.ac:'
     echo '***        CW_VERSION_MAJOR, CW_VERSION_MINOR, CW_VERSION_REVISION,'
     echo '***        CW_PACKAGE_NAME, CW_BUGREPORT, CW_COMPILE_FLAGS and CW_THREADS.'
     echo '***        Please see cwm4/templates/configure.ac for an example.'
     exit 1
   fi
-  count="$(egrep '^[[:space:]]*define[[:space:]]*\([[:space:]]*CW_INTERFACE_(VERSION_REVISION|VERSION|AGE)[[:space:]]*,' configure.ac | sort -u | wc --lines)"
+  count="$(grep -E '^[[:space:]]*define[[:space:]]*\([[:space:]]*CW_INTERFACE_(VERSION_REVISION|VERSION|AGE)[[:space:]]*,' configure.ac | sort -u | wc --lines)"
   if test "$count" != 0 -a "$count" != 3; then
     echo '*** ERROR: The follow macros should be defined at the top of configure.ac for a library project:'
     echo '***        CW_INTERFACE_VERSION_REVISION, CW_INTERFACE_VERSION and CW_INTERFACE_AGE.'
@@ -61,7 +61,7 @@ else
 fi
 
 # Determine if this project uses libtool.
-RESULT=$(find . -type d \( -name '.git' -o -name 'cwm4' \) -prune -o -name Makefile.am -exec egrep -l '^[[:alnum:]_]*_LTLIBRARIES[[:space:]]*=' {} \;)
+RESULT=$(find . -type d \( -name '.git' -o -name 'cwm4' \) -prune -o \( -name Makefile.am -o -name makefile.am \) -exec grep -E -l '^[[:alnum:]_]*_LTLIBRARIES[[:space:]]*=' {} \;)
 if test -n "$RESULT"; then
   using_libtool="yes"
 else
@@ -69,14 +69,14 @@ else
 fi
 
 # Determine if this project uses gettext.
-if m4 -P cwm4/sugar.m4 configure.ac | egrep '^[[:space:]]*AM_GNU_GETTEXT_VERSION' >/dev/null; then
+if m4 -P cwm4/sugar.m4 configure.ac | grep -E '^[[:space:]]*AM_GNU_GETTEXT_VERSION' >/dev/null; then
   using_gettext="yes"
 else
   using_gettext="no"
 fi
 
 # Determine if this project uses doxygen.
-CW_DOXYGEN_LINE=$(egrep '^[[:space:]]*CW_DOXYGEN' configure.ac)
+CW_DOXYGEN_LINE=$(grep -E '^[[:space:]]*CW_DOXYGEN' configure.ac)
 if test -n "$CW_DOXYGEN_LINE"; then
   using_doxygen="yes"
   CW_DOXYGEN_PATHS="$(echo $CW_DOXYGEN_LINE | sed -r -e 's/^[[:space:]]*CW_DOXYGEN[[:space:]]*\(\[*//;s/\]*\).*//')"
@@ -85,7 +85,7 @@ else
 fi
 
 # Determine if this project uses gtk-doc.
-if m4 -P cwm4/sugar.m4 configure.ac | egrep '^[[:space:]]*GTK_DOC_CHECK' >/dev/null; then
+if m4 -P cwm4/sugar.m4 configure.ac | grep -E '^[[:space:]]*GTK_DOC_CHECK' >/dev/null; then
   using_gtkdoc="yes"
 else
   using_gtkdoc="no"
@@ -105,20 +105,20 @@ GTKDOCIZE=${GTKDOCIZE:-gtkdocize}
 export AUTOMAKE ACLOCAL AUTOCONF AUTOHEADER AUTOM4TE LIBTOOL LIBTOOLIZE GETTEXT GTKDOCIZE
 
 # Sanity checks.
-($AUTOCONF --version) >/dev/null 2>/dev/null || (echo -e "\nERROR: Cannot find '$AUTOCONF'. You need GNU autoconf to install from git (ftp://ftp.gnu.org/gnu/autoconf/)"; exit 1) || exit 1
-($AUTOMAKE --version) >/dev/null 2>/dev/null || (echo -e "\nERROR: Cannot find '$AUTOMAKE'. You need GNU automake $required_automake_version or higher to install from git (ftp://ftp.gnu.org/gnu/automake/)"; exit 1) || exit 1
-($ACLOCAL --version) >/dev/null 2>/dev/null || (echo -e "\nERROR: Cannot find '$ACLOCAL'. Please set the correct environment variable (ACLOCAL)."; exit 1) || exit 1
-($AUTOHEADER --version) >/dev/null 2>/dev/null || (echo -e "\nERROR: Cannot find '$AUTOHEADER'. Please set the correct environment variable (AUTOHEADER)."; exit 1) || exit 1
-($AUTOM4TE --version) >/dev/null 2>/dev/null || (echo -e "\nERROR: Cannot find '$AUTOM4TE'. Please set the correct environment variable (AUTOM4TE)."; exit 1) || exit 1
+($AUTOCONF --version) >/dev/null 2>/dev/null || (echo -e "\nERROR: Cannot find '$AUTOCONF'. You need GNU autoconf to install from git (sudo apt install autoconf)"; exit 1) || exit 1
+($AUTOMAKE --version) >/dev/null 2>/dev/null || (echo -e "\nERROR: Cannot find '$AUTOMAKE'. You need GNU automake $required_automake_version or higher to install from git (sudo apt install automake)"; exit 1) || exit 1
+($ACLOCAL --version) >/dev/null 2>/dev/null || (echo -e "\nERROR: Cannot find '$ACLOCAL' (part of the 'automake' package). Please set the correct environment variable (ACLOCAL)."; exit 1) || exit 1
+($AUTOHEADER --version) >/dev/null 2>/dev/null || (echo -e "\nERROR: Cannot find '$AUTOHEADER' (part of the 'autoconf' package). Please set the correct environment variable (AUTOHEADER)."; exit 1) || exit 1
+($AUTOM4TE --version) >/dev/null 2>/dev/null || (echo -e "\nERROR: Cannot find '$AUTOM4TE' (part of the 'autoconf' package). Please set the correct environment variable (AUTOM4TE)."; exit 1) || exit 1
 if test $using_libtool = "yes"; then
-  ($LIBTOOL --version) >/dev/null 2>/dev/null || (echo -e "\nERROR: Cannot find '$LIBTOOL'. You need GNU libtool $required_libtool_version or higher to install from git (ftp://ftp.gnu.org/gnu/libtool/)"; exit 1) || exit 1
-  ($LIBTOOLIZE --version) >/dev/null 2>/dev/null || (echo -e "\nERROR: Cannot find '$LIBTOOLIZE'. Please set the correct environment variable."; exit 1) || exit 1
+  ($LIBTOOL --version) >/dev/null 2>/dev/null || (echo -e "\nERROR: Cannot find '$LIBTOOL'. You need GNU libtool $required_libtool_version or higher to install from git (sudo apt install libtool-bin)"; exit 1) || exit 1
+  ($LIBTOOLIZE --version) >/dev/null 2>/dev/null || (echo -e "\nERROR: Cannot find '$LIBTOOLIZE' (part of the 'libtool' package). Please set the correct environment variable."; exit 1) || exit 1
 fi
 if test "$using_gettext" = "yes"; then
-  ($GETTEXT --version) >/dev/null 2>/dev/null || (echo -e "\nERROR: Cannot find '$GETTEXT'. Please set the correct environment variable (GETTEXT)."; exit 1) || exit 1
+  ($GETTEXT --version) >/dev/null 2>/dev/null || (echo -e "\nERROR: Cannot find '$GETTEXT' (part of the 'gettext-base' package). Please set the correct environment variable (GETTEXT)."; exit 1) || exit 1
 fi
 if test "$using_gtkdoc" = "yes"; then
-  ($GTKDOCIZE --version) >/dev/null 2>/dev/null || (echo -e "\nERROR: Cannot find '$GTKDOCIZE'. Please set the correct environment variable (GTKDOCIZE)."; exit 1) || exit 1
+  ($GTKDOCIZE --version) >/dev/null 2>/dev/null || (echo -e "\nERROR: Cannot find '$GTKDOCIZE' (part of the 'gtk-doc-tools' package). Please set the correct environment variable (GTKDOCIZE)."; exit 1) || exit 1
 fi
 
 # Determine the version of autoconf.
@@ -191,9 +191,9 @@ if test x"$required_autoconf_version" = x; then
 fi
 
 echo "dnl This file is automatically generated, do not edit. Edit autogen_versions instead." > m4/min_automake_version.m4
-echo "$required_automake_version dnl" >> m4/min_automake_version.m4
+echo "[$required_automake_version] dnl" >> m4/min_automake_version.m4
 echo "dnl This file is automatically generated, do not edit. Edit autogen_versions instead." > m4/min_autoconf_version.m4
-echo "$required_autoconf_version dnl" >> m4/min_autoconf_version.m4
+echo "[$required_autoconf_version] dnl" >> m4/min_autoconf_version.m4
 
 version_compare() {
   if [[ $1 == $2 ]]; then
@@ -307,29 +307,12 @@ if [ $? -eq 2 ]; then
   cd ..
 fi
 
-# Do some git sanity checks.
-if test -d .git; then
-  PUSH_RECURSESUBMODULES="$(git config push.recurseSubmodules)"
-  if test -z "$PUSH_RECURSESUBMODULES"; then
-    # Use this as default for now.
-    git config push.recurseSubmodules check
-    echo -e "\n*** WARNING: git config push.recurseSubmodules was not set!"
-    echo "***      To prevent pushing a project that references unpushed submodules,"
-    echo "***      this config was set to 'check'. Use instead the command"
-    echo "***      > git config push.recurseSubmodules on-demand"
-    echo "***      to automatically push submodules when pushing a reference to them."
-    echo "***      See http://stackoverflow.com/a/10878273/1487069 and"
-    echo "***      http://stackoverflow.com/a/34615803/1487069 for more info."
-    echo
-  fi
-fi
-
 if test "$using_doxygen" = "yes"; then
 
 if expr "$CW_DOXYGEN_LINE" : "^[[:space:]]*CW_DOXYGEN[[:space:]]*[^(]" > /dev/null ||
    expr "$CW_DOXYGEN_LINE" : "^[[:space:]]*CW_DOXYGEN[[:space:]]*$" > /dev/null; then
   echo -e "\n*ERROR:**********************************************************"
-  echo "* Using CW_DOXYGEN without arguments. Please specify directories to generate documtation in."
+  echo "* Using CW_DOXYGEN without arguments. Please specify directories to generate documentation in."
   echo "* Use a dot (.) for the root directory. For example:"
   echo "* CW_DOXYGEN([. src utils])"
   exit 1
@@ -474,28 +457,28 @@ if test ! -f Makefile.am; then
   created_files="$created_files Makefile.am"
 fi
 
-if ! egrep '^[[:space:]]*SUBDIRS[[:space:]]*=.*@CW_SUBDIRS@' Makefile.am >/dev/null; then
+if ! grep -E '^[[:space:]]*SUBDIRS[[:space:]]*=.*@CW_SUBDIRS@' Makefile.am >/dev/null; then
   echo -e "\n*** ERROR: SUBDIRS in Makefile.am must contain @CW_SUBDIRS@.\n***        For example: SUBDIRS = @CW_SUBDIRS@ src"
   exit 1
 fi
 
-if egrep '^[[:space:]]*EXTRA_DIST[[:space:]]*=' Makefile.am >/dev/null; then
+if grep -E '^[[:space:]]*EXTRA_DIST[[:space:]]*=' Makefile.am >/dev/null; then
   echo -e "\n*** ERROR: EXTRA_DIST should only append new files. Use 'EXTRA_DIST += ...' instead of 'EXTRA_DIST ='."
   exit 1
 fi
 
-if egrep '^[[:space:]]*MAINTAINERCLEANFILES[[:space:]]*=' Makefile.am >/dev/null; then
+if grep -E '^[[:space:]]*MAINTAINERCLEANFILES[[:space:]]*=' Makefile.am >/dev/null; then
   echo -e "\n*** ERROR: MAINTAINERCLEANFILES should only append new files. Use 'MAINTAINERCLEANFILES += ...' instead of 'MAINTAINERCLEANFILES ='."
   exit 1
 fi
 
 generate_makefile_am="no"
-if ! egrep '^[[:space:]]*include[[:space:]]+\$\(srcdir\)/cwm4/root_makefile_top\.am' Makefile.am >/dev/null; then
+if ! grep -E '^[[:space:]]*include[[:space:]]+\$\(srcdir\)/cwm4/root_makefile_top\.am' Makefile.am >/dev/null; then
   echo "Missing 'include \$(srcdir)/cwm4/root_makefile_top.am' in Makefile.am."
   generate_makefile_am="yes"
 fi
 
-if ! egrep '^[[:space:]]*include[[:space:]]+\$\(srcdir\)/cwm4/root_makefile_bottom\.am' Makefile.am >/dev/null; then
+if ! grep -E '^[[:space:]]*include[[:space:]]+\$\(srcdir\)/cwm4/root_makefile_bottom\.am' Makefile.am >/dev/null; then
   echo "Missing 'include \$(srcdir)/cwm4/root_makefile_bottom.am' in Makefile.am."
   generate_makefile_am="yes"
 fi
@@ -526,6 +509,11 @@ if test "$using_libtool" = "yes"; then
   #if test ! -e depcomp; then
   #  ln -s cwm4/scripts/depcomp.sh depcomp
   #fi
+  if test ! -e ltmain.sh; then
+    echo "$LIBTOOLIZE failed to install \"ltmain.sh\" in the right place."
+    echo "Please add AC_CONFIG_AUX_DIR([.]) to the configure.ac of your project."
+    exit 3
+  fi
 fi
 if test -n "$ACLOCAL_PATH"; then
   echo "ACLOCAL_PATH is set ($ACLOCAL_PATH)!"
