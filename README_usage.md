@@ -34,7 +34,7 @@ if you already cloned it there, it should add it.
 
 Note that if <i>XYZ</i> starts with <tt>ai-</tt> then the required
 subdirectory that it is cloned into needs to have that prefix removed.
-Currently those submodules are <tt>ai-utils</tt>, <tt>ai-threadsafe</tt>,
+Currently those submodules are <tt>ai-utils</tt>, <tt>threadsafe</tt>,
 <tt>ai-statefultask</tt> and <tt>ai-xml</tt>. For example to add
 the submodule <tt>ai-utils</tt> to a project, execute the following
 in the root of the project:
