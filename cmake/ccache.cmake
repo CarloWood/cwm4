@@ -1,4 +1,4 @@
-cmake_minimum_required(VERSION 3.4)
+cmake_minimum_required(VERSION 3.4...3.27)
 
 # Cause cmake to use ccache for CXX.
 if (DEFINED ENV{CCACHE_DIR})
