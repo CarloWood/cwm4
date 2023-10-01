@@ -14,7 +14,7 @@ endif ()
 message(STATUS "----------------------------------------------------\n** Configuring project ${PROJECT_NAME}:")
 
 # Default message log level. Use cmake -DCMAKE_MESSAGE_LOG_LEVEL=DEBUG to get DEBUG output.
-set(CMAKE_MESSAGE_LOG_LEVEL "STATUS")
+set(CMAKE_MESSAGE_LOG_LEVEL "STATUS" CACHE STRING "Default debug level.")
 
 # Add extra build types.
 string(REGEX REPLACE "( -DNDEBUG$|-DNDEBUG )" "" CMAKE_CXX_FLAGS_BETATEST "${CMAKE_CXX_FLAGS_RELEASE}")
