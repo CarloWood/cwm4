@@ -2,7 +2,7 @@
 
 The root project should be using
 [autotools](https://en.wikipedia.org/wiki/GNU_Build_System_autotools) or
-[cmake](https://cmake.org/) and
+[cmake](https://cmake.org/), and
 [cwm4](https://github.com/CarloWood/cwm4) and
 [libcwd](https://github.com/CarloWood/libcwd).
 
