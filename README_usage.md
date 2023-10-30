@@ -4,7 +4,7 @@ The root project should be using
 [autotools](https://en.wikipedia.org/wiki/GNU_Build_System_autotools) or
 [cmake](https://cmake.org/), and
 [cwm4](https://github.com/CarloWood/cwm4) and
-[libcwd](https://github.com/CarloWood/libcwd).
+[cwds](https://github.com/CarloWood/cwds).
 
 ## Checking out a project that uses the cwm4 submodule.
 
