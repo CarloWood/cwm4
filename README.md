@@ -2,8 +2,8 @@
 
 This repository is a git submodule containing
 autoconf macros and helper scripts to support
-building a project that uses autotools and
-git submodules.
+building a project that uses git submodules and
+autotools or cmake.
 
 ## Checking out a project that uses the cwm4 submodule.
 
@@ -28,7 +28,7 @@ cp cwm4/templates/autogen.sh .
 ./autogen.sh
 </pre>
 
-and follow the instructions (if any). If fixing of <tt>configure.ac</tt>
+and follow the instructions (if any). [autotools only:] If fixing of <tt>configure.ac</tt>
 was necessary, run <tt>./autogen.sh</tt> again until all issues are fixed.
 
 Finally add <tt>autogen.sh</tt> to your project:
