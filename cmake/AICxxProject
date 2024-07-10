@@ -13,10 +13,6 @@ endif ()
 
 message(STATUS "----------------------------------------------------\n** Configuring project ${PROJECT_NAME}:")
 
-# Use boost provided BoostConfig.cmake (requires boost version 1.70 or higher).
-# This policy was introduced in cmake 3.30.
-cmake_policy(SET CMP0167 NEW)
-
 # Default message log level. Use cmake -DCMAKE_MESSAGE_LOG_LEVEL=DEBUG to get DEBUG output.
 set(CMAKE_MESSAGE_LOG_LEVEL "STATUS" CACHE STRING "Default debug level.")
 
@@ -71,6 +67,20 @@ if (_is_main_project)
     # No longer passing $(MAKE) because then ninja won't work.
     COMMAND ${CMAKE_CURRENT_SOURCE_DIR}/cwm4/scripts/cmake_maintainer_clean.sh ${generator} \"${GITACHE_PACKAGES}\"
   )
+
+  #==============================================================================
+  # Set project wide policies.
+  #
+  # In order for these to have effect, the CMakeLists.txt file in the root
+  # of the project must be using:
+  #
+  # include(cwm4/cmake/AICxxProject NO_POLICY_SCOPE)
+  #
+  if (POLICY CMP0167)
+    # Use boost provided BoostConfig.cmake (requires boost version 1.70 or higher).
+    # This policy was introduced in cmake 3.30.
+    cmake_policy(SET CMP0167 NEW)
+  endif ()
 endif ()
 
 # vi:syntax=cmake
