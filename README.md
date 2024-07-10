@@ -2,24 +2,12 @@
 
 This repository is a git submodule containing
 autoconf macros and helper scripts to support
-building a project that uses autotools and
-git submodules.
+building a project that uses git submodules and
+autotools or cmake.
 
 ## Checking out a project that uses the cwm4 submodule.
 
-To clone a project example-project that uses cwm4 simply run:
-
-<pre>
-<b>git clone --recursive</b> &lt;<i>URL-to-project</i>&gt;<b>/example-project.git</b>
-<b>cd example-project</b>
-<b>./autogen.sh</b>
-</pre>
-
-The <tt>--recursive</tt> is optional because <tt>./autogen.sh</tt> will fix
-it when you forgot it.
-
-Afterwards you probably want to use <tt>--enable-mainainer-mode</tt>
-as option to the generated <tt>configure</tt> script.
+Please read [README_usage](https://github.com/CarloWood/cwm4/blob/master/README_usage.md).
 
 ## Adding the cwm4 submodule to a project.
 
@@ -40,7 +28,7 @@ cp cwm4/templates/autogen.sh .
 ./autogen.sh
 </pre>
 
-and follow the instructions (if any). If fixing of <tt>configure.ac</tt>
+and follow the instructions (if any). [autotools only:] If fixing of <tt>configure.ac</tt>
 was necessary, run <tt>./autogen.sh</tt> again until all issues are fixed.
 
 Finally add <tt>autogen.sh</tt> to your project:

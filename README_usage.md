@@ -1,22 +1,22 @@
 # Using a cwm4 submodule
 
 The root project should be using
-[autotools](https://en.wikipedia.org/wiki/GNU_Build_System_autotools),
+[autotools](https://en.wikipedia.org/wiki/GNU_Build_System_autotools) or
+[cmake](https://cmake.org/), and
 [cwm4](https://github.com/CarloWood/cwm4) and
-[libcwd](https://github.com/CarloWood/libcwd).
+[cwds](https://github.com/CarloWood/cwds).
 
 ## Checking out a project that uses the cwm4 submodule.
 
-To clone a project <tt>example-project</tt> that uses cwm4 submodule(s) simply run:
+To clone a project <tt>example-project</tt> that uses cwm4 submodule(s) simply clone the project using `--recursive` and then run `./autogen.sh`:
 
     git clone --recursive <URL-to-project>/example-project.git
     cd example-project
     ./autogen.sh
 
-The <tt>--recursive</tt> is optional because <tt>./autogen.sh</tt> will fix
-it when you forgot it.
+If you forget to use <tt>--recursive</tt> then <tt>./autogen.sh</tt> will fix that.
 
-Afterwards you probably want to use <tt>--enable-mainainer-mode</tt>
+Afterwards, if you are using autotools, you probably want to use <tt>--enable-mainainer-mode</tt>
 as option to the generated <tt>configure</tt> script.
 
 ## Adding a cwm4 submodule to your project
@@ -34,7 +34,7 @@ if you already cloned it there, it should add it.
 
 Note that if <i>XYZ</i> starts with <tt>ai-</tt> then the required
 subdirectory that it is cloned into needs to have that prefix removed.
-Currently those submodules are <tt>ai-utils</tt>, <tt>ai-threadsafe</tt>,
+Currently those submodules are <tt>ai-utils</tt>,
 <tt>ai-statefultask</tt> and <tt>ai-xml</tt>. For example to add
 the submodule <tt>ai-utils</tt> to a project, execute the following
 in the root of the project:
@@ -65,14 +65,14 @@ would look like
     include(AICxxProject)
 
     add_executable(some_test some_test.cxx)
-         target_link_libraries(some_test PRIVATE ${AICXX_OBJECTS_LIST})
+    target_link_libraries(some_test PRIVATE ${AICXX_OBJECTS_LIST})
 
 That is, `AICXX_OBJECTS_LIST` is, automatically, filled with all the
 objects of all the aicxx submodules. Alternatively, you can list all
 required aicxx submodules manually. For example,
 
     add_executable(some_test some_test.cxx)
-         target_link_libraries(some_test PRIVATE AICxx::statefultask AICxx::evio AICxx::evio_protocol AICxx::threadpool AICxx::threadsafe AICxx::events AICxx::xml AICxx::utils AICxx::cwds)
+    target_link_libraries(some_test PRIVATE AICxx::statefultask AICxx::evio AICxx::evio_protocol AICxx::threadpool AICxx::threadsafe AICxx::events AICxx::xml AICxx::utils AICxx::cwds)
 
 For the largest part the order of these is important as many depend on what is on their right-side.
 

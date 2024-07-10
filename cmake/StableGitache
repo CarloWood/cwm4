@@ -1,5 +1,5 @@
 # FetchContent was added to 3.14.
-cmake_minimum_required(VERSION 3.14)
+cmake_minimum_required(VERSION 3.14...3.27)
 
 include(FetchContent)
 
@@ -13,7 +13,7 @@ endif ()
 FetchContent_Declare(
   gitache
   GIT_REPOSITORY "https://github.com/CarloWood/gitache.git"
-  GIT_TAG        "bef7d0d52ef3587e310edd43a762f4cc16ef1708"  # Latest SHA1 of branch "stable".
+  GIT_TAG        "e5ef040c28810ca7a1a5e200268af683440fbd27"  # Latest SHA1 of branch "stable".
 )
 
 # To enable DEBUG messages, pass -DCMAKE_MESSAGE_LOG_LEVEL=DEBUG to cmake on the command line.
