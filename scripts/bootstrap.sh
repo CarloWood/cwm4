@@ -44,9 +44,9 @@ if test "$generate_configure_ac" = "yes"; then
   CW_BUGREPORT="$GIT_AUTHOR_EMAIL"
   sed -e 's/@CW_PACKAGE_NAME@/'"$CW_PACKAGE_NAME"'/;s/@CW_BUGREPORT@/'"$CW_BUGREPORT"'/' cwm4/templates/configure.ac > configure.ac
 else
-  if test $(grep -E '^[[:space:]]*define[[:space:]]*\([[:space:]]*CW_(VERSION_MAJOR|VERSION_MINOR|VERSION_REVISION|PACKAGE_NAME|BUGREPORT|COMPILE_FLAGS|THREADS)[[:space:]]*,' configure.ac | sort -u | wc --lines) != 7; then
+  if test $(grep -E '^[[:space:]]*define[[:space:]]*\([[:space:]]*CW_(VERSION_MAJOR|VERSION_MINOR|PACKAGE_NAME|BUGREPORT|COMPILE_FLAGS|THREADS)[[:space:]]*,' configure.ac | sort -u | wc --lines) != 7; then
     echo '*** ERROR: The follow macros should be defined at the top of configure.ac:'
-    echo '***        CW_VERSION_MAJOR, CW_VERSION_MINOR, CW_VERSION_REVISION,'
+    echo '***        CW_VERSION_MAJOR, CW_VERSION_MINOR, [CW_VERSION_REVISION,]'
     echo '***        CW_PACKAGE_NAME, CW_BUGREPORT, CW_COMPILE_FLAGS and CW_THREADS.'
     echo '***        Please see cwm4/templates/configure.ac for an example.'
     exit 1
