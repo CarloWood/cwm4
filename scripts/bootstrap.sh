@@ -519,7 +519,7 @@ if test -n "$ACLOCAL_PATH"; then
   echo "ACLOCAL_PATH is set ($ACLOCAL_PATH)!"
 fi
 ACLOCAL_INCLUDES="-I m4/aclocal -I cwm4/aclocal "
-ACLOCAL_INCLUDES+="$(grep '^ACLOCAL_AMFLAGS\s*[+]\?=' Makefile.am | sed -re 's/^ACLOCAL_AMFLAGS\s*[+]?=\s*(.*)/\1/')" 
+ACLOCAL_INCLUDES+="$(grep '^ACLOCAL_AMFLAGS\s*[+]\?=' Makefile.am | sed -re 's/^ACLOCAL_AMFLAGS\s*[+]?=\s*(.*)/\1/')"
 run "$ACLOCAL $ACLOCAL_INCLUDES"
 if test "$using_gtkdoc" = "yes"; then
   run "$GTKDOCIZE"
