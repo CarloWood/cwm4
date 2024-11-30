@@ -518,7 +518,9 @@ fi
 if test -n "$ACLOCAL_PATH"; then
   echo "ACLOCAL_PATH is set ($ACLOCAL_PATH)!"
 fi
-run "$ACLOCAL -I m4 -I m4/aclocal -I cwm4/aclocal"
+ACLOCAL_INCLUDES="-I m4/aclocal -I cwm4/aclocal"
+ACLOCAL_INCLUDES+=" -I m4" 
+run "$ACLOCAL $ACLOCAL_INCLUDES"
 if test "$using_gtkdoc" = "yes"; then
   run "$GTKDOCIZE"
 fi
