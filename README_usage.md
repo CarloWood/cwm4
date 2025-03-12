@@ -72,7 +72,7 @@ objects of all the aicxx submodules. Alternatively, you can list all
 required aicxx submodules manually. For example,
 
     add_executable(some_test some_test.cxx)
-    target_link_libraries(some_test PRIVATE AICxx::statefultask AICxx::evio AICxx::evio_protocol AICxx::threadpool AICxx::threadsafe AICxx::events AICxx::xml AICxx::utils AICxx::cwds)
+    target_link_libraries(some_test PRIVATE AICxx::statefultask AICxx::evio AICxx::evio_protocol AICxx::threadpool AICxx::threadsafe AICxx::events AICxx::xml AICxx::math AICxx::utils AICxx::cwds)
 
 For the largest part the order of these is important as many depend on what is on their right-side.
 

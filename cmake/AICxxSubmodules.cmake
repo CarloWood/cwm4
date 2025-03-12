@@ -2,8 +2,8 @@
 include_guard(GLOBAL)
 
 # This is a list of all aicxx submodules that exist.
-# Submodules on the right depend on the submodules on the left (but not on events or xml).
-set(AICxxSubmodules cwds utils xml events threadsafe threadpool evio statefultask fastprimes cairowindow)
+# If a submodule X depends on Y it must be on the right, i.e.: Y X.
+set(AICxxSubmodules cwds utils xml events threadsafe threadpool evio statefultask fastprimes math cairowindow)
 
 foreach (subdir ${AICxxSubmodules})
   get_filename_component(_fullpath "${subdir}" REALPATH)

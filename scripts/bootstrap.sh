@@ -44,9 +44,9 @@ if test "$generate_configure_ac" = "yes"; then
   CW_BUGREPORT="$GIT_AUTHOR_EMAIL"
   sed -e 's/@CW_PACKAGE_NAME@/'"$CW_PACKAGE_NAME"'/;s/@CW_BUGREPORT@/'"$CW_BUGREPORT"'/' cwm4/templates/configure.ac > configure.ac
 else
-  if test $(grep -E '^[[:space:]]*define[[:space:]]*\([[:space:]]*CW_(VERSION_MAJOR|VERSION_MINOR|VERSION_REVISION|PACKAGE_NAME|BUGREPORT|COMPILE_FLAGS|THREADS)[[:space:]]*,' configure.ac | sort -u | wc --lines) != 7; then
+  if test $(grep -E '^[[:space:]]*define[[:space:]]*\([[:space:]]*CW_(VERSION_MAJOR|VERSION_MINOR|PACKAGE_NAME|BUGREPORT|COMPILE_FLAGS|THREADS)[[:space:]]*,' configure.ac | sort -u | wc --lines) != 6; then
     echo '*** ERROR: The follow macros should be defined at the top of configure.ac:'
-    echo '***        CW_VERSION_MAJOR, CW_VERSION_MINOR, CW_VERSION_REVISION,'
+    echo '***        CW_VERSION_MAJOR, CW_VERSION_MINOR, [CW_VERSION_REVISION,]'
     echo '***        CW_PACKAGE_NAME, CW_BUGREPORT, CW_COMPILE_FLAGS and CW_THREADS.'
     echo '***        Please see cwm4/templates/configure.ac for an example.'
     exit 1
@@ -518,7 +518,9 @@ fi
 if test -n "$ACLOCAL_PATH"; then
   echo "ACLOCAL_PATH is set ($ACLOCAL_PATH)!"
 fi
-run "$ACLOCAL -I m4/aclocal -I cwm4/aclocal"
+ACLOCAL_INCLUDES="-I m4/aclocal -I cwm4/aclocal "
+ACLOCAL_INCLUDES+="$(grep '^ACLOCAL_AMFLAGS\s*[+]\?=' Makefile.am | sed -re 's/^ACLOCAL_AMFLAGS\s*[+]?=\s*(.*)/\1/')"
+run "$ACLOCAL $ACLOCAL_INCLUDES"
 if test "$using_gtkdoc" = "yes"; then
   run "$GTKDOCIZE"
 fi
