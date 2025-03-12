@@ -1,7 +1,8 @@
 #! /bin/bash
 
 GENERATOR="$1"
-GITACHE_PACKAGES="$2"
+PROJECT_NAME="$2"
+GITACHE_PACKAGES="$3"
 
 if [ "$GENERATOR" = "ninja" ]; then
   MAKE="$(which ninja)"
@@ -60,10 +61,10 @@ else # GENERATOR
 
 fi # GENERATOR
 
-# The project root uses the extention -extra.
-if $MAKE -n maintainer-clean-extra >/dev/null 2>/dev/null; then
-  echo "Running: $MAKE maintainer-clean-extra"
-  $MAKE maintainer-clean-extra
+# The project root uses the prefix $PROJECT_NAME- and postfix -extra.
+if $MAKE -n $PROJECT_NAME-maintainer-clean-extra >/dev/null 2>/dev/null; then
+  echo "Running: $MAKE $PROJECT_NAME-maintainer-clean-extra"
+  $MAKE $PROJECT_NAME-maintainer-clean-extra
 fi
 
 # Remove all cmake stuff and the Makefiles.
