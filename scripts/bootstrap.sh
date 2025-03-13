@@ -529,15 +529,3 @@ run "$AUTOMAKE --add-missing --foreign"
 run "$AUTOCONF"
 
 echo
-project_name=`basename "$PWD"`
-
-echo -n "Now you can do '"
-if [ ! -d ../$project_name-objdir ]; then
-  echo -n "mkdir ../$project_name-objdir; "
-fi
-echo -n "cd ../$project_name-objdir; "
-if test -n "$CONFIGURE_OPTIONS"; then
-  echo "configure'."
-else
-  echo "../$project_name/configure --enable-maintainer-mode [--help]'."
-fi

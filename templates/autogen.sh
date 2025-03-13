@@ -115,7 +115,18 @@ if [ -e CMakeLists.txt ]; then
   done
   echo
   echo "cmake --build "$BUILDDIR" --config "$CMAKE_CONFIG" --parallel $(nproc)"
-elif [ -e Makefile.am ]; then
-  echo -e "\nBuilding with autotools:"
+fi
+
+if [ -e Makefile.am ]; then
+  echo -e "\nBuilding with autotools:\n"
+  project_name=$(basename "$PWD")
   # Give general instructions for building using autotools.
+  [ -d ../$project_name-objdir ] || echo "mkdir ../$project_name-objdir"
+  echo "cd ../$project_name-objdir"
+  echo -n "../$project_name/configure --enable-maintainer-mode "
+  if [ -n "$CONFIGURE_OPTIONS" ]; then
+    echo "$CONFIGURE_OPTIONS"
+  else
+    echo "[--help]"
+  fi
 fi
