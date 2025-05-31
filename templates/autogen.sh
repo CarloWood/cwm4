@@ -102,9 +102,9 @@ fi
 
 if [ -e CMakeLists.txt ]; then
   # Set CMAKE_CONFIG to '$CMAKE_CONFIG' if not already set.
-  : "${CMAKE_CONFIG:='\$CMAKE_CONFIG'}"
+  : "${CMAKE_CONFIG:=\$CMAKE_CONFIG}"
   # Set BUILDDIR to '$BUILDDIR' if not already set.
-  : "${BUILDDIR:='\$BUILDDIR'}"
+  : "${BUILDDIR:=\$BUILDDIR}"
 
   echo -e "\nBuilding with cmake:\n"
   echo "To make a $CMAKE_CONFIG build, run:"
@@ -124,7 +124,7 @@ fi
 
 if [ -e Makefile.am ]; then
   # Set CONFIGURE_OPTIONS to '$CONFIGURE_OPTIONS' if not already set.
-  : "${CONFIGURE_OPTIONS:='\$CONFIGURE_OPTIONS'}"
+  : "${CONFIGURE_OPTIONS:=\$CONFIGURE_OPTIONS}"
 
   echo -e "\nBuilding with autotools:\n"
   project_name=$(basename "$PWD")
