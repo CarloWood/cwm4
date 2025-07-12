@@ -30,15 +30,24 @@ if test "$(echo $GIT_COMMITTER_EMAIL | md5sum | cut -d \  -f 1)" = "$1"; then
   popd >/dev/null
 
   echo "$prefix Updating the projects autogen.sh..."
+  # Fuck Microsoft (and all other woke companies).
+  if git show-ref --quiet refs/heads/master; then
+    MASTER=master
+  elif git show-ref --quiet refs/heads/main; then
+    MASTER=main
+  else
+    echo "Fatal error: branch master does not exist."
+    exit 1
+  fi
   # Get the trailing 'AccountName/projectname.git' of the upstream fetch url of branch master:
-  MASTER_REMOTE=$(git config branch.master.remote)
+  MASTER_REMOTE=$(git config branch.$MASTER.remote)
   if test -z "$MASTER_REMOTE"; then
     REPO_NAME=$(basename $(pwd))
-    echo "Fatal error: branch master does not have a remote set."
+    echo "Fatal error: branch $MASTER does not have a remote set."
     echo "Make sure you created the repository $REPO_NAME on github and issued the commands"
     echo "under '...or push an existing repository from the command line'"
     echo "That is: create the remote REMOTE (ie, origin) and then issue the command:"
-    echo "git push -u REMOTE master"
+    echo "git push -u REMOTE $MASTER"
     exit 1
   fi
   PROJECT_URL="$(git config remote.$MASTER_REMOTE.url | sed -e 's%.*[^A-Za-z]\([^/ ]*/[^/ ]*$\)%\1%')"
