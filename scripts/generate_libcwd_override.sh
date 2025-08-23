@@ -16,81 +16,98 @@ else
   rcfile="$(realpath "../libcwdrc_$dir")"
 fi
 
-declare -A channel_state  # key: "key:channel", value: "on"|"off".
-declare -A key_seen       # key: "<key>", value: "1".
+# State: ("key:channel") -> on|off.
+declare -A channel_state
+# Keys that exist (used for ordering and emission).
+declare -A key_seen
+# Preserve original header text after "# " for each key, if present.
+declare -A header_text
 
-# Parse an existing override file if present.
-if [[ -f "$rcfile" ]]; then
-  prev=""
-  while IFS= read -r line || [[ -n "$line" ]]; do
-    if [[ "$line" =~ ^[[:space:]]*channels_on[[:space:]]*=[[:space:]]*(.*)$ ]] ||
-       [[ "$line" =~ ^[[:space:]]*#channels_off[[:space:]]*=[[:space:]]*(.*)$ ]]; then
-      # Determine key from the immediately preceding "# <key>..." line.
-      key=""
-      if [[ "$prev" =~ ^#\ (.*)$ ]]; then
-        first="${BASH_REMATCH[1]}"
-        first="${first%%[[:space:].,:;]*}"
-        if [[ "$first" == "libcwd" || -d "$first" ]]; then
-          key="$first"
-        fi
+############################
+# Parse existing rc override.
+############################
+current_key=""
+while IFS= read -r line || [[ -n "$line" ]]; do
+  # Detect header lines and set current_key. Preserve full header text to repeat later.
+  if [[ "$line" =~ ^#[[:space:]]+(.*)$ ]]; then
+    text="${BASH_REMATCH[1]}"
+    # Determine key as the first 'word' in the header (up to whitespace or punctuation).
+    key_candidate="$text"
+    key_candidate="${key_candidate%%[[:space:].,:;]*}"
+    if [[ -n "$key_candidate" ]]; then
+      if [[ "$key_candidate" == "libcwd" || -d "$key_candidate" ]]; then
+        current_key="$key_candidate"
+        header_text["$current_key"]="$text"
+        key_seen["$current_key"]=1
+      else
+        # Unknown key candidate; do not set current_key.
+        current_key=""
       fi
-      # Skip if no valid key was found.
-      if [[ -z "$key" ]]; then
-        prev="$line"
-        continue
-      fi
-
-      # Extract and record channels.
-      list="${BASH_REMATCH[1]}"
-      IFS=',' read -ra chans <<< "$list"
-      for c in "${chans[@]}"; do
-        # Remove all whitespace and lowercase.
-        c="${c//[[:space:]]/}"
-        c="${c,,}"
-        [[ -z "$c" ]] && continue
-        if [[ "$line" =~ ^[[:space:]]*channels_on ]]; then
-          channel_state["$key:$c"]="on"
-        else
-          channel_state["$key:$c"]="off"
-        fi
-      done
-      key_seen["$key"]=1
+    else
+      current_key=""
     fi
-    prev="$line"
-  done < "$rcfile"
-fi
+    continue
+  fi
 
-# Normalize a directory path to the top-level directory name.
-normalize_key() {
-  local path="$1"
-  path="${path#./}"
-  case "$path" in
-    */*) echo "${path%%/*}" ;;
-    *)   echo "$path" ;;
-  esac
-}
+  # Parse channels_on and #channels_off lines for the current key.
+  if [[ "$line" =~ ^[[:space:]]*channels_on[[:space:]]*=[[:space:]]*(.*)$ ]]; then
+    [[ -z "$current_key" ]] && continue
+    list="${BASH_REMATCH[1]}"
+    IFS=',' read -ra chans <<< "$list"
+    for c in "${chans[@]}"; do
+      c="${c//[[:space:]]/}"
+      c="${c,,}"
+      [[ -z "$c" ]] && continue
+      channel_state["$current_key:$c"]="on"
+    done
+    key_seen["$current_key"]=1
+    continue
+  fi
 
-# Collect channels from source files.
+  if [[ "$line" =~ ^[[:space:]]*#channels_off[[:space:]]*=[[:space:]]*(.*)$ ]]; then
+    [[ -z "$current_key" ]] && continue
+    list="${BASH_REMATCH[1]}"
+    IFS=',' read -ra chans <<< "$list"
+    for c in "${chans[@]}"; do
+      c="${c//[[:space:]]/}"
+      c="${c,,}"
+      [[ -z "$c" ]] && continue
+      channel_state["$current_key:$c"]="off"
+    done
+    key_seen["$current_key"]=1
+    continue
+  fi
+done < <( [[ -f "$rcfile" ]] && cat -- "$rcfile" || printf '' )
+
+######################################
+# Scan source tree for channel_ct lines.
+######################################
 shopt -s globstar nullglob
-for f in **/*.cxx **/*.cpp **/*.cc **/*.C; do
-  # Resolve top-level key for this file. Skip files in the repository root.
-  d="$(dirname "$f")"
-  key="$(normalize_key "$d")"
-  [[ "$key" == "$d" && "$d" != */* ]] && continue
 
+# Supported C++ source extensions.
+src_globs=( **/*.cxx **/*.cpp **/*.cc **/*.C )
+
+for f in "${src_globs[@]}"; do
+  # Only consider files in subdirectories of $PWD.
+  [[ "$f" != */* ]] && continue
+
+  rel="${f#./}"
+  top="${rel%%/*}"                  # Top-level directory is the key.
+  key_seen["$top"]=1
+
+  # Grep lines that start with optional whitespace then 'channel_ct '.
   while IFS= read -r match; do
-    # match looks like: "  channel_ct foo("FOO"); ...".
-    text="${match#*channel_ct }"
-    chan="${text%%(*}"
-    chan="${chan%%[[:space:]]*}"
-    chan="${chan,,}"
-    [[ -z "$chan" ]] && continue
-    key_seen["$key"]=1
-    [[ -n "${channel_state["$key:$chan"]-}" ]] || channel_state["$key:$chan"]="off"
+    # Extract the identifier with a bash regex to avoid brittle slicing.
+    if [[ "$match" =~ ^[[:space:]]*channel_ct[[:space:]]+([A-Za-z_][A-Za-z_0-9]*)[[:space:]]*\( ]]; then
+      chan="${BASH_REMATCH[1],,}"
+      [[ -n "${channel_state["$top:$chan"]-}" ]] || channel_state["$top:$chan"]="off"
+    fi
   done < <(grep -E '^[[:space:]]*channel_ct[[:space:]]+' "$f" || true)
 done
 
-# Ensure libcwd defaults are present.
+###########################################
+# Ensure special libcwd defaults are present.
+###########################################
 key_seen["libcwd"]=1
 for ch in warning notice debug; do
   channel_state["libcwd:$ch"]="on"
@@ -98,78 +115,83 @@ done
 for ch in bfd demangler malloc system; do
   : "${channel_state["libcwd:$ch"]:="off"}"
 done
+# If there was no preserved header, provide a sensible one.
+: "${header_text["libcwd"]:="libcwd default debug channels."}"
 
-# Build ordered key list: explicit → *-task (alphabetic) → rest (alphabetic).
+#############################################
+# Compute key order: explicit → *-task → rest.
+#############################################
 explicit_order=(libcwd cwds utils memory threadsafe threadpool events evio statefultask)
 
-# Collect all keys seen.
-mapfile -t all_keys < <(printf '%s\n' "${!key_seen[@]}")
+# Collect all keys that actually have channels.
+declare -A key_has_channel
+for kch in "${!channel_state[@]}"; do
+  k="${kch%%:*}"
+  key_has_channel["$k"]=1
+done
 
-# Add explicit keys if present.
+# Helper to append unique keys in order.
 ordered=()
 declare -A placed
+append_key() { if [[ -n "${key_has_channel[$1]-}" && -z "${placed[$1]-}" ]]; then ordered+=("$1"); placed["$1"]=1; fi; }
+
 for k in "${explicit_order[@]}"; do
-  if [[ -n "${key_seen[$k]-}" ]]; then
-    ordered+=("$k")
-    placed["$k"]=1
-  fi
+  append_key "$k"
 done
 
-# Add *-task keys (excluding already placed), sorted.
+# *-task keys (excluding those already placed).
 mapfile -t task_keys < <(
-  for k in "${all_keys[@]}"; do
-    if [[ "$k" == *-task && -z "${placed[$k]-}" ]]; then
-      echo "$k"
-    fi
-  done | sort -u
+  for k in "${!key_has_channel[@]}"; do [[ "$k" == *-task && -z "${placed[$k]-}" ]] && printf '%s\n' "$k"; done | sort -u
 )
-for k in "${task_keys[@]}"; do
-  ordered+=("$k")
-  placed["$k"]=1
-done
+for k in "${task_keys[@]}"; do append_key "$k"; done
 
-# Add remaining keys, sorted.
+# Remaining keys.
 mapfile -t rest_keys < <(
-  for k in "${all_keys[@]}"; do
-    if [[ -z "${placed[$k]-}" ]]; then
-      echo "$k"
-    fi
-  done | sort -u
+  for k in "${!key_has_channel[@]}"; do [[ -z "${placed[$k]-}" ]] && printf '%s\n' "$k"; done | sort -u
 )
-ordered+=("${rest_keys[@]}")
+for k in "${rest_keys[@]}"; do append_key "$k"; done
 
-# Regenerate override file.
+########################
+# Write the override file.
+########################
 {
   echo "# This is an override file; just define the debug channels that we need."
   echo
 
   for key in "${ordered[@]}"; do
-    # Collect on/off lists for this key.
+    # Collect channels for this key.
     on_list=()
     off_list=()
     for entry in "${!channel_state[@]}"; do
       k="${entry%%:*}"
       c="${entry#*:}"
-      if [[ "$k" == "$key" ]]; then
-        if [[ "${channel_state[$entry]}" == "on" ]]; then
-          on_list+=("$c")
-        else
-          off_list+=("$c")
-        fi
+      [[ "$k" != "$key" ]] && continue
+      if [[ "${channel_state[$entry]}" == "on" ]]; then
+        on_list+=("$c")
+      else
+        off_list+=("$c")
       fi
     done
 
     # Skip keys without any channels.
     (( ${#on_list[@]} + ${#off_list[@]} == 0 )) && continue
 
-    echo "# $key"
-    (( ${#on_list[@]} )) && { echo -n "channels_on = "; echo "${on_list[*]}" | sed 's/ /,/g'; }
+    # Emit preserved header if available, else just the key.
+    if [[ -n "${header_text[$key]-}" ]]; then
+      echo "# ${header_text[$key]}"
+    else
+      echo "# $key"
+    fi
+
+    (( ${#on_list[@]} ))  && { echo -n "channels_on = ";  echo "${on_list[*]}"  | sed 's/ /,/g'; }
     (( ${#off_list[@]} )) && { echo -n "#channels_off = "; echo "${off_list[*]}" | sed 's/ /,/g'; }
     echo
   done
 } > "$rcfile"
 
-# Print export line with optional $TOPPROJECT canonicalization.
+#######################################
+# Print export line (canonicalize prefix).
+#######################################
 if [[ -n "${TOPPROJECT-}" && -n "$TOPPROJECT" && "$rcfile" == "$TOPPROJECT"* ]]; then
   rcfile="\$TOPPROJECT${rcfile#$TOPPROJECT}"
 fi
