@@ -96,6 +96,8 @@ parse_override_file() {
   on_channels=()
   off_channels=()
 
+  [[ -e "$file" ]] || return
+
   while IFS= read -r line || [ -n "$line" ]; do
     # Remove carriage returns and trim trailing whitespace.
     line="${line//$'\r'/}"
