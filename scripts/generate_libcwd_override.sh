@@ -228,6 +228,10 @@ mapfile -t rest_keys < <(
 )
 for key in "${rest_keys[@]}"; do append_key "$key"; done
 
+if [[ -f "$OVERRIDE_FILE" ]]; then
+  cp "$OVERRIDE_FILE" "$OVERRIDE_FILE.bak"
+fi
+
 # Write the override file.
 {
   for key in "${ordered[@]}"; do
@@ -245,9 +249,14 @@ for key in "${rest_keys[@]}"; do append_key "$key"; done
   done
 } > "$OVERRIDE_FILE"
 
-if [[ -n "$TOPPROJECT" && "$OVERRIDE_FILE" == "$TOPPROJECT"* ]]; then
-  OVERRIDE_FILE="\$TOPPROJECT${OVERRIDE_FILE#$TOPPROJECT}"
-fi
-
 # Display the determined path.
-echo "Override file path: $OVERRIDE_FILE"
+if [[ "$LIBCWD_RCFILE_OVERRIDE_NAME" != "$OVERRIDE_FILE" ]]; then
+  if [[ -n "$TOPPROJECT" && "$OVERRIDE_FILE" == "$TOPPROJECT"* ]]; then
+    OVERRIDE_FILE="\$TOPPROJECT${OVERRIDE_FILE#$TOPPROJECT}"
+  fi
+  echo "Add to environment: export LIBCWD_RCFILE_OVERRIDE_NAME=\"$OVERRIDE_FILE\""
+else
+  echo "Override path: \"$OVERRIDE_FILE\""
+  echo "Changes made:"
+  diff -u "$OVERRIDE_FILE.bak" "$OVERRIDE_FILE"
+fi
