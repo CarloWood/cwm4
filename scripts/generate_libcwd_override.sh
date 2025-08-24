@@ -106,7 +106,6 @@ parse_override_file() {
       local channel_type="${BASH_REMATCH[1]}"
       local channel_list="${BASH_REMATCH[2]}"
 
-      echo "header_lines = ${header_lines[*]}"
       # Check for key definition line: # KEY KEY-COMMENT.
       if [[ ${#header_lines[@]} -gt 0 &&  "${header_lines[-1]}" =~ ^#[[:space:]]+([A-Za-z0-9_-]+)([[:space:]]+(.*))?$ ]]; then
         # Extract key and comment.
@@ -134,12 +133,9 @@ parse_override_file() {
       channel_list="${channel_list%%#*}"
       channel_list="${channel_list%%[[:space:]]}"
 
-      echo "FOUND: \"$line\"; channel_type: \"$channel_type\"; channel_list: \"$channel_list\""
-
       # Split comma-separated list and add to appropriate array.
       IFS=',' read -ra channels <<< "$channel_list"
       for channel in "${channels[@]}"; do
-        echo "CHANNEL = \"$channel\""
         # Trim whitespace from each channel.
         channel="${channel##[[:space:]]}"
         channel="${channel%%[[:space:]]}"
@@ -169,31 +165,13 @@ parse_override_file() {
   add_off_channel libcwd bfd
   add_off_channel libcwd system
 
-  if [[ -v key_header["libcwd"] ]]; then
-    echo "key_header["libcwd"] exists with contents: \"${key_header[libcwd]}\"."
-  else
+  if [[ ! -v key_header["libcwd"] ]]; then
     key_header["libcwd"]=$'# This is an override file; just define the debug channels that we need.\n\n# libcwd default debug channels.'
   fi
 }
 
-# Function to display the parsed data (for debugging).
-display_parsed_data() {
-  echo "Parsed override file data:"
-  echo "=========================="
-
-  for key in "${!key_set[@]}"; do
-    echo "Header:"
-    echo "${key_header[$key]:-(none)}"
-    echo "Key: [$key] [${key_comment[$key]:-(none)}]"
-    echo "  ON:  ${on_channels[$key]:-(none)}"
-    echo "  OFF: ${off_channels[$key]:-(none)}"
-    echo
-  done
-}
-
 # Example usage.
 parse_override_file "$OVERRIDE_FILE"
-display_parsed_data
 
 # Collect new channels from source files.
 shopt -s globstar nullglob
@@ -222,8 +200,6 @@ for key in "${!key_set[@]}"; do
     key_has_channel["$key"]=1
   fi
 done
-
-echo "All keys that have at least one channel: "${!key_has_channel[@]}
 
 # Build ordered list respecting the requered ordering.
 ordered=()
@@ -269,32 +245,9 @@ for key in "${rest_keys[@]}"; do append_key "$key"; done
   done
 } > "$OVERRIDE_FILE"
 
-# Example of how to access the data.
-echo "Accessing specific data:"
-for key in "${!key_set[@]}"; do
-  echo "Processing key: $key"
-
-  # Convert space-separated strings to arrays if needed.
-  IFS=' ' read -ra on_array <<< "${on_channels[$key]}"
-  IFS=' ' read -ra off_array <<< "${off_channels[$key]}"
-
-  echo "  ON channels (as array): ${on_array[*]}"
-  echo "  OFF channels (as array): ${off_array[*]}"
-  echo
-done
-
 if [[ -n "$TOPPROJECT" && "$OVERRIDE_FILE" == "$TOPPROJECT"* ]]; then
   OVERRIDE_FILE="\$TOPPROJECT${OVERRIDE_FILE#$TOPPROJECT}"
 fi
 
 # Display the determined path.
 echo "Override file path: $OVERRIDE_FILE"
-
-# You can add additional logic here to use the override file.
-# For example:
-# if [ -f "$OVERRIDE_FILE" ]; then
-#   echo "Override file exists: $OVERRIDE_FILE"
-#   # Process the file here.
-# else
-#   echo "Override file does not exist: $OVERRIDE_FILE"
-# fi
