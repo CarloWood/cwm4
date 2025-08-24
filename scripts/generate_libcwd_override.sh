@@ -193,7 +193,7 @@ for f in **/*.cxx **/*.cpp **/*.cc **/*.C; do
 done
 
 # Compute key order: explicit → *-task → rest.
-explicit_order=(libcwd cwds utils memory threadsafe threadpool events evio statefultask)
+explicit_order=(libcwd cwds utils memory threadsafe threadpool events xml evio statefultask)
 
 # Build a set of keys that actually have channels.
 declare -A key_has_channel
