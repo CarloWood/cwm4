@@ -1,4 +1,4 @@
-#! /bin/sh
+#! /bin/bash
 
 if test -f .git; then
   echo "Error: don't run $0 inside a submodule. Run it from the parent project's directory."
