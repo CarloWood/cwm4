@@ -1,4 +1,4 @@
-message(STATUS "[CW_OPTIONS] Enter ${CMAKE_CURRENT_LIST_FILE}")
+message(STATUS "[CW_OPTIONS] Entering ${CMAKE_CURRENT_LIST_FILE} (line 1)")
 # option cmake macro -- this file is part of cwm4.
 # Copyright (C) 2019  Carlo Wood <carlo@alinoe.com>
 #
@@ -57,8 +57,11 @@ message(STATUS "[CW_OPTIONS] Enter ${CMAKE_CURRENT_LIST_FILE}")
 # where argument four is a semi-colon separated list of variables
 # that must be true for this option to be added (otherwise OFF,
 # argument five).
+message(STATUS "[CW_OPTIONS] ${CMAKE_CURRENT_LIST_FILE} (line 60)")
 include_guard(GLOBAL)
+message(STATUS "[CW_OPTIONS] ${CMAKE_CURRENT_LIST_FILE} (line 62)")
 include(color_vars)
+message(STATUS "[CW_OPTIONS] ${CMAKE_CURRENT_LIST_FILE} (line 64)")
 set(Option "${BoldCyan}Option${ColourReset}")
 set(OptionColor "${Green}")
 set(OptionColorYay "${Green}")
@@ -93,6 +96,7 @@ unset(OptionEnableLibcwd)
 # dependent-list: A semi-colon separated list of variables that all have to be true.
 # default2      : The value to use when one or more of the variables in dependent-list is not true.
 #
+message(STATUS "[CW_OPTIONS] ${CMAKE_CURRENT_LIST_FILE} (line 99)")
 macro(cw_option option_name help_string default dependent_list default2)
   message(DEBUG "  in: ${option_name} = ${${option_name}}")
   set(extra_info "")
@@ -150,6 +154,7 @@ macro(cw_option option_name help_string default dependent_list default2)
     #message( STATUS "${Option} ${option_name} (${help_string}) = ${OptionColorAlert}${Option${option_name}}${ColourReset}${extra_info}" )
   endif ()
 endmacro ()
+message(STATUS "[CW_OPTIONS] ${CMAKE_CURRENT_LIST_FILE} (line 157)")
 
 # Normalize the build type capitalization and handle NONE case.
 if (NOT CMAKE_BUILD_TYPE)
@@ -200,7 +205,9 @@ endif ()
 if (CMAKE_BUILD_TYPE STREQUAL "Tracy")
   set(CW_BUILD_TYPE_IS_TRACY ON CACHE INTERNAL "")
 endif ()
+message(STATUS "[CW_OPTIONS] ${CMAKE_CURRENT_LIST_FILE} (line 208)")
 message(STATUS "${Option} ${OptionColor}CMAKE_BUILD_TYPE${ColourReset} =\n\t${OptionColorBuildType}${CMAKE_BUILD_TYPE}${ColourReset}")
+message(STATUS "[CW_OPTIONS] ${CMAKE_CURRENT_LIST_FILE} (line 210)")
 #message(STATUS "${Option} ${OptionColor}CMAKE_BUILD_TYPE${ColourReset} = ${OptionColorBuildType}${CMAKE_BUILD_TYPE}${ColourReset}")
 
 if (NOT "${PROJECT_NAME}" STREQUAL "libcwd")
@@ -231,3 +238,4 @@ if (NOT "${PROJECT_NAME}" STREQUAL "libcwd")
     message(FATAL_ERROR "EnableLibcwd specified but libcwd_r not found!")
   endif ()
 endif ()
+message(STATUS "[CW_OPTIONS] Leaving ${CMAKE_CURRENT_LIST_FILE} (line 241)")
