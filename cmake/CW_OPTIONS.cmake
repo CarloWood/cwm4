@@ -1,3 +1,4 @@
+message(STATUS "[CW_OPTIONS] Enter ${CMAKE_CURRENT_LIST_FILE}")
 # option cmake macro -- this file is part of cwm4.
 # Copyright (C) 2019  Carlo Wood <carlo@alinoe.com>
 #

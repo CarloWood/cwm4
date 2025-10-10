@@ -42,7 +42,14 @@ set(AICXX_OBJECTS_LIST "" CACHE INTERNAL "List of OBJECT libaries that this proj
 include(ccache)
 
 # Add support for CMAKE_BUILD_TYPE, EnableDebug, EnableGlobalDebug, EnableLibcwd
-include(CW_OPTIONS)
+#include(CW_OPTIONS)
+# Has the macro been defined already (i.e. CW_OPTIONS was included)?
+if (COMMAND cw_option)
+  message(STATUS "cw_option is already defined BEFORE including CW_OPTIONS here.")
+endif()
+message(STATUS "About to include our CW_OPTIONS...")
+include("${CMAKE_CURRENT_SOURCE_DIR}/cwm4/cmake/CW_OPTIONS.cmake" NO_POLICY_SCOPE)
+message(STATUS "Returned from our CW_OPTIONS.")
 
 if (_is_main_project)
   if (CMAKE_GENERATOR STREQUAL "Ninja")
