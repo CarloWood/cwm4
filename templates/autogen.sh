@@ -84,22 +84,6 @@ if test -z "$AUTOGEN_CMAKE_ONLY"; then
   cwm4/scripts/bootstrap.sh
 fi
 
-if [ -r ".build-instructions" ]; then
-  # Set sensible values for:
-  # REPOBASE                            : the root of the project (repository base).
-  # BUILDDIR                            : the directory that will be used to build the project.
-  # CMAKE_CONFIG                        : one of Debug, RelWithDebInfo, RelWithDebug, BetaTest or Release.
-  # CMAKE_CONFIGURE_OPTIONS_STR         : other options, separated by '|' symbols.
-  # CONFIGURE_OPTIONS                   : options for the autotools `configure` script (if any).
-  source "./.build-instructions"
-
-  # Convert CMAKE_CONFIGURE_OPTIONS_STR back to an array.
-  # If you use a bash array locally for your options, then convert them to CMAKE_CONFIGURE_OPTIONS_STR
-  # for the sake of these printed instructions (if you want) with:
-  # export CMAKE_CONFIGURE_OPTIONS_STR=$(printf "%s|" "${CMAKE_CONFIGURE_OPTIONS[@]}")
-  IFS='|' read -ra CMAKE_CONFIGURE_OPTIONS <<< "$CMAKE_CONFIGURE_OPTIONS_STR"
-fi
-
 if [ -e CMakeLists.txt ]; then
   # Set CMAKE_CONFIG to '$CMAKE_CONFIG' if not already set.
   : "${CMAKE_CONFIG:=\$CMAKE_CONFIG}"
@@ -108,8 +92,8 @@ if [ -e CMakeLists.txt ]; then
 
   echo -e "\nBuilding with cmake:\n"
   echo "To make a $CMAKE_CONFIG build, run:"
-  [ -d "$BUILDDIR" ] || echo "mkdir -p $BUILDDIR"
-  echo -n "cmake -S \"$REPOBASE\" -B \"$BUILDDIR\" -DCMAKE_BUILD_TYPE=\"$CMAKE_CONFIG\""
+  [ -d "$BUILDDIR" ] || echo "mkdir -p \$BUILDDIR"
+  echo -n "cmake -S \"\$REPOBASE\" -B \"\$BUILDDIR\" -DCMAKE_BUILD_TYPE=\"$CMAKE_CONFIG\""
   # Put quotes around options that contain spaces.
   for option in "${CMAKE_CONFIGURE_OPTIONS[@]}"; do
     if [[ $option == *" "* ]]; then
@@ -119,7 +103,7 @@ if [ -e CMakeLists.txt ]; then
     fi
   done
   echo
-  echo "cmake --build \"$BUILDDIR\" --config \"$CMAKE_CONFIG\" --parallel $(nproc)"
+  echo "cmake --build \"\$BUILDDIR\" --config \"$CMAKE_CONFIG\" --parallel $(nproc)"
 fi
 
 if [ -e Makefile.am ]; then
