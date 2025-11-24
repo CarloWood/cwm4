@@ -61,5 +61,11 @@ size_t cache_line_size() {
 int main()
 {
   // No new line!
+  size_t size = cache_line_size();
+  if (!(size > 0 && ((size - 1) & size) == 0))
+  {
+    fprintf(stderr, "CW_SYS_CACHELINE_SIZE: Failed to determine cacheline_size!");
+    return 1;
+  }
   printf("%lu", cache_line_size());
 }
