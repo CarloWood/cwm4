@@ -23,7 +23,7 @@ fi
 if test -d .git; then
   # Take care of git submodule related stuff.
   # The following line is parsed by configure.ac to find the maintainer hash. Do not change its format!
-  MAINTAINER_HASH=15014aea5069544f695943cfe3a5348c
+  MAINTAINER_HASH=dcc3e4640e3ff4769e3cee4a2ab8e5eb
   # If this was a clone without --recursive, fix that fact.
   if test ! -e cwm4/scripts/real_maintainer.sh; then
     git submodule update --init --recursive
@@ -108,7 +108,7 @@ if [ -e CMakeLists.txt ]; then
 
   echo -e "\nBuilding with cmake:\n"
   echo "To make a $CMAKE_CONFIG build, run:"
-  [ -d "$BUILDDIR" ] || echo "mkdir $BUILDDIR"
+  [ -d "$BUILDDIR" ] || echo "mkdir -p $BUILDDIR"
   echo -n "cmake -S \"$REPOBASE\" -B \"$BUILDDIR\" -DCMAKE_BUILD_TYPE=\"$CMAKE_CONFIG\""
   # Put quotes around options that contain spaces.
   for option in "${CMAKE_CONFIGURE_OPTIONS[@]}"; do
