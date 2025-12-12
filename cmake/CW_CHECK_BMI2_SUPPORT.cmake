@@ -58,4 +58,3 @@ function(CW_CHECK_BMI2_SUPPORT)
     endif ()
   endif ()
 endfunction()
-
