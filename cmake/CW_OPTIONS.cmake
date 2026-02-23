@@ -44,6 +44,7 @@
 # CW_BUILD_TYPE_IS_RELWITHDEBUG         - true iff CMAKE_BUILD_TYPE = RelWithDebug
 # CW_BUILD_TYPE_IS_PERF                 - true iff CMAKE_BUILD_TYPE = Perf
 # CW_BUILD_TYPE_IS_TRACY                - true iff CMAKE_BUILD_TYPE = Tracy
+# CW_BUILD_TYPE_IS_NONE                 - true iff CMAKE_BUILD_TYPE = None
 #
 # Usage example,
 #
@@ -73,6 +74,7 @@ set(CW_BUILD_TYPE_IS_BETATEST OFF CACHE INTERNAL "")
 set(CW_BUILD_TYPE_IS_RELWITHDEBUG OFF CACHE INTERNAL "")
 set(CW_BUILD_TYPE_IS_PERF OFF CACHE INTERNAL "")
 set(CW_BUILD_TYPE_IS_TRACY OFF CACHE INTERNAL "")
+set(CW_BUILD_TYPE_IS_NONE OFF CACHE INTERNAL "")
 unset(OptionEnableDebug)
 unset(OptionEnableLibcwd)
 
@@ -170,6 +172,8 @@ elseif ("${BUILD_TYPE_UPPER}" STREQUAL "PERF")
   set(CMAKE_BUILD_TYPE "Perf" CACHE STRING "Build Type" FORCE)
 elseif ("${BUILD_TYPE_UPPER}" STREQUAL "TRACY")
   set(CMAKE_BUILD_TYPE "Tracy" CACHE STRING "Build Type" FORCE)
+elseif ("${BUILD_TYPE_UPPER}" STREQUAL "NONE")
+  set(CMAKE_BUILD_TYPE "None" CACHE STRING "Build Type" FORCE)
 else ()
   message(FATAL_ERROR "Unknown CMAKE_BUILD_TYPE \"${CMAKE_BUILD_TYPE}\".")
 endif ()
@@ -198,6 +202,9 @@ if (CMAKE_BUILD_TYPE STREQUAL "Perf")
 endif ()
 if (CMAKE_BUILD_TYPE STREQUAL "Tracy")
   set(CW_BUILD_TYPE_IS_TRACY ON CACHE INTERNAL "")
+endif ()
+if (CMAKE_BUILD_TYPE STREQUAL "None")
+  set(CW_BUILD_TYPE_IS_NONE ON CACHE INTERNAL "")
 endif ()
 message(STATUS "${Option} ${OptionColor}CMAKE_BUILD_TYPE${ColourReset} =\n\t${OptionColorBuildType}${CMAKE_BUILD_TYPE}${ColourReset}")
 #message(STATUS "${Option} ${OptionColor}CMAKE_BUILD_TYPE${ColourReset} = ${OptionColorBuildType}${CMAKE_BUILD_TYPE}${ColourReset}")
