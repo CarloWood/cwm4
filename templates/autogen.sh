@@ -93,7 +93,7 @@ if [ -e CMakeLists.txt ]; then
   echo -e "\nBuilding with cmake:\n"
   echo "To make a $CMAKE_CONFIG build, run:"
   [ -d "$BUILDDIR" ] || echo "mkdir -p \$BUILDDIR"
-  echo -n "cmake -S \"\$REPOBASE\" -B \"\$BUILDDIR\" -DCMAKE_BUILD_TYPE=\"$CMAKE_CONFIG\""
+  echo -n "cmake -S \"\$REPOROOT\" -B \"\$BUILDDIR\" -DCMAKE_BUILD_TYPE=\"$CMAKE_CONFIG\""
   # Put quotes around options that contain spaces.
   for option in "${CMAKE_CONFIGURE_OPTIONS[@]}"; do
     if [[ $option == *" "* ]]; then

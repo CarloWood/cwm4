@@ -61,9 +61,9 @@ AC_SUBST(ARFLAGS, [cruU])
 
 dnl Check if we are the real maintainer.
 cw_real_maintainer=0
-if test -z "$MAINTAINER_MODE_TRUE" -a -n "$REPOBASE"; then
+if test -z "$MAINTAINER_MODE_TRUE" -a -n "$REPOROOT"; then
   if test "$(echo "$GIT_COMMITTER_EMAIL" | md5sum | cut -d \  -f 1)" = dnl
-      "$(sed -n -e 's/.*MAINTAINER_HASH=//p' "$REPOBASE/autogen.sh")"; then
+      "$(sed -n -e 's/.*MAINTAINER_HASH=//p' "$REPOROOT/autogen.sh")"; then
     cw_real_maintainer=1
   fi
 fi
